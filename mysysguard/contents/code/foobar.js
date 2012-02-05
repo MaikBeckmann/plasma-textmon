@@ -1,107 +1,147 @@
+// -*- coding: utf-8 -*-
+
 foobar = (function() {
 
-    var labels = new function() 
-    {
-        this.wlan = new Label();
-        this.cpu = new Label();
-        this.mem = new Label();
-        this.hdd = new Label();
+  var labels = new function()
+  {
+    this.wlan = new Label();
+    this.cpu = new Label();
+    this.mem = new Label();
+    this.hdd = new Label();
 
-        var font = QFont("Sans Serif", 6, "Normal");
-        this.cpu.font = font;
-        this.mem.font = font;
-        this.wlan.font = font;
-        this.hdd.font = font;
+    var font = QFont("Liberation Mono", 6, "Normal");
+    this.cpu.font = font;
+    this.mem.font = font;
+    this.wlan.font = font;
+    this.hdd.font = font;
 
-        this.wlan.wordWrap=false;
-        this.cpu.wordWrap=false;
-        this.wlan.wordWrap=false;
-        this.hdd.wordWrap=false;
-    };
+    this.wlan.wordWrap = false;
+    this.cpu.wordWrap = false;
+    this.wlan.wordWrap = false;
+    this.hdd.wordWrap = false;
+  };
 
 
-    var names = new function() {
+  var p_sourceNames = new function() {
 
-        var sdaBase = "disk/sda_(8:0)/Rate";
+    var sdaBase = "disk/sda_(8:0)/Rate";
 
-        this.cpu = "cpu/system/TotalLoad";
-        this.mem = "mem/physical/application";
-        this.wlanDown = "network/interfaces/wlan0/receiver/data";
-        this.wlanUp = "network/interfaces/wlan0/transmitter/data";
-        this.sdaRead = sdaBase + "/rblk";
-        this.sdaWrite = sdaBase + "/wblk";
-    };
+    this.cpu = "cpu/system/TotalLoad";
+    this.mem = "mem/physical/application";
+    this.wlanDown = "network/interfaces/wlan0/receiver/data";
+    this.wlanUp = "network/interfaces/wlan0/transmitter/data";
+    this.sdaRead = sdaBase + "/rblk";
+    this.sdaWrite = sdaBase + "/wblk";
+  };
 
-    var data = new function()  {
+  var p_data = new function()  {
 
-        this.wlan = new Array();
-        this.cpu = new Array();
-        this.mem = new Array();
-        this.hdd = new Array();
-    };
+    this.wlan = new Array();
+    this.cpu = new Array();
+    this.mem = new Array();
+    this.hdd = new Array();
+  };
 
-    var functions = new function() 
-    {
-        this.updateData = function (name, d) {
 
-            var nameStr = name.toString();
+  /** */
+  var p_updateData =  function (data, name, sourceData) {
 
-            if (nameStr === names.cpu ) {
+    var nameStr = name.toString();
 
-                data.cpu["value"] = parseInt(d["value"]);
-                data.cpu["units"] = d["units"];
-            }
-            else if (nameStr === names.wlanDown ) {
+    /* cpu */
+    if (nameStr === p_sourceNames.cpu ) {
 
-                if ( d["units"] === "KB/s" ) {
-
-	            data.wlan["down_value"] = d["value"];
-	            data.wlan["down_units"] = d["units"];
-                }	
-            }
-            else if (nameStr === names.wlanUp ) {
-
-                if ( d["units"] === "KB/s" )  {
-
-	            data.wlan["up_value"] = d["value"];
-	            data.wlan["up_units"] = d["units"];
-                }	
-            }
-            else if (nameStr === names.mem ) {
-
-                data.mem["value"] = parseInt(d["value"]/1024);
-                data.mem["units"] = "MB";
-            }
-            else if (nameStr === names.sdaRead ) {	   
-
-                data.hdd["read_value"] = parseInt(d["value"]);
-                data.hdd["read_units"] = d["units"];
-            }
-            else if (nameStr === names.sdaWrite ) {
-
-                data.hdd["write_value"] = parseInt(d["value"]);
-                data.hdd["write_units"] = d["units"];
-            }
-
-        };
-        
-        this.updateView = function () {
-
-            labels.cpu.text = data.cpu["value"] + data.cpu["units"];
-            
-            labels.mem.text = data.mem["value"] + data.mem["units"];
-            
-            labels.wlan.text = "down " + data.wlan["down_value"] + data.wlan["down_units"];
-            labels.wlan.text += " up " + data.wlan["up_value"] + data.wlan["up_units"];
-
-            labels.hdd.text = "r " + data.hdd["read_value"] + data.hdd["read_units"];
-            labels.hdd.text += " w " + data.hdd["write_value"] + data.hdd["write_units"];
-        };
-
-    }; // functions
-    return {
-        functions: functions,
-        labels: labels,
-        names: names
+      data.cpu["value"] = parseInt(sourceData["value"]);
+      data.cpu["units"] = sourceData["units"];
     }
+
+    /* wlan */
+    else if (nameStr === p_sourceNames.wlanDown ) {
+
+      if ( sourceData["units"] === "KB/s" ) {
+
+	data.wlan["down_value"] = sourceData["value"];
+	data.wlan["down_units"] = sourceData["units"];
+      }
+    }
+    else if (nameStr === p_sourceNames.wlanUp ) {
+
+      if ( sourceData["units"] === "KB/s" )  {
+
+	data.wlan["up_value"] = sourceData["value"];
+	data.wlan["up_units"] = sourceData["units"];
+      }
+    }
+
+    /* mem */
+    else if (nameStr === p_sourceNames.mem ) {
+
+      data.mem["value"] = parseInt(sourceData["value"]/1024);
+      data.mem["units"] = "MB";
+    }
+
+    /* hdd */
+    else if (nameStr === p_sourceNames.sdaRead ) {
+
+      data.hdd["read_value"] = parseInt(sourceData["value"]);
+      data.hdd["read_units"] = sourceData["units"];
+    }
+    else if (nameStr === p_sourceNames.sdaWrite ) {
+
+      data.hdd["write_value"] = parseInt(sourceData["value"]);
+      data.hdd["write_units"] = sourceData["units"];
+    }
+
+    /* fail */
+    else {
+      stop_because_undefined;
+    }
+
+  }; // updateData
+
+
+  /** */
+  var functions = new function()
+  {
+    /* */
+    this.updateData = function (name, d) {
+      p_updateData(p_data, name, d);
+    };
+
+    /* */
+    this.updateView = function () {
+
+      var d = p_data
+      labels.cpu.text = d.cpu["value"] + d.cpu["units"];
+
+      labels.mem.text = d.mem["value"] + d.mem["units"];
+
+      labels.wlan.text = "down " + d.wlan["down_value"] + d.wlan["down_units"];
+      labels.wlan.text += " up " + d.wlan["up_value"] + d.wlan["up_units"];
+
+      labels.hdd.text = "r " + d.hdd["read_value"] + d.hdd["read_units"];
+      labels.hdd.text += " w " + d.hdd["write_value"] + d.hdd["write_units"];
+    };
+
+
+    /** */
+    this.isCoveredSource = function(name) {
+      var isCpu = name === p_sourceNames.cpu;
+      var isMem = name === p_sourceNames.mem;
+      var isWlan = name === p_sourceNames.wlanDown || name === p_sourceNames.wlanUp;
+      var isHdd = name === p_sourceNames.sdaRead || name === p_sourceNames.sdaWrite;
+      if ( isCpu || isMem || isWlan || isHdd ) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
+  }; // functions
+
+  return {
+    functions: functions,
+    labels: labels
+  }
 }());
