@@ -146,4 +146,4 @@ internals = (function() {
     functions: functions,
     labels: labels
   }
-}());
+}()); // Module `internals'
