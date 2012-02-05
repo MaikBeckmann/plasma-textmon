@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 
 /** Module `internals' */
-internals = (function() {
+var internals = (function() {
 
   var labels = new function()
   {
