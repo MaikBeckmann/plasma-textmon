@@ -23,13 +23,12 @@ internals = (function() {
 
 
   var p_sourceNames = new function() {
-
-    var sdaBase = "disk/sda_(8:0)/Rate";
-
     this.cpu = "cpu/system/TotalLoad";
     this.mem = "mem/physical/application";
     this.wlanDown = "network/interfaces/wlan0/receiver/data";
     this.wlanUp = "network/interfaces/wlan0/transmitter/data";
+    //
+    var sdaBase = "disk/sda_(8:0)/Rate";
     this.sdaRead = sdaBase + "/rblk";
     this.sdaWrite = sdaBase + "/wblk";
   };
