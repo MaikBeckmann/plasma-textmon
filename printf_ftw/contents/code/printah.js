@@ -4,5 +4,7 @@ function print_element_names(obj) {
     }
 }
 
-
-print_element_names(this);
+l = new Label()
+print_element_names(l);
+print(l.alignment);
+print(QtAlignRight);
