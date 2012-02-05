@@ -10,16 +10,12 @@ var internals = (function() {
     this.mem = new Label();
     this.hdd = new Label();
 
+    var ls = [this.cpu, this.mem, this.wlan, this.hdd];
     var font = QFont("Liberation Mono", 6, "Normal");
-    this.cpu.font = font;
-    this.mem.font = font;
-    this.wlan.font = font;
-    this.hdd.font = font;
-
-    this.wlan.wordWrap = false;
-    this.cpu.wordWrap = false;
-    this.wlan.wordWrap = false;
-    this.hdd.wordWrap = false;
+    for(var e in ls) {
+      ls[e].font = font;
+      ls[e].wordWrap = false;
+    }
   };
 
 
