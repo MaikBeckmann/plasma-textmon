@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 
-foobar = (function() {
+internals = (function() {
 
   var labels = new function()
   {

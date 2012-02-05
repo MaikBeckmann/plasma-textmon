@@ -3,9 +3,9 @@
 /** Modules */
 
 /* foobar */
-print("loading foobar.js:" + plasmoid.include("foobar.js"));
-var labels = foobar.labels;
-var functions = foobar.functions
+print("loading internals.js:" + plasmoid.include("internals.js"));
+var labels = internals.labels;
+var functions = internals.functions
 
 
 /** View design */
