@@ -126,16 +126,18 @@ internals = (function() {
 
     /** */
     this.isCoveredSource = function(name) {
+      var ret = false;
+
       var isCpu = name === p_sourceNames.cpu;
       var isMem = name === p_sourceNames.mem;
       var isWlan = name === p_sourceNames.wlanDown || name === p_sourceNames.wlanUp;
       var isHdd = name === p_sourceNames.sdaRead || name === p_sourceNames.sdaWrite;
+
       if ( isCpu || isMem || isWlan || isHdd ) {
-        return true;
+        ret = true;
       }
-      else {
-        return false;
-      }
+
+      return ret;
     }
 
   }; // functions
