@@ -1,0 +1,13 @@
+* Javascript
+** API
+ - http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API
+
+** Snippets
+*** Print the name for each object element
+#+begin_src js
+  function print_element_names(obj) {  
+    for(var e in obj) {
+      print(e + ":");
+    }
+  }
+#+end_src
