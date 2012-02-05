@@ -12,9 +12,9 @@ var internals = (function() {
 
     var ls = [this.cpu, this.mem, this.wlan, this.hdd];
     var font = QFont("Liberation Mono", 6, "Normal");
-    for(var e in ls) {
-      ls[e].font = font;
-      ls[e].wordWrap = false;
+    for(var i = 0; i < ls.length;  i++) {
+      ls[i].font = font;
+      ls[i].wordWrap = false;
     }
   };
 
