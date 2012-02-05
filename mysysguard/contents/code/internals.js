@@ -124,7 +124,7 @@ var internals = (function() {
     };
 
 
-    /** */
+    /* */
     this.isCoveredSource = function(name) {
       var ret = false;
 
@@ -142,8 +142,13 @@ var internals = (function() {
 
   }; // functions
 
-  return {
+
+  /* Exported module elements */
+  var exports = {
     functions: functions,
     labels: labels
   }
+  //
+  return exports
+
 }()); // Module `internals'
