@@ -3,7 +3,7 @@
 /** Module `internals' */
 var internals = (function() {
 
-  var labels = new function()
+  var p_labels = new function()
   {
     this.wlan = new Label();
     this.cpu = new Label();
@@ -34,6 +34,7 @@ color: white; \
     this.sdaWrite = sdaBase + "/wblk";
   };
 
+
   var p_data = new function()  {
 
     this.wlan = new Array();
@@ -43,7 +44,6 @@ color: white; \
   };
 
 
-  /** */
   var p_updateData =  function (data, name, sourceData) {
 
     var nameStr = name.toString();
@@ -100,60 +100,64 @@ color: white; \
   }; // updateData
 
 
+  var checkedValueStr = function(obj, deflt) {
+    var ret = deflt;
+    if (obj) {
+      ret = obj.toString();
+    }
+    return ret;
+  }
+
+  // left padding s with c to a total of n chars
+  var padStrLeft= function(str, padChr, minWidth) {
+    if (str.length >= minWidth) {
+      return str;
+    }
+
+    var padChr = padChr[0]; // just to be sure it's exactly one char
+    var n = minWidth - str.length
+    for (var i = 0; i < n; i++) {
+      str = padChr + str;
+    }
+
+    return str;
+  }
+
+  var p_updateView = function(data, labels) {
+    var d = data;
+    var value = padStrLeft(checkedValueStr(d.cpu["value"], '0'), ' ', 3);
+    labels.cpu.text = value + d.cpu["units"];
+
+    var value = padStrLeft(checkedValueStr(d.mem["value"], '0'), ' ', 4);
+    labels.mem.text = value + d.mem["units"];
+
+    var value = padStrLeft(checkedValueStr(d.wlan["down_value"], '0'), ' ', 4);
+    labels.wlan.text = value + d.wlan["down_units"] + " down ";
+    //
+    var value = padStrLeft(checkedValueStr(d.wlan["up_value"], '0'), ' ', 4);
+    labels.wlan.text += value + d.wlan["up_units"] + " up";
+
+    var value = padStrLeft(checkedValueStr(d.hdd["read_value"], '0'), ' ', 5);
+    labels.hdd.text = value + d.hdd["read_units"] + " r " ;
+    //
+    var value = padStrLeft(checkedValueStr(d.hdd["write_value"], '0'), ' ', 5);
+    labels.hdd.text += value + d.hdd["write_units"] + " w";
+  };
+
+
+
   /** */
-  var functions = new function()
+  var p_functions = new function()
   {
     /* */
     this.updateData = function (name, d) {
       p_updateData(p_data, name, d);
     };
 
-    var checkedValueStr = function(obj, deflt) {
-      var ret = deflt;
-      if (obj) {
-	ret = obj.toString();
-      }
-      return ret;
-    }
-
-    // left padding s with c to a total of n chars
-    var padStrLeft= function(str, padChr, minWidth) {
-      if (str.length >= minWidth) {
-	return str;
-      }
-
-      var padChr = padChr[0]; // just to be sure it's exactly one char
-      var n = minWidth - str.length
-      for (var i = 0; i < n; i++) {
-	str = padChr + str;
-      }
-
-      return str;
-    }
-
     /* */
     this.updateView = function () {
-
-      var d = p_data;
-      var value = padStrLeft(checkedValueStr(d.cpu["value"], '0'), ' ', 3);
-      labels.cpu.text = value + d.cpu["units"];
-
-      var value = padStrLeft(checkedValueStr(d.mem["value"], '0'), ' ', 4);
-      labels.mem.text = value + d.mem["units"];
-
-      var value = padStrLeft(checkedValueStr(d.wlan["down_value"], '0'), ' ', 4);
-      labels.wlan.text = value + d.wlan["down_units"] + " down ";
-      //
-      var value = padStrLeft(checkedValueStr(d.wlan["up_value"], '0'), ' ', 4);
-      labels.wlan.text += value + d.wlan["up_units"] + " up";
-
-      var value = padStrLeft(checkedValueStr(d.hdd["read_value"], '0'), ' ', 5);
-      labels.hdd.text = value + d.hdd["read_units"] + " r " ;
-      //
-      var value = padStrLeft(checkedValueStr(d.hdd["write_value"], '0'), ' ', 5);
-      labels.hdd.text += value + d.hdd["write_units"] + " w";
-    };
-
+      p_updateView(p_data, p_labels);
+    }
 
     /* */
     this.isCoveredSource = function(name) {
@@ -171,13 +175,13 @@ color: white; \
       return ret;
     }
 
-  }; // functions
+  }; // p_functions
 
 
   /* Exported module elements */
   var exports = {
-    functions: functions,
-    labels: labels
+    functions: p_functions,
+    labels: p_labels
   }
   //
   return exports
