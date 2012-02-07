@@ -1,7 +1,9 @@
 /* -*- coding: utf-8 -*- */
 
 /** Module `helpers' */
-var helpers = (function() {
+// This doesn't work for some reason, of its loaded into another module.
+// var helpers = (function() {
+helpers = (function() {
   /*TODO: docstring */
   var checkedValueStr = function(obj, deflt) {
     var ret = deflt;
