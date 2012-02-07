@@ -90,7 +90,7 @@ var internals = (function() {
 
     /* fail */
     else {
-      stop_because_undefined;
+      throw("source '" + sourceData + "' wasn't expected");
     }
 
   }; // updateData
