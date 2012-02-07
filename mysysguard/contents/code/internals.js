@@ -108,8 +108,8 @@ color: white; \
       p_updateData(p_data, name, d);
     };
 
-    var valueOrZero = function(obj) {
-      var ret = '0';
+    var checkedValueStr = function(obj, deflt) {
+      var ret = deflt;
       if (obj) {
 	ret = obj.toString();
       }
@@ -117,34 +117,40 @@ color: white; \
     }
 
     // left padding s with c to a total of n chars
-    function padding_left(s, c, n) {
-      var max = (n - s.length)/c.length;
-      for (var i = 0; i < max; i++) {
-	s = c + s;
+    var padStrLeft= function(str, padChr, minWidth) {
+      if (str.length >= minWidth) {
+	return str;
       }
-      return s;
+
+      var padChr = padChr[0]; // just to be sure it's exactly one char
+      var n = minWidth - str.length
+      for (var i = 0; i < n; i++) {
+	str = padChr + str;
+      }
+
+      return str;
     }
 
     /* */
     this.updateView = function () {
 
       var d = p_data;
-      var value = padding_left(valueOrZero(d.cpu["value"]), ' ', 3);
+      var value = padStrLeft(checkedValueStr(d.cpu["value"], '0'), ' ', 3);
       labels.cpu.text = value + d.cpu["units"];
 
-      var value = padding_left(valueOrZero(d.mem["value"]), ' ', 4);
+      var value = padStrLeft(checkedValueStr(d.mem["value"], '0'), ' ', 4);
       labels.mem.text = value + d.mem["units"];
 
-      var value = padding_left(valueOrZero(d.wlan["down_value"]), ' ', 4);
-      labels.wlan.text = value + d.wlan["down_units"] + " down";
+      var value = padStrLeft(checkedValueStr(d.wlan["down_value"], '0'), ' ', 4);
+      labels.wlan.text = value + d.wlan["down_units"] + " down ";
       //
-      var value = padding_left(valueOrZero(d.wlan["up_value"]), ' ', 4);
+      var value = padStrLeft(checkedValueStr(d.wlan["up_value"], '0'), ' ', 4);
       labels.wlan.text += value + d.wlan["up_units"] + " up";
 
-      var value = padding_left(valueOrZero(d.hdd["read_value"]), ' ', 5);
-      labels.hdd.text = value + d.hdd["read_units"] + " r" ;
+      var value = padStrLeft(checkedValueStr(d.hdd["read_value"], '0'), ' ', 5);
+      labels.hdd.text = value + d.hdd["read_units"] + " r " ;
       //
-      var value = padding_left(valueOrZero(d.hdd["write_value"]), ' ', 5);
+      var value = padStrLeft(checkedValueStr(d.hdd["write_value"], '0'), ' ', 5);
       labels.hdd.text += value + d.hdd["write_units"] + " w";
     };
 
