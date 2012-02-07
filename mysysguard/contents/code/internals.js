@@ -108,19 +108,44 @@ color: white; \
       p_updateData(p_data, name, d);
     };
 
+    var valueOrZero = function(obj) {
+      var ret = '0';
+      if (obj) {
+	ret = obj.toString();
+      }
+      return ret;
+    }
+
+    // left padding s with c to a total of n chars
+    function padding_left(s, c, n) {
+      var max = (n - s.length)/c.length;
+      for (var i = 0; i < max; i++) {
+	s = c + s;
+      }
+      return s;
+    }
+
     /* */
     this.updateView = function () {
 
-      var d = p_data
-      labels.cpu.text = d.cpu["value"] + d.cpu["units"];
+      var d = p_data;
+      var value = padding_left(valueOrZero(d.cpu["value"]), ' ', 3);
+      labels.cpu.text = value + d.cpu["units"];
 
-      labels.mem.text = d.mem["value"] + d.mem["units"];
+      var value = padding_left(valueOrZero(d.mem["value"]), ' ', 4);
+      labels.mem.text = value + d.mem["units"];
 
-      labels.wlan.text = "down " + d.wlan["down_value"] + d.wlan["down_units"];
-      labels.wlan.text += " up " + d.wlan["up_value"] + d.wlan["up_units"];
+      var value = padding_left(valueOrZero(d.wlan["down_value"]), ' ', 4);
+      labels.wlan.text = value + d.wlan["down_units"] + " down";
+      //
+      var value = padding_left(valueOrZero(d.wlan["up_value"]), ' ', 4);
+      labels.wlan.text += value + d.wlan["up_units"] + " up";
 
-      labels.hdd.text = "r " + d.hdd["read_value"] + d.hdd["read_units"];
-      labels.hdd.text += " w " + d.hdd["write_value"] + d.hdd["write_units"];
+      var value = padding_left(valueOrZero(d.hdd["read_value"]), ' ', 5);
+      labels.hdd.text = value + d.hdd["read_units"] + " r" ;
+      //
+      var value = padding_left(valueOrZero(d.hdd["write_value"]), ' ', 5);
+      labels.hdd.text += value + d.hdd["write_units"] + " w";
     };
 
 
