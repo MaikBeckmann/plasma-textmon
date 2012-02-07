@@ -248,3 +248,40 @@ removeEventListener:
 hasExtension:
 __qt_scope__:
 #+end_example
+** Open questions
+*** Clone
+There just has to be a function that lets one write this
+#+begin_src js
+  var separator = function(sepStr, styleSheet) {
+    var l = new Label();
+    l.text = sepStr;
+  
+    if(styleSheet) {
+      l.styleSheet = styleSheet;
+    }
+  
+    return l;
+  }
+  var styleSheet = labels.cpu.styleSheet;
+  //
+  layout.addItem(labels.cpu);
+  layout.addItem(labels.mem);
+  layout.addItem(separator("|", styleSheet));
+  layout.addItem(labels.wlan);
+  layout.addItem(separator("|", styleSheet));
+  layout.addItem(labels.hdd);
+#+end_src
+like this instead
+#+begin_src js
+  var sep = new Label();
+  sep.text = "|";
+  sep.styleSheet = labels.cpu.styleSheet
+  //
+  layout.addItem(labels.cpu);
+  layout.addItem(labels.mem);
+  layout.addItem(clone(sep));
+  layout.addItem(labels.wlan);
+  layout.addItem(clone(sep));
+  layout.addItem(labels.hdd);
+#+end_src
+
