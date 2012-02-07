@@ -26,9 +26,16 @@ layout.spacing = 5;
 layout.setContentsMargins(0,0,0,0);
 
 // The widgets which display the actual content
+var sep = function(c) {
+  var l = new Label();
+  l.text = c;
+  return l;
+}
 layout.addItem(labels.cpu);
 layout.addItem(labels.mem);
+layout.addItem(sep("|"));
 layout.addItem(labels.wlan);
+layout.addItem(sep("|"));
 layout.addItem(labels.hdd);
 
 
