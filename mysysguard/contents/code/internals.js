@@ -3,6 +3,17 @@
 /** Module `internals' */
 var internals = (function() {
 
+  /** Other modules */
+
+  /* helpers */
+  print("loading helpers.js:" + plasmoid.include("helpers.js"));
+  var checkedValueStr = helpers.checkedValueStr;
+  var padStrLeft = helpers.padStrLeft;
+
+
+  /** Module content */
+
+  /* TODO docstring*/
   var p_labels = new function()
   {
     this.wlan = new Label();
@@ -23,6 +34,7 @@ color: white; \
   };
 
 
+  /* TODO docstring*/
   var p_sourceNames = new function() {
     this.cpu = "cpu/system/TotalLoad";
     this.mem = "mem/physical/application";
@@ -35,6 +47,7 @@ color: white; \
   };
 
 
+  /* TODO docstring*/
   var p_data = new function()  {
 
     this.wlan = new Array();
@@ -100,29 +113,7 @@ color: white; \
   }; // updateData
 
 
-  var checkedValueStr = function(obj, deflt) {
-    var ret = deflt;
-    if (obj) {
-      ret = obj.toString();
-    }
-    return ret;
-  }
-
-  // left padding s with c to a total of n chars
-  var padStrLeft= function(str, padChr, minWidth) {
-    if (str.length >= minWidth) {
-      return str;
-    }
-
-    var padChr = padChr[0]; // just to be sure it's exactly one char
-    var n = minWidth - str.length
-    for (var i = 0; i < n; i++) {
-      str = padChr + str;
-    }
-
-    return str;
-  }
-
+  /* TODO docstring*/
   var p_updateView = function(data, labels) {
     var d = data;
     var value = padStrLeft(checkedValueStr(d.cpu["value"], '0'), ' ', 3);
@@ -146,20 +137,20 @@ color: white; \
 
 
 
-  /** */
+  /* TODO docstring*/
   var p_functions = new function()
   {
-    /* */
+    /* TODO docstring*/
     this.updateData = function (name, d) {
       p_updateData(p_data, name, d);
     };
 
-    /* */
+  /* TODO docstring*/
     this.updateView = function () {
       p_updateView(p_data, p_labels);
     }
 
-    /* */
+  /* TODO docstring*/
     this.isCoveredSource = function(name) {
       var ret = false;
 
