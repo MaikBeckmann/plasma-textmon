@@ -11,10 +11,14 @@ var internals = (function() {
     this.hdd = new Label();
 
     var ls = [this.cpu, this.mem, this.wlan, this.hdd];
-    var font = QFont("Liberation Mono", 6, "Normal");
     for(var i = 0; i < ls.length;  i++) {
-      ls[i].font = font;
       ls[i].wordWrap = false;
+      ls[i].styleSheet = '\
+font-family: "Liberation Mono" ; \
+font-style: normal; \
+font-size: 10px; \
+color: white; \
+'
     }
   };
 
