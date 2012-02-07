@@ -1,59 +1,68 @@
 /* -*- coding: utf-8 -*- */
 
-/** Modules */
+/** Javscript modules */
 
-/* foobar */
+/* internals */
 print("loading internals.js:" + plasmoid.include("internals.js"));
 var labels = internals.labels;
 var functions = internals.functions
 
 
-/** View design */
 
-/* The applet frame */
+/** View */
 
-// There is a hacky part to this particular place: I've tweaked the width value
-// (here 310) so that the plasmoid doesn't resize all that often.  Without this
-// our applet would cause constant movement of neighboring applets in a panel.
-// TODO: There is still a lot movement within the applet.  I want the labels
-// themself to align their content right handed.
-plasmoid.setMinimumSize(310, 10);
-plasmoid.resize(310, 10);
+/** Outer applet dimensions */
 
-/* Inside the frame */
+/* Useful while developing with
+  $ plasmoidviewer mysysguard */
+//plasmoid.setMinimumSize(400, 10);
+//plasmoid.resize(400, 10);
+
+
+/* Inner applet Layout */
 var layout = new LinearLayout(plasmoid);
-layout.spacing = 5;
+layout.spacing = 2;
 layout.setContentsMargins(0,0,0,0);
 
 // The widgets which display the actual content
-var sep = function(c) {
+var separator = function(sepStr, styleSheet) {
   var l = new Label();
-  l.text = c;
+  l.text = sepStr;
+
+  if(styleSheet) {
+    l.styleSheet = styleSheet;
+  }
+
   return l;
 }
+var styleSheet = labels.cpu.styleSheet;
+//
 layout.addItem(labels.cpu);
 layout.addItem(labels.mem);
-layout.addItem(sep("|"));
+layout.addItem(separator("|", styleSheet));
 layout.addItem(labels.wlan);
-layout.addItem(sep("|"));
+layout.addItem(separator("|", styleSheet));
 layout.addItem(labels.hdd);
 
 
-/** Event registration */
+/** Model */
 
-plasmoid.dataUpdated = function(name, d) {
-  functions.updateData(name, d);
-  functions.updateView();
-};
-
-/* Dataengine */
-
+/* Register to sources of interest */
 var smDataEngine = dataEngine("systemmonitor")
-
-// Register to sources of interest
+//
 smDataEngine.sourceAdded.connect(function(name) {
   var nameStr = name.toString();
   if (functions.isCoveredSource(nameStr)) {
     smDataEngine.connectSource(name, plasmoid, 1000);
   }
 });
+
+
+/** Controller */
+
+/* */
+plasmoid.dataUpdated = function(name, d) {
+  functions.updateData(name, d);
+  functions.updateView();
+};
+
