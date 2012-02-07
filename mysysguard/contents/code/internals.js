@@ -1,4 +1,4 @@
-// -*- coding: utf-8 -*-
+/* -*- coding: utf-8 -*- */
 
 /** Module `internals' */
 var internals = (function() {
