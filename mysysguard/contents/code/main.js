@@ -21,7 +21,7 @@ var functions = internals.functions
 
 /* Inner applet Layout */
 var layout = new LinearLayout(plasmoid);
-layout.spacing = 5;
+layout.spacing = 0;
 layout.setContentsMargins(0,0,0,0);
 
 // The widgets which display the actual content
@@ -37,13 +37,13 @@ var separator = function(sepStr, styleSheet) {
 }
 var styleSheet = labels.cpu.styleSheet;
 //
-layout.addItem(separator("{", styleSheet));
+layout.addItem(separator("{cpu:", styleSheet));
 layout.addItem(labels.cpu);
-layout.addItem(separator("}{", styleSheet));
+layout.addItem(separator("}{mem:", styleSheet));
 layout.addItem(labels.mem);
-layout.addItem(separator("}{", styleSheet));
+layout.addItem(separator("}{wlan:", styleSheet));
 layout.addItem(labels.wlan);
-layout.addItem(separator("}{", styleSheet));
+layout.addItem(separator("}{sda:", styleSheet));
 layout.addItem(labels.hdd);
 layout.addItem(separator("}", styleSheet));
 
