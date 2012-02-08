@@ -116,18 +116,23 @@ color: white; \
   /* TODO docstring*/
   var p_updateView = function(data, labels) {
     var d = data;
+
+    // cpu
     var value = padStrLeft(checkedValueStr(d.cpu["value"], '0'), ' ', 3);
     labels.cpu.text = value + d.cpu["units"];
 
+    // mem
     var value = padStrLeft(checkedValueStr(d.mem["value"], '0'), ' ', 4);
     labels.mem.text = value + d.mem["units"];
 
+    // wlan
     var value = padStrLeft(checkedValueStr(d.wlan["down_value"], '0'), ' ', 4);
     labels.wlan.text = value + d.wlan["down_units"] + " down ";
     //
     var value = padStrLeft(checkedValueStr(d.wlan["up_value"], '0'), ' ', 4);
     labels.wlan.text += value + d.wlan["up_units"] + " up";
 
+    // hdd
     var value = padStrLeft(checkedValueStr(d.hdd["read_value"], '0'), ' ', 5);
     labels.hdd.text = value + d.hdd["read_units"] + " r " ;
     //
