@@ -285,3 +285,28 @@ like this instead
   layout.addItem(labels.hdd);
 #+end_src
 
+
+* textmon
+** Settings text
+Configuration is done by getting your hands covered in code >:]
+
+ 1. Change to the dir which contains user installed plasmoids
+     : $ cd $(kde4-config --localprefix)/share/apps/plasma/plasmoids
+
+ 2. In there is our textmon dir.  Change to the dir which contains the applet
+    implementation
+     : $ cd textmon/contents/code
+
+ 3. Edit main.js and main.js
+
+ 4. Test via
+     : $ plasmoidviewer textmon
+    If you're happy with your changes, proceed.  Otherwise return to 3.
+
+ 5. Restart plasma-desktop to have your changes effect the applet
+     : $ kquitapp plasma-desktop
+     : $ plasma-desktop
+
+Additional tip:  If kquitapp plasma-desktop doesn't work, use 
+ : $ killall plasma-desktop
+instead.
