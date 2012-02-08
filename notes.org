@@ -290,14 +290,14 @@ like this instead
 ** Settings text
 Configuration is done by getting your hands covered in code >:]
 
- 1. Change to the dir which contains user installed plasmoids
+ 1. Change to the dir which contains the user installed plasmoids
      : $ cd $(kde4-config --localprefix)/share/apps/plasma/plasmoids
 
  2. In there is our textmon dir.  Change to the dir which contains the applet
     implementation
      : $ cd textmon/contents/code
 
- 3. Edit main.js and main.js
+ 3. Edit main.js and internals.js
 
  4. Test via
      : $ plasmoidviewer textmon
