@@ -37,13 +37,15 @@ var separator = function(sepStr, styleSheet) {
 }
 var styleSheet = labels.cpu.styleSheet;
 //
+layout.addItem(separator("{", styleSheet));
 layout.addItem(labels.cpu);
-layout.addItem(separator("|", styleSheet));
+layout.addItem(separator("}{", styleSheet));
 layout.addItem(labels.mem);
-layout.addItem(separator("|", styleSheet));
+layout.addItem(separator("}{", styleSheet));
 layout.addItem(labels.wlan);
-layout.addItem(separator("|", styleSheet));
+layout.addItem(separator("}{", styleSheet));
 layout.addItem(labels.hdd);
+layout.addItem(separator("}", styleSheet));
 
 
 /** Model */

@@ -127,14 +127,14 @@ color: white; \
 
     // wlan
     var value = padStrLeft(checkedValueStr(d.wlan["down_value"], '0'), ' ', 4);
-    labels.wlan.text = value + d.wlan["down_units"] + " down ";
+    labels.wlan.text = value + d.wlan["down_units"] + " down|";
     //
     var value = padStrLeft(checkedValueStr(d.wlan["up_value"], '0'), ' ', 4);
     labels.wlan.text += value + d.wlan["up_units"] + " up";
 
     // hdd
     var value = padStrLeft(checkedValueStr(d.hdd["read_value"], '0'), ' ', 5);
-    labels.hdd.text = value + d.hdd["read_units"] + " r " ;
+    labels.hdd.text = value + d.hdd["read_units"] + " r|" ;
     //
     var value = padStrLeft(checkedValueStr(d.hdd["write_value"], '0'), ' ', 5);
     labels.hdd.text += value + d.hdd["write_units"] + " w";
