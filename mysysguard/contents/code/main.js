@@ -28,7 +28,7 @@ layout.setContentsMargins(0,0,0,0);
 var separator = function(sepStr, styleSheet) {
   var l = new Label();
   l.text = sepStr;
-
+  l.wordWrap = false;
   if(styleSheet) {
     l.styleSheet = styleSheet;
   }
