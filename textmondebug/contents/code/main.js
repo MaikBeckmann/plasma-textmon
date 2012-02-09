@@ -6,7 +6,7 @@ layout.addItem(l);
 
 var smDataEngine = dataEngine("systemmonitor")
 //
-smDataEngine.sourceAdded.connect(function(name) {  
+smDataEngine.sourceAdded.connect(function(name) {
   var nameStr = name.toString();
   if (nameStr == "cpu/system/TotalLoad") {
     print("registering: " + nameStr);

@@ -23,6 +23,7 @@ var internals = (function() {
 
     var ls = [this.cpu, this.mem, this.wlan, this.hdd];
     for(var i = 0; i < ls.length;  i++) {
+      ls[i].text= "---"
       ls[i].wordWrap = false;
       ls[i].styleSheet = '\
 font-family: "Liberation Mono" ; \
