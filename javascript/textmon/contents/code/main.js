@@ -4,6 +4,7 @@
 
 /* internals */
 print("loading internals.js:" + plasmoid.include("internals.js"));
+var sourceNames = internals.sourceNames;
 var labels = internals.labels;
 var functions = internals.functions
 
@@ -50,17 +51,6 @@ layout.addItem(separator("}", styleSheet));
 
 /** Model */
 
-/* Register to sources of interest */
-var smDataEngine = dataEngine("systemmonitor")
-//
-smDataEngine.sourceAdded.connect(function(name) {
-  var nameStr = name.toString();
-  if (functions.isCoveredSource(nameStr)) {
-    smDataEngine.connectSource(name, plasmoid, 1000);
-  }
-});
-
-
 /** Controller */
 
 /* */
@@ -69,3 +59,4 @@ plasmoid.dataUpdated = function(name, d) {
   functions.updateView();
 };
 
+functions.connectSources(plasmoid);

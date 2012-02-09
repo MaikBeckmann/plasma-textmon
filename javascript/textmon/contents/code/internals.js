@@ -141,6 +141,15 @@ color: white; \
     labels.hdd.text += value + d.hdd["write_units"] + " w";
   };
 
+    /* TODO docstring*/
+  var p_connectSources = function(engine, sources, receiver, interval) {
+    for(var i = 0; i < sources.length; i++) {
+      var source = sources[i];
+      if( ! engine.connectSource(source, receiver, interval) ) {
+        throw("Wasn't able to connect to " + source);
+      }
+    }
+  }
 
 
   /* TODO docstring*/
@@ -151,25 +160,20 @@ color: white; \
       p_updateData(p_data, name, d);
     };
 
-  /* TODO docstring*/
+    /* TODO docstring*/
     this.updateView = function () {
       p_updateView(p_data, p_labels);
     }
 
-  /* TODO docstring*/
-    this.isCoveredSource = function(name) {
-      var ret = false;
+    /* TODO docstring*/
+    this.connectSources = function(receiver) {
+      sources = [ p_sourceNames.cpu, p_sourceNames.meme,
+                  p_sourceNames.wlanDown, p_sourceNames.wlanUp,
+                  p_sourceNames.sdaRead, p_sourceNames.sdaWrite ];
 
-      var isCpu = name === p_sourceNames.cpu;
-      var isMem = name === p_sourceNames.mem;
-      var isWlan = name === p_sourceNames.wlanDown || name === p_sourceNames.wlanUp;
-      var isHdd = name === p_sourceNames.sdaRead || name === p_sourceNames.sdaWrite;
+      var smDataEngine = dataEngine("systemmonitor");
+      p_connectSources(smDataEngine, sources, receiver, 1000);
 
-      if ( isCpu || isMem || isWlan || isHdd ) {
-        ret = true;
-      }
-
-      return ret;
     }
 
   }; // p_functions
@@ -178,6 +182,7 @@ color: white; \
   /* Exported module elements */
   var exports = {
     functions: p_functions,
+    sourceNames: p_sourceNames,
     labels: p_labels
   }
   //
