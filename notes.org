@@ -1,3 +1,53 @@
+* Agenda
+** Initialization bug
+*** File problem to plasma-devel
+  - Visualize problem with 
+    - http://wstaw.org/m/2012/02/08/plasma-desktopZ29288.png
+  - Reduced code in =textmondebug=
+  - Visualize with
+   - http://wstaw.org/m/2012/02/08/plasma-desktopl30563.png
+
+**** EMail
+
+Hello,
+
+Forever ago when I switched (back) from the awesome window manager to KDE I've
+done a textual system monitor applet in javascript, which shows the most
+important system parameters (cpu, memory, network, hdd).  I've cleaned the
+source up and decided it might of interested to others, but there is an issue I
+wasn't able to solve yet: When the applet is added to the desktop or panel,
+then the "systemmonitor" doesn't respond.  Only when the plasma-desktop process
+is restarted, it starts working.
+
+The following screenshot visualizes the effect.
+ - http://wstaw.org/m/2012/02/08/plasma-desktopZ29288.png
+In there two applet instances are shown.  The one on top was added followed by
+ : kquitapp plasma-desktop
+ : plasma-desktop
+The one beneath was just added without restarting plasma.
+
+The code in this paste is a condenced version that reproduces the problem
+ - http://paste.kde.org/205478/
+(and the matching metadata.desktop http://paste.kde.org/205490/ ).  Here a
+screenshot that is the equivalent to the one above for the complete applet
+ - http://wstaw.org/m/2012/02/08/plasma-desktopl30563.png
+Note the problem doesn't occur with plasmoidviewer, only with the actually
+running plasma-desktop.
+
+
+My question: Is this a bug or am I doing something wrong?
+
+
+Best,
+Maik
+
+*** Code same thing in other languages
+**** C++
+nil
+
+**** Python
+nil
+
 * Javascript
 ** Installation
 In ~$HOME/.kde4/share/apps/plasma/plasmoids~
@@ -248,6 +298,36 @@ removeEventListener:
 hasExtension:
 __qt_scope__:
 #+end_example
+*** Functions/variables in ~dataengine("systemmonitor")~
+ : objectName:
+ : sources:
+ : valid:
+ : icon:
+ : name:
+ : destroyed(QObject*):
+ : destroyed():
+ : deleteLater():
+ : sourceAdded(QString):
+ : sourceRemoved(QString):
+ : scheduleSourcesUpdated():
+ : removeSource(QString):
+ : updateAllSources():
+ : forceImmediateUpdateOfAllVisualizations():
+ : serviceForSource(QString):
+ : connectSource(QString,QObject*,uint,Plasma::IntervalAlignment):
+ : connectSource(QString,QObject*,uint):
+ : connectSource(QString,QObject*):
+ : connectAllSources(QObject*,uint,Plasma::IntervalAlignment):
+ : connectAllSources(QObject*,uint):
+ : connectAllSources(QObject*):
+ : disconnectSource(QString,QObject*):
+ : containerForSource(QString):
+ : query(QString):
+ : createDefaultService(QObject*):
+ : createDefaultService():
+ : updateSensors():
+ : updateMonitorsList():
+
 ** Open questions
 *** Clone
 There just has to be a function that lets one write this
@@ -285,7 +365,6 @@ like this instead
   layout.addItem(labels.hdd);
 #+end_src
 
-
 * textmon
 ** Settings text
 Configuration is done by getting your hands covered in code >:]
@@ -310,3 +389,166 @@ Configuration is done by getting your hands covered in code >:]
 Additional tip:  If kquitapp plasma-desktop doesn't work, use 
  : $ killall plasma-desktop
 instead.
+* Tutorial
+** Introduction
+*** Where we start
+*** Where we want to get to
+** Javascript
+*** Commandline js
+*** Hello World
+#+begin_src js
+  print("hello world");
+#+end_src
+
+#+RESULTS:
+: hello world
+
+*** Defining a function
+#+begin_src js
+  function myfunc() {
+    return 42;
+  }
+  print(myfunc();
+#+end_src
+
+#+RESULTS:
+: 42
+
+*** Local and global variables
+#+begin_src js
+  x = 1
+  function myfunc() {
+    x = 2
+  }
+  myfunc();
+  print(x);
+#+end_src
+
+#+RESULTS:
+: 2
+: undefined
+
+
+#+begin_src js
+  x = 1
+  function myfunc() {
+    var x = 2
+  }
+  myfunc();
+  print(x);
+#+end_src
+
+#+RESULTS:
+: 1
+
+*** The for loop
+#+begin_src js
+  function myfunc() {
+    for(i = 0; i < 5; i++) {
+      print(i);
+    }
+  }
+  
+  myfunc();
+#+end_src
+
+#+RESULTS:
+: 0
+: 1
+: 2
+: 3
+: 4
+
+#+begin_src js
+  i = -1;
+  function myfunc() {
+    for(i = 0; i < 5; i++) {
+      print(i);
+    }
+  }
+  
+  myfunc();
+  print("---");
+  print(i);
+#+end_src
+
+#+RESULTS:
+: 0
+: 1
+: 2
+: 3
+: 4
+: ---
+: 5
+
+
+#+begin_src js
+  i = -1;
+  function myfunc() {
+    for(var i = 0; i < 5; i++) {
+      print(i);
+    }
+  }
+  
+  myfunc();
+  print("---");
+  print(i);
+#+end_src
+
+#+RESULTS:
+: 0
+: 1
+: 2
+: 3
+: 4
+: ---
+: -1
+
+*** Array
+nil
+
+*** Associative Array
+nil
+
+*** The for each loop
+nil
+
+** Hello World
+
+*** print on console
+=metadata.desktop=
+#+begin_src conf :tangle textmon_tut/hello_world/metadata.desktop
+  [Desktop Entry]
+  Type=Service   
+  X-Plasma-API=javascript
+  X-Plasma-MainScript=code/main.js
+#+end_src
+
+=content/code/main.js=
+#+begin_src js :tangle textmon_tut/hello_world/contents/code/main.js
+  print("hello world");
+#+end_src
+*** Text on widget
+
+ - http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/GettingStarted
+
+** Hello CPU
+*** Find the source
+ 1. Start
+  : $ plasmaengineexplorer
+
+ 2. Select =systemmonitor=
+
+ 3. Expand the entry =cpu/system/TotalLoad=
+ 
+
+*** Print values on the console
+*** Quirks of systemmonitor
+*** Display value
+*** Model View Controller
+*** Installing the applet
+** Adding a memory view
+** Fixed width strings
+** Adding wlan
+** Adding sda
+** Javascript modules
