@@ -1,0 +1,5 @@
+
+[Desktop Entry]
+Type=Service   
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
