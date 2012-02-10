@@ -167,7 +167,7 @@ color: white; \
 
     /* TODO docstring*/
     this.connectSources = function(receiver) {
-      sources = [ p_sourceNames.cpu, p_sourceNames.meme,
+      sources = [ p_sourceNames.cpu, p_sourceNames.mem,
                   p_sourceNames.wlanDown, p_sourceNames.wlanUp,
                   p_sourceNames.sdaRead, p_sourceNames.sdaWrite ];
 
