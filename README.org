@@ -1,11 +1,31 @@
-* A minimalistic textual system monitor.
+* Minimalistic textual system monitor for plasma
+** What is plasma?
+Plasma Workspaces is the umbrella term for all graphical environments provided
+by KDE
+ - [[http://en.wikipedia.org/wiki/KDE_Plasma_Workspaces][Wikipedia on Plasma]]
+ - [[http://en.wikipedia.org/wiki/KDE_Software_Compilation_4][Wikipedia on KDE]]
 
-By default it shows
+Plasma is implemented as a framework which loads components.  A Component can
+act as "data engine" or as an widget that visualizes such data.  It however
+never does both.
+
+Components are either native, which means they are written in C++, or they're
+using one of the bindings to a dynamic lanuage, like Python, Ruby and
+Javascript.
+
+The Javascript bindings are special as they're part of every plasma
+installation and in that it's API is "simplified" aka. limited.  In return
+components written with Javascript are ensured to be max. portable.
+
+** What is this?
+This is plasma widget which displays data emitted by the "systemmonitor" data
+engine.  By default it shows
 - total cpu load
 - used application memory
 - wlan down and up rate
 - sda read and write rate
 
+** Eh, it failed with an error / I want more data!
 You most likely want to tweak the settings. This is done by editing the source
 code. The settings dialog shows you how to get there.
 
