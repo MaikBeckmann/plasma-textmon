@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=CpuLoadJavscript
+Comment=Artificial debugging applet
+Type=Service
+Icon=utilities-system-monitor
+ServiceTypes=Plasma/Applet
+ 
+X-KDE-PluginInfo-Name=cpuload_javascript
+X-KDE-PluginInfo-Category=System Information
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Tutorial 1
+Comment=Plasma Hello World
+Type=Service
+ServiceTypes=Plasma/Applet
+ 
+X-KDE-Library=plasma_applet_hello_world
+X-KDE-PluginInfo-Name=hello_world
+X-KDE-PluginInfo-Category=Examples
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
