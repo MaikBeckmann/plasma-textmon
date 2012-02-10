@@ -142,11 +142,8 @@ var labels = (function (styleSheet, labelNames) {
     var name = labelNames[i]
     layout.addItem(separator("{" + name + ":"));
     layout.addItem(labels[name]);
-    if (i < (labelNames.length - 1)) {
-      layout.addItem(separator("}{"));
-    }
+    layout.addItem(separator("}"));
   }
-  layout.addItem(separator("}"));
 
   return labels;
 })(styleSheet, labelNames);
