@@ -1,4 +1,4 @@
-#+Title:A minimalistic textual system monitor.
+* A minimalistic textual system monitor.
 
 By default it shows
 - total cpu load
