@@ -1,0 +1,19 @@
+#+Title:A minimalistic textual system monitor.
+
+By default it shows
+- total cpu load
+- used application memory
+- wlan down and up rate
+- sda read and write rate
+
+You most likely want to tweak the settings. This is done by editing the source
+code. The settings dialog shows you how to get there.
+
+This hacky way of configuring the applet is no shortcoming but by intention. I
+plan to write up a little guide/tutorial which shows how to write this applet
+from scratch in Javascript. Stay tuned :D
+
+This is also a tribute to the awesome window manager, where doing such a system
+monitor widget is among the first things you learn. I've came to appreciate
+knowing exactly when my system comes under pressure (cpu, mem, sda) or if a
+download is still going (wlan).
