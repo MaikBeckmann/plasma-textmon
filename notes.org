@@ -453,7 +453,7 @@ Configuration is done by getting your hands covered in code >:]
     implementation
      : $ cd textmon/contents/code
 
- 3. Edit main.js and internals.js
+ 3. Edit main.js
 
  4. Test via
      : $ plasmoidviewer textmon
