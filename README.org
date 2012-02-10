@@ -33,6 +33,7 @@ This hacky way of configuring the applet is no shortcoming but by intention. I
 plan to write up a little guide/tutorial which shows how to write this applet
 from scratch in Javascript. Stay tuned :D
 
+** A glimpse of awesomenss
 This is also a tribute to the awesome window manager, where doing such a system
 monitor widget is among the first things you learn. I've came to appreciate
 knowing exactly when my system comes under pressure (cpu, mem, sda) or if a
