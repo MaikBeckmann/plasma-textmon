@@ -1,52 +1,20 @@
 * Agenda
 ** Initialization bug
-*** File problem to plasma-devel
-  - Visualize problem with 
-    - http://wstaw.org/m/2012/02/08/plasma-desktopZ29288.png
-  - Reduced code in =textmondebug=
-  - Visualize with
-   - http://wstaw.org/m/2012/02/08/plasma-desktopl30563.png
+Explain with 
+ - plasmapkg -u .
+ - Add Widget -> MyApplet
+cycle.
 
-**** EMail
+ 1. Mention that sourceAdded isn't called
+ 2. How to fix it
+ 3. Ask if sourceAdded is even needed
+ 4. Explain the silent dataUpdated problem
+ 5. How to catch it
 
-Hello,
+Restarting plasma-desktop and even more important using plasmoidviewer hides
+ 1. missing dataUpdated bug
+ 2. that sourceAdded might not be called
 
-Forever ago when I switched (back) from the awesome window manager to KDE I've
-done a textual system monitor applet in javascript, which shows the most
-important system parameters (cpu, memory, network, hdd).  I've cleaned the
-source up and decided it might of interested to others, but there is an issue I
-wasn't able to solve yet: When the applet is added to the desktop or panel,
-then the "systemmonitor" doesn't respond.  Only when the plasma-desktop process
-is restarted, it starts working.
-
-The following screenshot visualizes the effect.
- - http://wstaw.org/m/2012/02/08/plasma-desktopZ29288.png
-In there two applet instances are shown.  The one on top was added followed by
- : kquitapp plasma-desktop
- : plasma-desktop
-The one beneath was just added without restarting plasma.
-
-The code in this paste is a condenced version that reproduces the problem
- - http://paste.kde.org/205478/
-(and the matching metadata.desktop http://paste.kde.org/205490/ ).  Here a
-screenshot that is the equivalent to the one above for the complete applet
- - http://wstaw.org/m/2012/02/08/plasma-desktopl30563.png
-Note the problem doesn't occur with plasmoidviewer, only with the actually
-running plasma-desktop.
-
-
-My question: Is this a bug or am I doing something wrong?
-
-
-Best,
-Maik
-
-*** Code same thing in other languages
-**** C++
-nil
-
-**** Python
-nil
 
 * Javascript
 ** Installation
@@ -365,7 +333,116 @@ like this instead
   layout.addItem(labels.hdd);
 #+end_src
 
+*** How to quit?
+How to quit the execution of an Javascript applet.  'throw' doesn't.
+** snippets
+#+begin_src js
+  ss = {color:"red", fonsize: 10};
+  str = ""
+  for(var k in ss) {
+    str = str + k + ":" + ss[k] + ";\n";
+  }
+  print(str);
+  
+#+end_src
+
+#+RESULTS:
+: color:red;
+: fonsize:10;
+: 
+: undefined
+
+
+
+#+begin_src js
+  var helpers  = (function() {
+  
+    var exports = {
+  
+      concatToString: function(list, term) {
+        var ret = "";
+        for(var i = 0; i < list.length;  i++) {
+          ret = ret + list[i] + term;
+        }
+        return ret;
+      }
+  
+    };
+  
+    return exports;
+  })();
+   
+  
+  var styles = [ "font-family: Liberation Mono;",
+                 "font-style: normal;",
+                 "font-size: 10px;",
+                 "color: white;" ];
+  
+  var styleSheet = helpers.concatToString(styles, "\n");
+
+  return styleSheet;
+#+end_src
+
+#+RESULTS:
+: font-family: Liberation Mono;
+: font-style: normal;
+: font-size: 10px;
+: color: white;
+: 
+
+#+begin_src js
+  var helpers  = (function() {  
+  
+    var concatToString = function(list, term) {
+      var ret = "";
+      for(var i = 0; i < list.length;  i++) {
+        ret = ret + list[i] + term;
+      }
+      return ret;
+    };
+  
+    var styleSheetToString = function(styleSheet) {
+      var lines = []
+      for(var k in styleSheet) {
+        lines.push("" + k + ": " + styles[k] + ";");
+      }
+      return concatToString(lines, "\n");
+    };
+      
+    var exports = {
+      concatToString: concatToString,
+      styleSheetToString: styleSheetToString
+    };
+  
+    return exports;
+  })();
+  
+  var styles = { "font-family": "Liberation Mono",
+                 "font-style": "normal",
+                 "font-size": "10px",
+                 "color": "white" };
+
+  return helpers.styleSheetToString(styles);
+#+end_src
+
+#+RESULTS:
+: font-family: Liberation Mono;
+: font-style: normal;
+: font-size: 10px;
+: color: white;
+: 
+
 * textmon
+** Update persistent Data
+The data engine emits new data points over time.  It does so for each
+subscriped source at a time.  There are labels that display data from more than
+one source.  May L be such an label and N_1,..., N_n its sources.  If a new
+value for N_k is emitted by the data engine the text in L has to be newly
+computed.  For that the values N_i with i != k have to be available.  Hence
+they have to be stored between source updates.
+
+
+
 ** Settings text
 Configuration is done by getting your hands covered in code >:]
 
@@ -588,3 +665,149 @@ Enter the build directory and have cmake preprocess the source file
 Then copy the command this spit out, paste it and append =-dM=.  Now
  : some_source.i
 contains the definition of each defined macros.
+* Bug reports
+** Initialization bug
+*** Enumeration of Problems starting from the given example
+**** sourceAdded not called.
+**** How to fix it (omitting sourceAdded altogether)
+**** Now dataUpdated isn't called.
+**** Why this is and how to fix it.
+**** Why I didn't catch the sourceAdded problem with plasmoidviewer
+*** File problem to plasma-devel
+   - Visualize problem with 
+     - http://wstaw.org/m/2012/02/08/plasma-desktopZ29288.png
+   - Reduced code in =textmondebug=
+   - Visualize with
+    - http://wstaw.org/m/2012/02/08/plasma-desktopl30563.png
+
+***** EMail
+
+Hello,
+
+Forever ago when I switched (back) from the awesome window manager to KDE I've
+done a textual system monitor applet in javascript, which shows the most
+important system parameters (cpu, memory, network, hdd).  I've cleaned the
+source up and decided it might of interested to others, but there is an issue I
+wasn't able to solve yet: When the applet is added to the desktop or panel,
+then the "systemmonitor" doesn't respond.  Only when the plasma-desktop process
+is restarted, it starts working.
+
+The following screenshot visualizes the effect.
+ - http://wstaw.org/m/2012/02/08/plasma-desktopZ29288.png
+In there two applet instances are shown.  The one on top was added followed by
+ : kquitapp plasma-desktop
+ : plasma-desktop
+The one beneath was just added without restarting plasma.
+
+The code in this paste is a condenced version that reproduces the problem
+ - http://paste.kde.org/205478/
+(and the matching metadata.desktop http://paste.kde.org/205490/ ).  Here a
+screenshot that is the equivalent to the one above for the complete applet
+ - http://wstaw.org/m/2012/02/08/plasma-desktopl30563.png
+Note the problem doesn't occur with plasmoidviewer, only with the actually
+running plasma-desktop.
+
+
+My question: Is this a bug or am I doing something wrong?
+
+
+Best,
+Maik
+
+*** Code same thing in other languages
+***** C++
+nil
+
+***** Python
+nil
+
+
+*** Explanation email to plasma-devel
+
+I figured the problem(s) out. Here it goes..
+
+Here source code from the initial email without the print statements.
+#+begin_src js
+    var layout = new LinearLayout(plasmoid);
+    l =  new Label();
+    l.text = "---";
+    layout.addItem(l);     
+     
+    var smDataEngine = dataEngine("systemmonitor")
+
+    smDataEngine.sourceAdded.connect(function(name) {
+      if (name.toString() == "cpu/system/TotalLoad") {
+        smDataEngine.connectSource(name, plasmoid, 1000);
+    });     
+     
+    plasmoid.dataUpdated = function(name, d) {
+      if ( d["value"] ) {
+        l.text = d["value"];
+      }
+    };
+#+end_src
+There are three bugs in there, where the first hides the remaining two.
+
+The first bug is that sourceAdded isn't called when the applet is added to a
+running plasma-desktop session.  If you'd restart plasma-deskop, then it works
+as advertised.  I assume that the the process loads all applet and then starts
+the data engines, which then causes the sourceAdded slot to be called.  Adding
+a new applet ofc doesn't restart the data engines and there we have it.  Note
+that for the same reason this bug doesn't show up when you're using
+plasmoidviewer (which is why it took me a while to figure it out).
+
+Now lets change the source code to work around this problem.  I'll get rid of
+sourceAdded altogether, since it's unlikely that the CPU will be plugged out at
+runtime.
+#+begin_src js
+    var layout = new LinearLayout(plasmoid);
+    l =  new Label();
+    l.text = "---";
+    layout.addItem(l);     
+     
+    var smDataEngine = dataEngine("systemmonitor")
+
+    smDataEngine.connectSource("cpu/system/TotalLoad", plasmoid, 1000);
+     
+    plasmoid.dataUpdated = function(name, d) {
+      if ( d["value"] ) {
+        l.text = d["value"];
+      }
+    };
+#+end_src
+This reliably _never_ works, because the second bug kicks in.  When
+connetSource is called the updateData slot isn't filled yet.  This causes
+connetSource to fail.  This failure doesn't cause an debug message to be
+emitted (which is good IMO), but connectSource returns 'undefined' rather than
+'true'. So the two remaining bugs are:
+ 1. 'plasmoid.dataUpdated = ..' isn't located before
+    'smDataEngine.connectSource(..)' in the source file.
+ 2. The return value of connectSource isn't checked.
+
+Here the final and hopefully correct version
+#+begin_src js
+  var layout = new LinearLayout(plasmoid);
+  l =  new Label();
+  l.text = "---";
+  layout.addItem(l);     
+    
+  plasmoid.dataUpdated = function(name, d) {
+    if ( d["value"] ) {
+      l.text = d["value"];
+    }
+  };
+  
+  var smDataEngine = dataEngine("systemmonitor");
+  if (!smDataEngine.connectSource("cpu/system/TotalLoad", plasmoid, 1000)) {
+    throw("connecting to data source failed.");
+  }   
+#+end_src
+
+
+Thanks for your attention, 
+Maik
+
+* People
+** KDE Javascript exports
+ - aseige
+ - notmart
