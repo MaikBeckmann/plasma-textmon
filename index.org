@@ -1,0 +1,8 @@
+#+Title: Digitize your TextMon :D
+#+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
+#+Language: en
+#+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
+
+* Introduction
+This guide aims to show you how to code an simple sytem minitor plasma applet
+in Javascript.
