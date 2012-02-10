@@ -1,11 +1,26 @@
-/* -*- coding: utf-8 -*- */
+// -*- coding: utf-8 -*-
+
 
 /** Module `helpers' */
-// This doesn't work for some reason, of its loaded into another module.
-// var helpers = (function() {
-helpers = (function() {
-  /*TODO: docstring */
-  var checkedValueStr = function(obj, deflt) {
+var helpers  = (function () {
+  var concatToString = function (list, term) {
+    var ret = "";
+    for(var i = 0; i < list.length;  i++) {
+      ret = ret + list[i] + term;
+    }
+    return ret;
+  };
+
+  var styleSheetToString = function (styles) {
+    var lines = []
+    for(var k in styles) {
+      lines.push("" + k + ": " + styles[k] + ";");
+    }
+    return concatToString(lines, "\n");
+  };
+
+
+  var checkedValueStr = function (obj, deflt) {
     var ret = deflt;
     if (obj) {
       ret = obj.toString();
@@ -14,7 +29,7 @@ helpers = (function() {
   }
 
   /* left padding of str with padChar */
-  var padStrLeft = function(str, padChr, minWidth) {
+  var padStrLeft = function (str, padChr, minWidth) {
     if (str.length >= minWidth) {
       return str;
     }
@@ -28,12 +43,11 @@ helpers = (function() {
     return str;
   }
 
-  /* Exported module elements */
-  var exports = {
+  return  {
     checkedValueStr: checkedValueStr,
-    padStrLeft: padStrLeft
-  }
-  //
-  return exports
+    padStrLeft: padStrLeft,
+    concatToString: concatToString,
+    styleSheetToString: styleSheetToString
+  };
+})(); // Module `helpers'
 
-}()); // Module `helpers'
