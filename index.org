@@ -312,7 +312,7 @@ To actually find a data source and a source it provides we gonna use
  : % plasmaengineexplorer
 #+caption: Plasma engine explorer
 #+label: fig:plasmaengineexplorer
-#+attr_html: width="790"
+##+attr_html: width="605"
 [[file:images/plasmaengineexplorer.png]]
 #
 In image \ref{fig:plasmaengineexplorer} the source /Local/ of the /time/ data
