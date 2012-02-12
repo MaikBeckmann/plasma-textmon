@@ -222,7 +222,7 @@ or rhino, as well done by Mozilla
  : js: "main.js", line 1: missing ] after element list
  : js: array = [1, 2 3];
  : js: ...............^
-Rhino is off by one dots, but still: wow!
+Rhino is off by one dot, but still: wow!
 
 A missing comma, brace and bracet is an frequent coding error.  QtScript will
 give you the line number, that's it.  If you have no idea what the heck it's
