@@ -118,7 +118,7 @@ interface yet, and the text
 appears in the shell where we started plasmoidviewer
 #+caption: Empty default applet
 #+label: fig:empty_default
-#+attr_html: width="150"
+##+attr_html: width="150"
 [[file:images/empty_default_applet.png]]
 
 ** plasmapkg and life ain't easy
@@ -529,3 +529,606 @@ However, you probably only ever use =toString()=.
  : typeof dateTime.toString() : string
  : dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
 
+* The /systemmonitor/ date engine
+** CPU load
+#+caption: systemmonitor : the system's total cpu load
+#+label: fig:cpu_total_load
+##+attr_html: width="605"
+[[file:images/cpu_total_load.png]]
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print("==== data =====");
+      for(var k in data) {
+        print("key : " + k);
+        print('data[key] : ' + data[k]);
+        print("---")
+      }
+    }
+  };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("cpu/system/TotalLoad", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
+#+end_src
+ : ==== data =====
+ : key : type
+ : data[key] : float
+ : ---
+ : ==== data =====
+ : key : units
+ : data[key] : %
+ : ---
+ : key : type
+ : data[key] : float
+ : ---
+ : key : value
+ : data[key] : 1.503759
+ : ---
+ : key : min
+ : data[key] : 0
+ : ---
+ : key : name
+ : data[key] : CPU Total Load
+ : ---
+ : key : max
+ : data[key] : 100
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print(data["value"] + data["units"]);
+    }
+  };
+#+end_src
+ : connection established
+ : main.js ends here
+ : NaN
+ : 4.834606%
+ : 0.502513%
+ : 1.012658%
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      // No data aviable. God knows why
+      if (!data["value"]) {
+        return;
+      }
+
+      print(data["value"] + data["units"]);
+    }
+  };
+#+end_src
+ : connection established
+ : main.js ends here
+ : 4.822335%
+ : 0.751880%
+ : 0.501253%
+
+
+- http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      // No data aviable. God knows why
+      if (!data["value"]) {
+        return;
+      }
+
+      print(parseInt(data["value"], 10) + data["units"]);
+    }
+  };
+#+end_src
+ : connection established
+ : main.js ends here
+ : 5%
+ : 2%
+ : 0%
+
+** Application memory
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print(data["value"] + data["units"]);
+    }
+  };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("mem/physical/application", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
+#+end_src
+ : connection established
+ : main.js ends here
+ : NaN
+ : 2077064KB
+ : 2079192KB
+ : 2079544KB
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      if (!data["value"]) { return; }
+      print(parseInt(data["value"] / 1024, 10) + "MB");
+    }
+  };
+#+end_src
+ : connection established
+ : main.js ends here
+ : 1934MB
+ : 1932MB
+ : 1932MB
+** Wlan
+*** Down rate
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print(data["value"] + data["units"]);
+    }
+  };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("network/interfaces/wlan0/receiver/data", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
+#+end_src
+connection established
+main.js ends here
+NaN
+89KB/s
+103KB/s
+105KB/s
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      if (!data["value"]) { return; }
+      print(data["value"] + data["units"]);
+    }
+  };
+#+end_src
+ : connection established
+ : main.js ends here
+ : 124KB/s
+ : 97KB/s
+ : 131KB/s
+
+*** Up rate
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      if (!data["value"]) { return; }
+      print(data["value"] + data["units"]);
+    }
+  };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("network/interfaces/wlan0/transmitter/data", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
+
+#+end_src
+ : connection established
+ : main.js ends here
+ : 5KB/s
+ : 6KB/s
+ : 6KB/s
+
+*** Joined data
+#+begin_src js
+  var sink = (function () {
+    var obj = {}
+
+    obj.sourceUp = "network/interfaces/wlan0/transmitter/data";
+    obj.sourceDown = "network/interfaces/wlan0/receiver/data";
+    obj.cache = {
+      up: {value: "----", units: "KB/s"},
+      down: {value: "----", units: "KB/s"}
+    };
+
+    obj.dataUpdated = function (name, data) {
+      if (!data["value"]) { return; }
+
+      // TODO: up and down tauchen
+      if (name == this.sourceUp) {
+        this.cache.up = data;
+      } else if (name == this.sourceDown) {
+        this.cache.down = data;
+      }
+
+      var msg = "down: " + this.cache.down["value"] + this.cache.down["units"];
+      msg += " ";
+      msg += "up: " + this.cache.up["value"] + this.cache.up["units"];
+      print(msg);
+    }
+
+    return obj;
+  })();
+
+
+  var engine = dataEngine("systemmonitor");
+
+  if ( engine.connectSource(sink.sourceDown, sink, 1000) ) {
+    print("connection to '" +  sink.sourceDown + "' established");
+  } else {
+    print("connection attempt to '" + sink.sourceDown + "' failed");
+  }
+
+  if ( engine.connectSource(sink.sourceUp, sink, 1000) ) {
+    print("connection to '" +  sink.sourceUp + "' established");
+  } else {
+    print("connection attempt to '" + sink.sourceUp + "' failed");
+  }
+
+
+  print("main.js ends here");
+#+end_src
+ : connection to 'network/interfaces/wlan0/receiver/data' established
+ : connection to 'network/interfaces/wlan0/transmitter/data' established
+ : main.js ends here
+ : down: ----KB/s up: 5KB/s
+ : down: 105KB/s up: 5KB/s
+ : down: 105KB/s up: 5KB/s
+ : down: 91KB/s up: 5KB/s
+ : down: 91KB/s up: 6KB/s
+ : down: 147KB/s up: 6KB/s
+
+** Harddisk
+*** Read rate
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print(data["value"] + data["units"]);
+    }
+  };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("disk/sda_(8:0)/Rate/rblk", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
+#+end_src
+ : connection established
+ : main.js ends here
+ : NaN
+ : 0.000000KB/s
+ : 0.000000KB/s
+ : 0.000000KB/s
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      // No data aviable. God knows why
+      if (!data["value"]) {
+        return;
+      }
+
+      print(parseInt(data["value"], 10) + data["units"]);
+    }
+  };
+#+end_src
+ : connection established
+ : main.js ends here
+ : 0KB/s
+ : 0KB/s
+ : 0KB/s
+
+*** Write rate
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      // No data aviable. God knows why
+      if (!data["value"]) {
+        return;
+      }
+
+      print(parseInt(data["value"], 10) + data["units"]);
+    }
+  };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("disk/sda_(8:0)/Rate/wblk", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
+#+end_src
+ : connection established
+ : main.js ends here
+ : 0KB/s
+ : 0KB/s
+ : 0KB/s
+*** Joined data
+#+begin_src js
+  var sink = (function () {
+    var obj = {}
+
+    obj.sourceRead = "disk/sda_(8:0)/Rate/wblk";
+    obj.sourceWrite = "disk/sda_(8:0)/Rate/rblk";
+    obj.cache = {
+      read: {value: "----", units: "KB/s"},
+      write: {value: "----", units: "KB/s"}
+    };
+
+    obj.dataUpdated = function (name, data) {
+      if (!data["value"]) { return; }
+
+      if (name == this.sourceRead) {
+        this.cache.read = data;
+        this.cache.read["value"] = parseInt(data["value"], 10);
+      } else if (name == this.sourceWrite) {
+        this.cache.write = data;
+        this.cache.write["value"] = parseInt(data["value"], 10);
+      }
+
+      var msg = "read: " + this.cache.read["value"]
+                         + this.cache.read["units"];
+      msg += " ";
+      msg += "write: " + this.cache.write["value"]
+                       + this.cache.write["units"];
+      print(msg);
+    }
+
+    return obj;
+  })();
+
+
+  var engine = dataEngine("systemmonitor");
+
+  if ( engine.connectSource(sink.sourceRead, sink, 1000) ) {
+    print("connection to '" +  sink.sourceRead + "' established");
+  } else {
+    print("connection attempt to '" + sink.sourceRead + "' failed");
+  }
+
+  if ( engine.connectSource(sink.sourceWrite, sink, 1000) ) {
+    print("connection to '" +  sink.sourceWrite + "' established");
+  } else {
+    print("connection attempt to '" + sink.sourceWrite + "' failed");
+  }
+
+
+  print("main.js ends here");
+#+end_src
+ : connection to 'disk/sda_(8:0)/Rate/wblk' established
+ : connection to 'disk/sda_(8:0)/Rate/rblk' established
+ : main.js ends here
+ : read: ----KB/s write: 0KB/s
+ : read: 0KB/s write: 0KB/s
+ : read: 0KB/s write: 0KB/s
+
+
+* UI
+The only two UI widget we'll use are a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#Label][Labels]], a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#LinearLayout][Layout]] to arrange them and the
+[[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-PlasmoidObject][plasmoid]] itself.
+
+** Hello plasmoid
+The applet itself is represented by a global object named =plasmoid=.  We gonna
+take a look at what properties it has to offer
+#+begin_src js
+  for(var k in plasmoid) {
+    print(k);
+  }
+#+end_src
+ : objectName
+ : aspectRatioMode
+ : formFactor
+ : location
+ : currentActivity
+ : shouldConserveResources
+ : activeConfig
+ : busy
+ : backgroundHints
+ : immutable
+ : userConfiguring
+ : apiVersion
+ : status
+ : rect
+ : size
+ : associatedApplication
+ : layout
+ : sender
+ : destroyed(QObject*)
+ : destroyed()
+ : releaseVisualFocus()
+ : configNeedsSaving()
+ : formFactorChanged()
+ : locationChanged()
+ : contextChanged()
+ : immutableChanged()
+ : statusChanged()
+ : gc()
+ : formFactor()
+ : aspectRatioMode()
+ : setAspectRatioMode(AspectRatioMode)
+ : setFailedToLaunch(bool,QString)
+ : setFailedToLaunch(bool)
+ : isBusy()
+ : setBusy(bool)
+ : backgroundHints()
+ : setBackgroundHints(BackgroundHints)
+ : setConfigurationRequired(bool,QString)
+ : setConfigurationRequired(bool)
+ : size()
+ : rect()
+ : setActionSeparator(QString)
+ : setAction(QString,QString,QString,QString)
+ : setAction(QString,QString,QString)
+ : setAction(QString,QString)
+ : removeAction(QString)
+ : action(QString)
+ : resize(qreal,qreal)
+ : setMinimumSize(qreal,qreal)
+ : setPreferredSize(qreal,qreal)
+ : activeConfig()
+ : setActiveConfig(QString)
+ : readConfig(QString)
+ : writeConfig(QString,QVariant)
+ : file(QString)
+ : file(QString,QString)
+ : include(QString)
+ : debug(QString)
+ : findChild(QString)
+ : extender()
+ : downloadedFiles()
+ : update(QRectF)
+ : update()
+ : listAddons
+ : loadAddon
+ : addEventListener
+ : removeEventListener
+ : hasExtension
+ : __qt_scope__
+From the number of properties alone you can tell that it must be important :P.
+
+And it is.  The =P= in this graph
+ :             P
+ :            / \
+ :           /   \
+ :          /     \
+ :         /       \
+ :        O         O
+ :       / \       /|\
+ :      /   \     / | \
+ :     O     O   O  O  O
+represents =plasmoid=.  It is the root object of our applet.  All other elemets
+in it are represented by an =O=.  If the applet is destroyed (by closing the
+window of shutting plasma down) it starts a cleanup cascade.  It tells its
+immediate children to kill their children and so on.
+
+Besizes that role it has some methods that control the outer dimensions and
+orientation of the applet.  For example
+#+begin_src js
+  plasmoid.resize(300, 30);
+#+end_src
+#+caption: Resize
+[[file:images/resize.png]]
+#
+The object graph for this applet is rather simple
+ :             P
+We gonna change that now.
+
+** Hello label
+This code
+#+begin_src js
+  l = new Label(plasmoid) // adds it as child of plasmoid
+  l.text = "Hello World";
+#+end_src
+puts a label =l= object into the graph
+ :             P
+ :             |
+ :             |
+ :             l
+
+The result
+#+caption: Hello label
+[[file:images/hello_label.png]]
+#
+This looks broken, doesn't it?  A label on it's own doesn't what to do with
+itself.
+
+** Hello layout
+The label needs some guidance, which will be delivered by an layout =L=
+ :             P
+ :             |
+ :             |
+ :             L
+ :             |
+ :             |
+ :             l
+#+begin_src js
+  layout = new LinearLayout(plasmoid); // add it as child of plasmoid
+
+  l = new Label()
+  l.text = "Hello World";
+  layout.addItem(l); // inserts it as cild of layout
+#+end_src
+The result is
+#+caption: Hello layout
+[[file:images/hello_layout.png]]
+#
+That looks a lot better.  However, I cheated.  You'll see prabably this:
+#+caption: Hello layout, err
+[[file:images/hello_layout_err.png]]
+#
+That is a lovely little bug that only occurs when the applet is run via
+/plasmoidviewer/.  You can fix it buy resizing the plasmoid a tiny bit.
+Actually, we can do that in the script itself
+#+begin_src js
+  layout = new LinearLayout(plasmoid); // add it as child of plasmoid
+
+  l = new Label()
+  l.text = "Hello World";
+  layout.addItem(l); // inserts it as cild of layout
+
+  // ugly little hack to work around layout issue when using plasmoidviewer
+  plasmoid.resize(201, 200)
+  plasmoid.resize(200, 200)
+#+end_src
+I'll use that trick from now on, but won't actually include it in the code
+listings.
+
+** More labels!
+This code
+#+begin_src js
+layout = new LinearLayout(plasmoid); // add it as child of plasmoid
+
+labels = [];
+for(var i = 0; i < 4; i++) {
+  l = new Label()
+  l.text = "l" + i;
+  layout.addItem(l); // inserts it as cild of layout
+
+  labels.push(l); // for later usage
+}
+#+end_src
+builds this object graph
+ :             P
+ :             |
+ :             L
+ :             |
+ :      o----o-----o---o
+ :      |    |     |   |
+ :     l0   l1    l2  l3
+The resulting applet is
+#+caption: More labels
+[[file:images/more_labels.png]]
+
+TODO:
+ - dummy layout with fake cpu, mem, wlan and sda values
+ - the real deal
+
+Idea: Maybe this is too much.  It might be a good idea to create seperate applets for
+ - cpu
+ - mem
+ - mem and cpu
+ - wlan up
+ - wlan down
+ - wlan up and down
+ - sda read
+ - sda write
+ - sda read and write
