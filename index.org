@@ -288,7 +288,8 @@ To actually find a data source and a source it provides we gonna use
 #+attr_html: width="790"
 [[file:images/plasmaengineexplorer.png]]
 #
-
+In image \ref{fig:plasmaengineexplorer} the source /Local/ of the /time/ data
+engine is expanded.  This code uses it
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -305,6 +306,7 @@ To actually find a data source and a source it provides we gonna use
 
   print("main.js ends here");
 #+end_src
+and results in
  : ping
  : connection established
  : main.js ends here
