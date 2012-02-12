@@ -302,4 +302,195 @@ To actually find a data source and a source it provides we gonna use
   } else {
     print("connection attempt failed");
   }
+
+  print("main.js ends here");
 #+end_src
+ : ping
+ : connection established
+ : main.js ends here
+ : ping
+ : ping
+ : ping
+
+As you can see, connectSource calls the dataUpdated slot.  So make sure that
+it's already there.  If not
+#+begin_src js
+  var sink = {};
+
+  var engine = dataEngine("time");
+  if ( engine.connectSource("Local", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  sink.dataUpdated = function (name, data) {
+    print("ping");
+  }
+
+  print("main.js ends here");
+#+end_src
+we'll get
+ : % plasmoidviewer .
+ : connection attempt failed
+ : main.js ends here
+ : %
+
+** Exploring a data source
+So far it is only confirmed that =dataUpdated= was called back.  Now we take a
+look at the value of the parameters it is called with by the data engine.
+
+First the =name=.  This code
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print(name);
+    }
+  };
+#+end_src
+results in
+ : Local
+ : connection established
+ : main.js ends here
+ : Local
+ : Local
+ : ...
+This is the same name we used with =connectSource=.  This becomes important
+when we subscribe to more than one data source.
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print(name);
+    }
+  };
+
+  var engine = dataEngine("time");
+  if ( engine.connectSource("Local", sink, 1000) ) {
+    print("connection to 'Local' in 'time' established");
+  } else {
+    print("connection attempt to 'Local' in 'time' failed");
+  }
+  //
+  if ( engine.connectSource("Europe/London", sink, 1000) ) {
+    print("connection to 'Europe/London' in 'time' established");
+  } else {
+    print("connection attempt to 'Europe/London' in 'time' failed");
+  }
+
+  print("main.js ends here");
+#+end_src
+ :  % plasmoidviewer .
+ : Local
+ : connection to 'Local' in 'time' established
+ : Europe/London
+ : connection to 'Europe/London' in 'time' established
+ : main.js ends here
+ : Local
+ : Europe/London
+ : Local
+ : Europe/Londo
+
+Now the =data=.  We're using the version that only connects to =Local= in
+=time= with this slot definition
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print("===== data =====");
+      for(var k in data) {
+        print("key : " + k);
+        print("data[key] : " + data[k]);
+        print("typeof data[key] : " + typeof data[k]);
+        print("----");
+      }
+    }
+  };
+#+end_src
+It results in
+ : ===== data =====
+ : key : Timezone Continent
+ : typeof data[key] : string
+ : data[key] : Europe
+ : ----
+ : key : Offset
+ : typeof data[key] : number
+ : data[key] : 3600
+ : ----
+ : key : DateTime
+ : typeof data[key] : object
+ : data[key] : Sun Feb 12 2012 09:46:52 GMT+0100 (CET)
+ : ----
+ : key : Timezone
+ : typeof data[key] : string
+ : data[key] : Europe/Berlin
+ : ----
+ : key : Time
+ : typeof data[key] : object
+ : data[key] : 09:46:52
+ : ----
+ : key : Date
+ : typeof data[key] : object
+ : data[key] : Sun Feb 12 2012 00:00:00 GMT+0100 (CET)
+ : ----
+ : key : Timezone City
+ : typeof data[key] : string
+ : data[key] : Berlin
+The =Offset= looks off, doesn't it?.  That's because its unit is seconds.  My
+time zone has an offset of
+ - $3600\:s = \dfrac{3600\:s \cdot 1\:min}{60\:s} = 60\:min$
+ - $60\:min = \dfrac{60\:min \cdot 1\:h}{60\:min} = 1\:h$ .
+
+If you compare this data with what is shown in \ref{fig:plasmaengineexplorer},
+then you'll notice it being exactly the same, except for the actual point in
+time.  For Qt data types that don't have an builtin equivalent in Javascript we
+get an object.
+ - [[http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types][Conversion between QtScript and C++ types]]
+Lets have a peek into what one of these converted Qt types has to offer
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print("==== data =====");
+      var date = data["DateTime"]
+      print('<properties of data["DateTime"]');
+      for(var k in date) {
+        print("key : " + k);
+        print('typeof date[key] : ' + typeof date[k]);
+        print('date[key] : ' + date[k]);
+      }
+      print('</properties of data["DateTime"]');
+    }
+  };
+#+end_src
+ : ==== data =====
+ : <properties of data["DateTime"]
+ : </properties of data["DateTime"]
+Nothing?  That is correct.  This shell around an C++ object only hands out you
+a string representation of its value to Javascript.  Though they are not
+showing up with the code above, these objects have the following methods
+ - =toString()=
+ - =toLocaleString()=
+ - =valueOf()=
+ - =hasOwnProperty(V)=
+ - =isPrototypeOf(V)=
+ - =propertyIsEnumerable(V)=
+The Qt docs just mention their existence
+ - http://doc.qt.nokia.com/4.7-snapshot/ecmascript.html
+For real information head over to Mozilla
+ - https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object
+However, you probably only ever use =toString()=.
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print("==== data =====");
+      var date = data["DateTime"]
+      print("typeof date : " + typeof date);
+      print("typeof date.toString : " + typeof date.toString);
+      print("typeof date.toString() : " + typeof date.toString());
+      print("date.toString() : " + date.toString());
+    }
+  };
+#+end_src
+ : ==== data =====
+ : typeof date : object
+ : typeof date.toString : function
+ : typeof date.toString() : string
+ : date.toString() : Sun Feb 12 2012 11:16:58 GMT+0100 (CET)

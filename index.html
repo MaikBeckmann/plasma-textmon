@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-12 03:27:31 CET"/>
+<meta name="generated" content="2012-02-12 11:23:59 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -83,7 +83,47 @@
  }
 /*]]>*///-->
 </script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
 
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
 </head>
 <body>
 
@@ -127,6 +167,7 @@
 <li><a href="#sec-4-1">4.1 Getting more than one shot</a></li>
 <li><a href="#sec-4-2">4.2 A sink with a slot</a></li>
 <li><a href="#sec-4-3">4.3 Connecting the slot to a source</a></li>
+<li><a href="#sec-4-4">4.4 Exploring a data source</a></li>
 </ul>
 </li>
 </ul>
@@ -641,6 +682,276 @@ To actually find a data source and a source it provides we gonna use
 } <span class="org-keyword">else</span> {
   print(<span class="org-string">"connection attempt failed"</span>);
 }
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+ping
+connection established
+main.js ends here
+ping
+ping
+ping
+</pre>
+
+
+<p>
+As you can see, connectSource calls the dataUpdated slot.  So make sure that
+it's already there.  If not
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+sink.dataUpdated = <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+  print(<span class="org-string">"ping"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<p>
+we'll get
+</p><pre class="example">
+% plasmoidviewer .
+connection attempt failed
+main.js ends here
+%
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Exploring a data source</h3>
+<div class="outline-text-3" id="text-4-4">
+
+<p>So far it is only confirmed that <code>dataUpdated</code> was called back.  Now we take a
+look at the value of the parameters it is called with by the data engine.
+</p>
+<p>
+First the <code>name</code>.  This code
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(name);
+  }
+};
+</pre>
+
+<p>
+results in
+</p><pre class="example">
+Local
+connection established
+main.js ends here
+Local
+Local
+...
+</pre>
+
+<p>This is the same name we used with <code>connectSource</code>.  This becomes important
+when we subscribe to more than one data source.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(name);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection to 'Local' in 'time' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to 'Local' in 'time' failed"</span>);
+}
+<span class="org-comment-delimiter">//</span>
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Europe/London"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection to 'Europe/London' in 'time' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to 'Europe/London' in 'time' failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+ % plasmoidviewer .
+Local
+connection to 'Local' in 'time' established
+Europe/London
+connection to 'Europe/London' in 'time' established
+main.js ends here
+Local
+Europe/London
+Local
+Europe/Londo
+</pre>
+
+
+<p>
+Now the <code>data</code>.  We're using the version that only connects to <code>Local</code> in
+<code>time</code> with this slot definition
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"===== data ====="</span>);
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> data) {
+      print(<span class="org-string">"key : "</span> + k);
+      print(<span class="org-string">"data[key] : "</span> + data[k]);
+      print(<span class="org-string">"typeof data[key] : "</span> + <span class="org-keyword">typeof</span> data[k]);
+      print(<span class="org-string">"----"</span>);
+    }
+  }
+};
+</pre>
+
+<p>
+It results in
+</p><pre class="example">
+===== data =====
+key : Timezone Continent
+typeof data[key] : string
+data[key] : Europe
+----
+key : Offset
+typeof data[key] : number
+data[key] : 3600
+----
+key : DateTime
+typeof data[key] : object
+data[key] : Sun Feb 12 2012 09:46:52 GMT+0100 (CET)
+----
+key : Timezone
+typeof data[key] : string
+data[key] : Europe/Berlin
+----
+key : Time
+typeof data[key] : object
+data[key] : 09:46:52
+----
+key : Date
+typeof data[key] : object
+data[key] : Sun Feb 12 2012 00:00:00 GMT+0100 (CET)
+----
+key : Timezone City
+typeof data[key] : string
+data[key] : Berlin
+</pre>
+
+<p>The <code>Offset</code> looks off, doesn't it?.  That's because its unit is seconds.  My
+time zone has an offset of
+</p><ul>
+<li>\(3600\:s = \dfrac{3600\:s \cdot 1\:min}{60\:s} = 60\:min\)
+</li>
+<li>\(60\:min = \dfrac{60\:min \cdot 1\:h}{60\:min} = 1\:h\) .
+</li>
+</ul>
+
+
+<p>
+If you compare this data with what is shown in <a href="#fig-plasmaengineexplorer">plasmaengineexplorer</a>,
+then you'll notice it being exactly the same, except for the actual point in
+time.  For Qt data types that don't have an builtin equivalent in Javascript we
+get an object.
+</p><ul>
+<li><a href="http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types">Conversion between QtScript and C++ types</a>
+</li>
+</ul>
+
+<p>Lets have a peek into what one of these converted Qt types has to offer
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"==== data ====="</span>);
+    <span class="org-keyword">var</span> <span class="org-variable-name">date</span> = data[<span class="org-string">"DateTime"</span>]
+    print(<span class="org-string">'&lt;properties of data["DateTime"]'</span>);
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> date) {
+      print(<span class="org-string">"key : "</span> + k);
+      print(<span class="org-string">'typeof date[key] : '</span> + <span class="org-keyword">typeof</span> date[k]);
+      print(<span class="org-string">'date[key] : '</span> + date[k]);
+    }
+    print(<span class="org-string">'&lt;/properties of data["DateTime"]'</span>);
+  }
+};
+</pre>
+
+<pre class="example">
+==== data =====
+&lt;properties of data["DateTime"]
+&lt;/properties of data["DateTime"]
+</pre>
+
+<p>Nothing?  That is correct.  This shell around an C++ object only hands out you
+a string representation of its value to Javascript.  Though they are not
+showing up with the code above, these objects have the following methods
+</p><ul>
+<li><code>toString()</code>
+</li>
+<li><code>toLocaleString()</code>
+</li>
+<li><code>valueOf()</code>
+</li>
+<li><code>hasOwnProperty(V)</code>
+</li>
+<li><code>isPrototypeOf(V)</code>
+</li>
+<li><code>propertyIsEnumerable(V)</code>
+</li>
+</ul>
+
+<p>The Qt docs just mention their existence
+</p><ul>
+<li><a href="http://doc.qt.nokia.com/4.7-snapshot/ecmascript.html">http://doc.qt.nokia.com/4.7-snapshot/ecmascript.html</a>
+</li>
+</ul>
+
+<p>For real information head over to Mozilla
+</p><ul>
+<li><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object">https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object</a>
+</li>
+</ul>
+
+<p>However, you probably only ever use <code>toString()</code>.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"==== data ====="</span>);
+    <span class="org-keyword">var</span> <span class="org-variable-name">date</span> = data[<span class="org-string">"DateTime"</span>]
+    print(<span class="org-string">"typeof date : "</span> + <span class="org-keyword">typeof</span> date);
+    print(<span class="org-string">"typeof date.toString : "</span> + <span class="org-keyword">typeof</span> date.toString);
+    print(<span class="org-string">"typeof date.toString() : "</span> + <span class="org-keyword">typeof</span> date.toString());
+    print(<span class="org-string">"date.toString() : "</span> + date.toString());
+  }
+};
+</pre>
+
+<pre class="example">
+==== data =====
+typeof date : object
+typeof date.toString : function
+typeof date.toString() : string
+date.toString() : Sun Feb 12 2012 11:16:58 GMT+0100 (CET)
 </pre>
 
 </div>
