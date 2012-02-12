@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-10 23:51:01 CET"/>
+<meta name="generated" content="2012-02-12 01:46:25 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -95,11 +95,31 @@
 <h1 class="title">Digitize your TextMon :D</h1>
 
 
+
+
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1 Introduction</a></li>
+<li><a href="#sec-2">2 Hello Javascript</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Install a Javascript interpreter</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1 Not Ubuntu</a></li>
+<li><a href="#sec-2-1-2">2.1.2 Ubuntu</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2 Hello World</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Hello Plasma</a>
+<ul>
+<li><a href="#sec-3-1">3.1 And there was metadata</a></li>
+<li><a href="#sec-3-2">3.2 plasmapkg and life ain't easy</a></li>
+<li><a href="#sec-3-3">3.3 Give yourself a treat: Good error messages</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -108,9 +128,382 @@
 <h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 
-<p>This guide aims to show you how to code an simple sytem minitor plasma applet
-in Javascript.
+<p>This guide aims to show you how to code a simple sytem minitor plasma applet in
+Javascript.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Hello Javascript</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Install a Javascript interpreter</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+</div>
+
+<div id="outline-container-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> Not Ubuntu</h4>
+<div class="outline-text-4" id="text-2-1-1">
+
+<ul>
+<li id="sec-2-1-1-1">js<br/>
+This is Mozilla's command line Javascript interpreter.  It's what I'll be using
+throughout this document, like
+<pre class="example">
+% js foobar.js
+</pre>
+
+
+<p>
+The package which contains this executable
+</p><dl>
+<dt>js</dt><dd>for ArchLinux, OpenSUSE and Fedora
+</dd>
+<dt>spidermonkey-bin</dt><dd>for Debian
+</dd>
+</dl>
+
+
+<p>
+It is <span style="text-decoration:underline;">not</span> available on <b>Ubuntu</b>.  You have to use one of the two following.
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-2-1-1-2">v8<br/>
+The <code>v8</code> package contains the <code>d8</code> Javscript interpreter.  When this documention says
+<pre class="example">
+% js foobar.js
+</pre>
+
+<p>then you can use
+</p><pre class="example">
+% d8 foobar.js
+</pre>
+
+<p>instead.
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-2-1-1-3">rhino<br/>
+This is an Java implementation.  It will take forever to startup the first time
+it runs, but after that it's ok.  When this documention says
+<pre class="example">
+% js foobar.js
+</pre>
+
+<p>then you can use
+</p><pre class="example">
+% rhino foobar.js
+</pre>
+
+<p>instead.
+</p>
+<p>
+Note: Only about Ubuntu I know for certain that it's <code>rhino</code> package includes
+the <code>/usr/bin/rhino</code> shell script.  On Archlinux you'd have to do
+</p><pre class="example">
+% java -jar /usr/share/java/js.jar foobar.js
+</pre>
+
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> Ubuntu</h4>
+<div class="outline-text-4" id="text-2-1-2">
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Hello World</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>Open your favorite editor and create the file <code>foobar.js</code> with the content
+</p>
+
+
+<pre class="src src-js">print(<span class="org-string">"Hello World!"</span>);
+</pre>
+
+<p>
+and run it in a shell
+</p><pre class="example">
+% js foobar.js
+Hello World!
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Hello Plasma</h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> And there was metadata</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>We aim to have plasma run our little world script.
+</p>
+
+
+<pre class="src src-js">print(<span class="org-string">"hello world"</span>);
+</pre>
+
+<p>
+For this we have to create a plasma package.  A package consists of its
+content, our Javascript file, and meta data that describes this content and its
+role.  The file tree of the simplest possible package looks like this
+</p><pre class="example">
+hello_world
+├── contents
+│   └── main.js
+└── metadata.desktop
+</pre>
+
+<p>The simplest possible and barely working meta data is
+</p>
+
+
+<pre class="src src-conf">[<span class="org-type">Desktop Entry</span>]
+<span class="org-variable-name">Type</span>=Service
+<span class="org-variable-name">X-Plasma-API</span>=javascript
+<span class="org-variable-name">X-Plasma-MainScript</span>=main.js
+</pre>
+
+<p>
+Now change to the directory <code>hello_world</code>, which contains the <code>metadata.desktop</code>
+file, and execute
+</p><pre class="example">
+plasmoidviewer .
+</pre>
+
+<p>An empty default applet appears, since we haven't done anything to the user
+interface yet, and the text
+</p><pre class="example">
+hello world
+</pre>
+
+<p>appears in the shell where we started plasmoidviewer
+</p>
+<div id="fig-empty_default" class="figure">
+<p><img src="images/empty_default_applet.png" width="150" alt="images/empty_default_applet.png" /></p>
+<p>Empty default applet</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> plasmapkg and life ain't easy</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<p>To make our applet be usable for plasma we have to install it.  We'll install
+it into our user directory
+</p><pre class="example">
+% echo $(kde4-config --localprefix)
+</pre>
+
+<p>which will be something like <code>/home/YOU/.kde</code> or <code>/home/YOU/.kde4</code>, just paste
+it into the shel and see for yourself.  The follwing command does the
+installation
+</p><pre class="example">
+% plasmapkg -i .
+</pre>
+
+<p>But it won't work.  It fails with
+</p><pre class="example">
+plasmapkg(24248)/libplasma Plasma::Package::installPackage: Package plugin name not specified
+Installation of /home/maik/.../hello_world failed.
+</pre>
+
+<p>Okay, lets add a name.  The name is provided by <code>X-KDE-PluginInfo-Name</code>
+</p>
+
+
+<pre class="src src-conf">[<span class="org-type">Desktop Entry</span>]
+<span class="org-variable-name">Type</span>=Service
+
+<span class="org-variable-name">X-KDE-PluginInfo-Name</span>=HelloFoobar
+<span class="org-variable-name">X-Plasma-API</span>=javascript
+<span class="org-variable-name">X-Plasma-MainScript</span>=main.js
+</pre>
+
+<p>
+Lets try again
+</p><pre class="example">
+% plasmapkg -i .
+Successfully installed /home/maik/Projekte/kde/plasmoids/javascript/textmon_tut/hello_world
+</pre>
+
+<p>Yay!  Now we want to run it.  Plasmoidviewer can to do that as well.  Instead
+of giving a path to it, we give the name we've put into the meta data
+</p><pre class="example">
+% plasmoidviewer HelloFoobar
+</pre>
+
+<p>But it won't work, again.  You get
+</p>
+<div id="fig-missing_servicetypes" class="figure">
+<p><img src="images/missing_servicetypes.png" width="250" alt="images/missing_servicetypes.png" /></p>
+<p>Missing X-KDE-ServiceTypes</p>
+</div>
+<p>
+BUMMER!  But wait, there is more fail to come.  Before I explain what is
+missing, lets try to get rid if the faulty installation.  You generally can
+remove plasma components with
+</p><pre class="example">
+% plasmapkg -r PACKAGENAME
+</pre>
+
+<p>But
+</p><pre class="example">
+% plasmapkg -r HelloFoobar
+</pre>
+
+<p>results in
+</p><pre class="example">
+Plugin HelloFoobar is not installed.
+</pre>
+
+<p>WAT?  That is clearly not correct.  It is a bug in plasmapkg that I'll report
+ASAP, I promise.  I the mean time do this
+</p><pre class="example">
+% rm $(kde4-config --localprefix)/share/kde4/services/plasma-applet-HelloFoobar.desktop
+% rm $(kde4-config --localprefix)/share/apps/plasma/plasmoids/HelloFoobar/ -r
+</pre>
+
+
+<p>
+What we have to add is the role this <i>Service</i> named <i>HelloFoobar</i> plays.  It's
+a plasma applet:
+</p>
+
+
+<pre class="src src-conf">[<span class="org-type">Desktop Entry</span>]
+<span class="org-variable-name">Type</span>=Service
+
+<span class="org-variable-name">X-KDE-PluginInfo-Name</span>=HelloFoobar
+<span class="org-variable-name">X-KDE-ServiceTypes</span>=Plasma/Applet
+
+<span class="org-variable-name">X-Plasma-API</span>=javascript
+<span class="org-variable-name">X-Plasma-MainScript</span>=main.js
+</pre>
+
+<p>
+No we not only get
+</p><pre class="example">
+% plasmapkg -i .
+Successfully installed /home/maik/Projekte/kde/plasmoids/javascript/textmon_tut/hello_world
+</pre>
+
+<p>but also
+</p><pre class="example">
+% plasmoidviewer HelloFoobar
+hello world
+</pre>
+
+<p>Yay :D
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Give yourself a treat: Good error messages</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<p>Consider this code
+</p>
+
+
+<pre class="src src-js">array = [1, 2, 3];
+</pre>
+
+<p>
+and break it
+<code>foobar.js</code>
+</p>
+
+
+<pre class="src src-js">array = [1, 2 3];
+</pre>
+
+<p>
+Put that into our main.js and see what plasma has to say
+</p><pre class="example">
+% plasmoidviwer .
+</pre>
+
+<p>We get this:
+</p>
+<div id="fig-missing_servicetypes" class="figure">
+<p><img src="images/syntax_error.png" width="250" alt="images/syntax_error.png" /></p>
+<p>Syntax Error: Parse Error.  This means: dunno!</p>
+</div>
+<p>
+Well ok, parsing a programming language is hard.  I'm sure they done as good as
+anybody can ask for, right?  Lets see what the contenders have to say. Here
+Mozilla's js
+</p><pre class="example">
+% js main.js
+main.js:1: SyntaxError: missing ] after element list:
+main.js:1: array = [1, 2 3];
+main.js:1: ..............^
+</pre>
+
+<p>or Google's v8 (its command line debugger is called d8)
+ :% d8 main.js
+</p><pre class="example">
+main.js:1: SyntaxError: Unexpected number
+array = [1, 2 3];
+              ^
+SyntaxError: Unexpected number
+</pre>
+
+<p>or rhino, as well done by Mozilla
+</p><pre class="example">
+% rhino main.js
+js: "main.js", line 1: missing ] after element list
+js: array = [1, 2 3];
+js: ...............^
+</pre>
+
+<p>Rhino is off by one dots, but still: wow!
+</p>
+<p>
+A missing comma, brace and bracet is an frequent coding error.  QtScript will
+give you the line number, that's it.  If you have no idea what the heck it's
+problem is, do yourself a favor by pasting the code in question into file and
+have one of the above Javascript interpreters a run at it.  They of cause won't
+be able to run it, but they'll find the syntax error with a <span style="text-decoration:underline;">sweet</span> error
+message.
 </p></div>
+</div>
 </div>
 </div>
 
