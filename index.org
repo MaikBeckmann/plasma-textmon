@@ -340,7 +340,7 @@ we'll get
 So far it is only confirmed that =dataUpdated= was called back.  Now we take a
 look at the value of the parameters it is called with by the data engine.
 
-First the =name=.  This code
+First the =name=.  This code for the sink section
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
