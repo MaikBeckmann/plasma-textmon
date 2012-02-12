@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-12 11:31:57 CET"/>
+<meta name="generated" content="2012-02-12 11:48:09 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -882,12 +882,12 @@ get an object.
 <pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
   <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
     print(<span class="org-string">"==== data ====="</span>);
-    <span class="org-keyword">var</span> <span class="org-variable-name">date</span> = data[<span class="org-string">"DateTime"</span>]
+    <span class="org-keyword">var</span> <span class="org-variable-name">dateTime</span> = data[<span class="org-string">"DateTime"</span>]
     print(<span class="org-string">'&lt;properties of data["DateTime"]'</span>);
-    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> date) {
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> dateTime) {
       print(<span class="org-string">"key : "</span> + k);
-      print(<span class="org-string">'typeof date[key] : '</span> + <span class="org-keyword">typeof</span> date[k]);
-      print(<span class="org-string">'date[key] : '</span> + date[k]);
+      print(<span class="org-string">'typeof dateTime[key] : '</span> + <span class="org-keyword">typeof</span> dateTime[k]);
+      print(<span class="org-string">'dateTime[key] : '</span> + dateTime[k]);
     }
     print(<span class="org-string">'&lt;/properties of data["DateTime"]'</span>);
   }
@@ -937,22 +937,23 @@ showing up with the code above, these objects have the following methods
 <pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
   <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
     print(<span class="org-string">"==== data ====="</span>);
-    <span class="org-keyword">var</span> <span class="org-variable-name">date</span> = data[<span class="org-string">"DateTime"</span>]
-    print(<span class="org-string">"typeof date : "</span> + <span class="org-keyword">typeof</span> date);
-    print(<span class="org-string">"typeof date.toString : "</span> + <span class="org-keyword">typeof</span> date.toString);
-    print(<span class="org-string">"typeof date.toString() : "</span> + <span class="org-keyword">typeof</span> date.toString());
-    print(<span class="org-string">"date.toString() : "</span> + date.toString());
+    <span class="org-keyword">var</span> <span class="org-variable-name">dateTime</span> = data[<span class="org-string">"DateTime"</span>]
+    print(<span class="org-string">"typeof dateTime : "</span> + <span class="org-keyword">typeof</span> dateTime);
+    print(<span class="org-string">"typeof dateTime.toString : "</span> + <span class="org-keyword">typeof</span> dateTime.toString);
+    print(<span class="org-string">"typeof dateTime.toString() : "</span> + <span class="org-keyword">typeof</span> dateTime.toString());
+    print(<span class="org-string">"dateTime.toString() : "</span> + dateTime.toString());
   }
 };
 </pre>
 
 <pre class="example">
 ==== data =====
-typeof date : object
-typeof date.toString : function
-typeof date.toString() : string
-date.toString() : Sun Feb 12 2012 11:16:58 GMT+0100 (CET)
+typeof dateTime : object
+typeof dateTime.toString : function
+typeof dateTime.toString() : string
+dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
 </pre>
+
 
 </div>
 </div>

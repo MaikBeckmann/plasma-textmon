@@ -449,12 +449,12 @@ Lets have a peek into what one of these converted Qt types has to offer
   var sink = {
     dataUpdated: function (name, data) {
       print("==== data =====");
-      var date = data["DateTime"]
+      var dateTime = data["DateTime"]
       print('<properties of data["DateTime"]');
-      for(var k in date) {
+      for(var k in dateTime) {
         print("key : " + k);
-        print('typeof date[key] : ' + typeof date[k]);
-        print('date[key] : ' + date[k]);
+        print('typeof dateTime[key] : ' + typeof dateTime[k]);
+        print('dateTime[key] : ' + dateTime[k]);
       }
       print('</properties of data["DateTime"]');
     }
@@ -481,16 +481,17 @@ However, you probably only ever use =toString()=.
   var sink = {
     dataUpdated: function (name, data) {
       print("==== data =====");
-      var date = data["DateTime"]
-      print("typeof date : " + typeof date);
-      print("typeof date.toString : " + typeof date.toString);
-      print("typeof date.toString() : " + typeof date.toString());
-      print("date.toString() : " + date.toString());
+      var dateTime = data["DateTime"]
+      print("typeof dateTime : " + typeof dateTime);
+      print("typeof dateTime.toString : " + typeof dateTime.toString);
+      print("typeof dateTime.toString() : " + typeof dateTime.toString());
+      print("dateTime.toString() : " + dateTime.toString());
     }
   };
 #+end_src
  : ==== data =====
- : typeof date : object
- : typeof date.toString : function
- : typeof date.toString() : string
- : date.toString() : Sun Feb 12 2012 11:16:58 GMT+0100 (CET)
+ : typeof dateTime : object
+ : typeof dateTime.toString : function
+ : typeof dateTime.toString() : string
+ : dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
+
