@@ -465,8 +465,13 @@ It results in
  : data[key] : Berlin
 The =Offset= looks off, doesn't it?.  That's because its unit is seconds.  My
 time zone has an offset of
- - $3600\:s = \dfrac{3600\:s \cdot 1\:min}{60\:s} = 60\:min$
- - $60\:min = \dfrac{60\:min \cdot 1\:h}{60\:min} = 1\:h$ .
+ :           3600 s * 1 min
+ : 3600 s =  -------------- = 60 min
+ :                    60 s
+ :
+ :           60 min * 1 h
+ : 60 min =  -------------- = 1 h .
+ :                 60 min
 
 If you compare this data with what is shown in \ref{fig:plasmaengineexplorer},
 then you'll notice it being exactly the same, except for the actual point in

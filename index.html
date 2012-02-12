@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-12 17:34:26 CET"/>
+<meta name="generated" content="2012-02-12 17:47:24 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -83,47 +83,7 @@
  }
 /*]]>*///-->
 </script>
-<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
-<!--/*--><![CDATA[/*><!--*/
-    MathJax.Hub.Config({
-        // Only one of the two following lines, depending on user settings
-        // First allows browser-native MathML display, second forces HTML/CSS
-        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
-                     "TeX/noUndefined.js"],
-        tex2jax: {
-            inlineMath: [ ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
-            skipTags: ["script","noscript","style","textarea","pre","code"],
-            ignoreClass: "tex2jax_ignore",
-            processEscapes: false,
-            processEnvironments: true,
-            preview: "TeX"
-        },
-        showProcessingMessages: true,
-        displayAlign: "center",
-        displayIndent: "2em",
 
-        "HTML-CSS": {
-             scale: 100,
-             availableFonts: ["STIX","TeX"],
-             preferredFont: "TeX",
-             webFont: "TeX",
-             imageFont: "TeX",
-             showMathMenu: true,
-        },
-        MMLorHTML: {
-             prefer: {
-                 MSIE:    "MML",
-                 Firefox: "MML",
-                 Opera:   "HTML",
-                 other:   "HTML"
-             }
-        }
-    });
-/*]]>*///-->
-</script>
 </head>
 <body>
 
@@ -913,12 +873,15 @@ data[key] : Berlin
 
 <p>The <code>Offset</code> looks off, doesn't it?.  That's because its unit is seconds.  My
 time zone has an offset of
-</p><ul>
-<li>\(3600\:s = \dfrac{3600\:s \cdot 1\:min}{60\:s} = 60\:min\)
-</li>
-<li>\(60\:min = \dfrac{60\:min \cdot 1\:h}{60\:min} = 1\:h\) .
-</li>
-</ul>
+</p><pre class="example">
+          3600 s * 1 min
+3600 s =  -------------- = 60 min
+                   60 s
+
+          60 min * 1 h
+60 min =  -------------- = 1 h .
+                60 min
+</pre>
 
 
 <p>
