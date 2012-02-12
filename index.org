@@ -49,8 +49,8 @@ Javascript.
 
 * Hello Javascript
 ** Install a Javascript interpreter
-*** Not Ubuntu
-**** js
+** Not Ubuntu
+*** js
 This is Mozilla's command line Javascript interpreter.  It's what I'll be using
 throughout this document, like
  : % js foobar.js
@@ -61,14 +61,14 @@ The package which contains this executable
 
 It is _not_ available on *Ubuntu*.  You have to use one of the two following.
 
-**** v8
+*** v8
 The =v8= package contains the =d8= Javscript interpreter.  When this documention says
  : % js foobar.js
 then you can use
  : % d8 foobar.js
 instead.
 
-**** rhino
+*** rhino
 This is an Java implementation.  It will take forever to startup the first time
 it runs, but after that it's ok.  When this documention says
  : % js foobar.js
@@ -80,7 +80,6 @@ Note: Only about Ubuntu I know for certain that it's =rhino= package includes
 the =/usr/bin/rhino= shell script.  On Archlinux you'd have to do
  : % java -jar /usr/share/java/js.jar foobar.js
 
-*** Ubuntu
 ** Hello World
 Open your favorite editor and create the file =foobar.js= with the content
 #+begin_src js
