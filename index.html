@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-12 01:52:01 CET"/>
+<meta name="generated" content="2012-02-12 03:27:31 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -120,6 +120,13 @@
 <li><a href="#sec-3-1">3.1 And there was metadata</a></li>
 <li><a href="#sec-3-2">3.2 plasmapkg and life ain't easy</a></li>
 <li><a href="#sec-3-3">3.3 Give yourself a treat: Good error messages</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Hello?</a>
+<ul>
+<li><a href="#sec-4-1">4.1 Getting more than one shot</a></li>
+<li><a href="#sec-4-2">4.2 A sink with a slot</a></li>
+<li><a href="#sec-4-3">4.3 Connecting the slot to a source</a></li>
 </ul>
 </li>
 </ul>
@@ -508,7 +515,135 @@ problem is, do yourself a favor by pasting the code in question into file and
 have one of the above Javascript interpreters a run at it.  They of cause won't
 be able to run it, but they'll find the syntax error with a <span style="text-decoration:underline;">sweet</span> error
 message.
-</p></div>
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Hello?</h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Getting more than one shot</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>Our script is run exactly once!  To get more than this single run, we have to
+convince plasma to give us additional cpu cycles.  this is done by defining a
+data sink and connecting it to a source.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> A sink with a slot</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>An object acts as the sink and a function as the slot that connects the source
+to the sink
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"ping"</span>);
+  }
+};
+</pre>
+
+<p>
+The name of the sink Object can be anything
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">CatDog</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"ping"</span>);
+  }
+};
+</pre>
+
+<p>
+The name of the slot function however is to be <code>dataUpdated</code>.  The function
+always receives two parameters.  We'll dicuss their content in a bit.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Connecting the slot to a source</h3>
+<div class="outline-text-3" id="text-4-3">
+
+<p>A plasma engine provides sources.  They're connected to via their
+<code>connectSource</code> method.  The arguments this method takes are the name of the
+source, the sink object and the desired interval length in which sink's
+<code>dataUpdated</code> slot should be called.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"SourcesServingEngine"</span>)
+<span class="org-keyword">var</span> <span class="org-variable-name">intervalInMilliSeconds</span> = 1000;  <span class="org-comment-delimiter">// </span><span class="org-comment">one second</span>
+engine.connectSource(<span class="org-string">"SourceOfInterest"</span>, sink, intervalInMilliSeconds);
+</pre>
+
+<p>
+This code has a flaw.  The connection might fail of
+</p><ul>
+<li>the source doesn't exist
+</li>
+<li>the sink object doesn't define the <code>dataUpdated</code> slot.
+</li>
+</ul>
+
+<p>This flowing version doesn't really handle these situation, but at least tells
+us about it.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"SourcesServingEngine"</span>)
+<span class="org-keyword">var</span> <span class="org-variable-name">intervalInMilliSeconds</span> = 1000;  <span class="org-comment-delimiter">// </span><span class="org-comment">one second</span>
+<span class="org-keyword">if</span> (! engine.connectSource(<span class="org-string">"SourceOfInterest"</span>, sink, intervalInMilliSeconds) ) {
+  print(<span class="org-string">"connection attempt to SourceOfInterest in SourcesServingEngine failed D:"</span>);
+}
+</pre>
+
+
+<p>
+To actually find a data source and a source it provides we gonna use
+</p><pre class="example">
+% plasmaengineexplorer
+</pre>
+
+
+<div id="fig-plasmaengineexplorer" class="figure">
+<p><img src="images/plasmaengineexplorer.png" width="790" alt="images/plasmaengineexplorer.png" /></p>
+<p>Plasma engine explorer</p>
+</div>
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"ping"</span>);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+</pre>
+
+</div>
 </div>
 </div>
 </div>

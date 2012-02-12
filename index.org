@@ -230,3 +230,76 @@ problem is, do yourself a favor by pasting the code in question into file and
 have one of the above Javascript interpreters a run at it.  They of cause won't
 be able to run it, but they'll find the syntax error with a _sweet_ error
 message.
+
+* Hello?
+** Getting more than one shot
+Our script is run exactly once!  To get more than this single run, we have to
+convince plasma to give us additional cpu cycles.  this is done by defining a
+data sink and connecting it to a source.
+
+** A sink with a slot
+An object acts as the sink and a function as the slot that connects the source
+to the sink
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print("ping");
+    }
+  };
+#+end_src
+The name of the sink Object can be anything
+#+begin_src js
+  var CatDog = {
+    dataUpdated: function (name, data) {
+      print("ping");
+    }
+  };
+#+end_src
+The name of the slot function however is to be =dataUpdated=.  The function
+always receives two parameters.  We'll dicuss their content in a bit.
+
+** Connecting the slot to a source
+A plasma engine provides sources.  They're connected to via their
+=connectSource= method.  The arguments this method takes are the name of the
+source, the sink object and the desired interval length in which sink's
+=dataUpdated= slot should be called.
+#+begin_src js
+  var engine = dataEngine("SourcesServingEngine")
+  var intervalInMilliSeconds = 1000;  // one second
+  engine.connectSource("SourceOfInterest", sink, intervalInMilliSeconds);
+#+end_src
+This code has a flaw.  The connection might fail of
+ - the source doesn't exist
+ - the sink object doesn't define the =dataUpdated= slot.
+This flowing version doesn't really handle these situation, but at least tells
+us about it.
+#+begin_src js
+  var engine = dataEngine("SourcesServingEngine")
+  var intervalInMilliSeconds = 1000;  // one second
+  if (! engine.connectSource("SourceOfInterest", sink, intervalInMilliSeconds) ) {
+    print("connection attempt to SourceOfInterest in SourcesServingEngine failed D:");
+  }
+#+end_src
+
+To actually find a data source and a source it provides we gonna use
+ : % plasmaengineexplorer
+#+caption: Plasma engine explorer
+#+label: fig:plasmaengineexplorer
+#+attr_html: width="790"
+[[file:images/plasmaengineexplorer.png]]
+#
+
+#+begin_src js
+  var sink = {
+    dataUpdated: function (name, data) {
+      print("ping");
+    }
+  };
+
+  var engine = dataEngine("time");
+  if ( engine.connectSource("Local", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+#+end_src
