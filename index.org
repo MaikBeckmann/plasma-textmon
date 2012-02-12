@@ -178,13 +178,40 @@ a plasma applet:
   X-Plasma-API=javascript
   X-Plasma-MainScript=main.js
 #+end_src
-No we not only get
+No we can not only
  : % plasmapkg -i .
  : Successfully installed /home/maik/Projekte/kde/plasmoids/javascript/textmon_tut/hello_world
 but also
 : % plasmoidviewer HelloFoobar
 : hello world
+as well as
+ : % plasmapkg -r HelloFoobar
+ : Successfully removed HelloFoobar
 Yay :D
+
+Since we have a package that plasmapkg can chew on without choking I suggest
+you play a bit with the options it provides.  We already saw how to install
+ : % plasmapkg -i /path/to/package/dir/
+ : % plasmapkg -i /path/to/package.plasmoid
+where we used the first version with
+ : % plasmapkg -i .
+We also, though unsuccessfully, used the command line to remove a package
+ : % plasmapkg -r PACKAGENAME
+ : % plasmapkg -r /path/to/package/dir/
+The second one reads the name of the package to remove from the
+=metadata.desktop= file in the directory it was given the path to.  That's why
+ : % plasmapkg -r .
+just reverts the things done by =plasmapkg -i=.  Well, once the bug mentioned
+above is fixed :P.  Finally the plasmapkg command you'll be using most of the
+time is that to upgrading an existing package
+ : % plasmapkg -u /path/to/package/dir/
+ : % plasmapkg -u /path/to/package.plasmoid
+This actually removes the package and installs it again.  For example
+ : % plasmapkg -u .
+and
+ : % plasmapkg -r .
+ : % plasmapkg -i .
+do the very same things.
 
 ** Give yourself a treat: Good error messages
 Consider this code
