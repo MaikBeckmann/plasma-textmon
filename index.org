@@ -27,3 +27,6 @@ etc.  Eventually I'll come back to this original applet.  The code will most
 like be much simper, easier to understand and tweak.
 
 * COMMENT  [[file:UI.html][Plasma user interface basics]]
+* [[http://github.com/MaikBeckmann/plasma-textmon][github repo]]
+There you'll find the applet sources, the [[http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages][sources]] for this documentation (emacs
+.org files) and an installable .plasmoid file in the [[http://github.com/MaikBeckmann/plasma-textmon/downloads][download]] sction.
