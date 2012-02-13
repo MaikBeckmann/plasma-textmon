@@ -13,9 +13,9 @@ This is Mozilla's command line Javascript interpreter.  It's what I'll be using
 throughout this document, like
  : % js foobar.js
 
-The package which contains this executable
-  - js :: for ArchLinux, OpenSUSE and Fedora
-  - spidermonkey-bin :: for Debian
+The package which contains this executable is
+  - *js* for ArchLinux, OpenSUSE and Fedora
+  - *spidermonkey-bin* for Debian
 
 It is _not_ available on *Ubuntu*.  You have to use one of the two following.
 
