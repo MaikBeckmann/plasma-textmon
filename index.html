@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-13 16:31:21 CET"/>
+<meta name="generated" content="2012-02-13 20:01:40 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -94,22 +94,54 @@
 <div id="content">
 <h1 class="title">Digitize your TextMon :D</h1>
 
-<p><img src="images/code_monster.png"  alt="images/code_monster.png" />
+<p>TextMon is minimalistic textual system monitor, meant to be an entry point for
+coding kde plasma applets in Javascript and yet be useful enough for everday
+usage.
+</p>
+<p>
+<img src="images/code_monster.png"  alt="images/code_monster.png" />
 </p>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> <a href="prelude.html">Prelude</a></h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> Getting started</h2>
 <div class="outline-text-2" id="text-1">
 
-<p>The very basics you need to try and error your way efficently to the goal.
+<p>Go to the <a href="http://github.com/MaikBeckmann/plasma-textmon/downloads">download</a> section, get <code>textmon.plasmoid</code> and install it via
+</p><pre class="example">
+% plasmapkg -i textmon.plasmoid
+</pre>
+
+
+<p>
+You most likely want to tweak the settings. This is done by editing the source
+code. The settings dialog shows you how to get there (right click the applet).
+This hacky way of configuring the applet is no shortcoming but by intention.
 </p>
 </div>
 
 </div>
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> <a href="dataengines.html">Plasma data engines</a></h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> <a href="prelude.html">Development Prelude</a></h2>
 <div class="outline-text-2" id="text-2">
+
+<p>The first step in a new devlopment environment is to get a simple message on the screen
+</p><pre class="example">
+hello world!
+</pre>
+
+<p>The predude shows you how to do exactly that with a stand alone Javascript
+interpreter as well as with a plasma applet written in Javascript.  Along the
+way you'll be shown the traps waiting for you to step into and how to avoid
+them.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> <a href="dataengines.html">Plasma data engines</a></h2>
+<div class="outline-text-2" id="text-3">
 
 <p>The main script of a plasma applet is run exactly once.  For being come back at
 you have to tell plasma what data you want and how often.
@@ -118,19 +150,19 @@ you have to tell plasma what data you want and how often.
 
 </div>
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> <a href="textmon-0_1-tweak-guide.html">Hacking TextMon-0.1</a></h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> <a href="textmon-0_1-tweak-guide.html">Hacking TextMon</a></h2>
+<div class="outline-text-2" id="text-4">
 
-<p>A number of examples on how to alter TextMon-0.1 are presented.
+<p>A number of examples on how to alter TextMon are presented.
 </p>
 </div>
 
 </div>
 
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> The next thing</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> The next thing</h2>
+<div class="outline-text-2" id="text-5">
 
 <p>The actual point of TextMon is to give you an hands-on hacking entry point to
 writing plasma applets.  While starting to document TextMon I've learned a lot
@@ -155,12 +187,12 @@ like be much simper, easier to understand and tweak.
 
 </div>
 
-<div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> <a href="http://github.com/MaikBeckmann/plasma-textmon">github repo</a></h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> <a href="http://github.com/MaikBeckmann/plasma-textmon">github repo</a></h2>
+<div class="outline-text-2" id="text-6">
 
-<p>There you'll find the applet sources, the <a href="http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages">sources</a> for this documentation (emacs
-.org files) and an installable .plasmoid file in the <a href="http://github.com/MaikBeckmann/plasma-textmon/downloads">download</a> sction.
+<p>There you'll find the applet sources and the <a href="http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages">sources</a> for this documentation
+(emacs .org files).
 </p></div>
 </div>
 </div>
