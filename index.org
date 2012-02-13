@@ -4,6 +4,8 @@
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 #+options: toc:nil
 
+[[file:images/code_monster.png]]
+
 * [[file:prelude.html][Prelude]]
 The very basics you need to try and error your way efficently to the goal.
 
