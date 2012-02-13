@@ -26,8 +26,9 @@ way you'll be shown the traps waiting for you to step into and how to avoid
 them.
 
 * [[file:dataengines.html][Plasma data engines]]
-The main script of a plasma applet is run exactly once.  For being come back at
-you have to tell plasma what data you want and how often.
+The main script of a plasma applet is run exactly once.  To get another chance
+of doing something you have to tell plasma why and how often.  The answer to
+the "why" is always the same: data.
 
 * [[file:textmon-0_1-tweak-guide.html][Hacking TextMon]]
 A number of examples on how to alter TextMon are presented.
