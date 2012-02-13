@@ -7,20 +7,7 @@
 
 * Introcdution
 A number of examples on how to alter TextMon-0.1 are presented.  I'll assume
-you know what is explained in the prelude (TODO link here).
-
-** The next thing
-The actual point of TextMon is to give you an hands-on hacking entry point to
-writing plasma applets.  While starting to document TextMon I've learned a lot
-new things, which aren't reflected in TextMon-0.1 .  There are new TextMon and
-foremost much simpler flavors TextMon to come, like
- - TextMonCpu
- - TextMonMem
- - TextMonWlan
- - TextMonSda
-etc.  Eventually I'll come back to this original applet.  The code will most
-like be much simper, easier to understand and alter.  For the time being, this
-document will server the need to tweak the current TextMon-0.1.
+you know what is explained in the [[file:prelude.html][prelude]].
 
 * Changing the font
 The CSS stylesheet that defines the font appearance is located in line 10
@@ -236,8 +223,14 @@ The result
 
 * Monitoring eth0 instead of wlan0
 Your system may have a different device names for /wlan/ (i.e. =ath0=) or you
-want to minitor your LAN (=eth0=) throughput instead.  The location in
-=main.js= to change these is line 21-28
+want to minitor your LAN (=eth0=) throughput instead.
+
+Though it isn't strictly necessary, I recommend reading on [[file:dataengines.html][plasma data engines]]
+before you continue.  Because
+ - it's interesting
+ - you'll know what to do when something goes wrong here
+
+The location in =main.js= to change the monitored devices is line 21-28
 #+begin_src js
   // systemmonitor sources we're subscribing to.  Found via
   //   : $ plasmaengineexplorer

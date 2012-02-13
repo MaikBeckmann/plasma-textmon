@@ -5,13 +5,12 @@
 
 [[file:index.html][{Back to index}]]
 
-* Hello?
-** Getting more than one shot
+* Getting more than one shot
 Our script is run exactly once!  To get more than this single run, we have to
 convince plasma to give us additional cpu cycles.  this is done by defining a
 data sink and connecting it to a source.
 
-** A sink with a slot
+* A sink with a slot
 An object acts as the sink and a function as the slot that connects the source
 to the sink
 #+begin_src js
@@ -32,7 +31,7 @@ The name of the sink Object can be anything
 The name of the slot function however is to be =dataUpdated=.  The function
 always receives two parameters.  We'll dicuss their content in a bit.
 
-** Connecting the slot to a source
+* Connecting the slot to a source
 A plasma engine provides sources.  They're connected to via their
 =connectSource= method.  The arguments this method takes are the name of the
 source, the sink object and the desired interval length in which sink's
@@ -112,7 +111,7 @@ we'll get
  : main.js ends here
  : %
 
-** Exploring a data source
+* Exploring a data source
 So far it is only confirmed that =dataUpdated= was called back.  Now we take a
 look at the value of the parameters it is called with by the data engine.
 
@@ -276,7 +275,7 @@ However, you probably only ever use =toString()=.
  : typeof dateTime.toString() : string
  : dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
 
-* COMMENT The /systemmonitor/ date engine
+*  COMMENT The /systemmonitor/ date engine
 ** CPU load
 #+caption: systemmonitor : the system's total cpu load
 #+label: fig:cpu_total_load

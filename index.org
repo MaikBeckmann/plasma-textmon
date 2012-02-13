@@ -2,50 +2,28 @@
 #+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
+#+options: toc:nil
 
+* [[file:prelude.html][Prelude]]
+The very basics you need to try and error your way efficently to the goal.
 
- - [[file:prelude.html][Prelude]]
- - [[file:textmon-0_1-tweak-guide.html][Hacking TextMon-0.1]]
- - [[file:dataengines.html][Plasma data engines]]
- - [[file:UI.html][Plasma user interface basics]]
+* [[file:dataengines.html][Plasma data engines]]
+The main script of a plasma applet is run exactly once.  For being come back at
+you have to tell plasma what data you want and how often.
 
-* COMMENT Planning
-** js on the command line
-js/rhino/qs_eval
+* [[file:textmon-0_1-tweak-guide.html][Hacking TextMon-0.1]]
+A number of examples on how to alter TextMon-0.1 are presented.
 
-*** Hello Javascript
-*** Error messages
-** plasmoidviwer
-*** plasmoid hello world
-*** Where the .. is the message?
-It's burried in debug messages -__-
+* The next thing
+The actual point of TextMon is to give you an hands-on hacking entry point to
+writing plasma applets.  While starting to document TextMon I've learned a lot
+new things, which aren't reflected in TextMon-0.1 .  There are new and foremost
+much simpler flavors TextMon to come, like
+  - TextMonCpu
+  - TextMonMem
+  - TextMonWlan
+  - TextMonSda
+etc.  Eventually I'll come back to this original applet.  The code will most
+like be much simper, easier to understand and tweak.
 
- : mv $(kde4-config --localprefix)/share/config/kdebugrc \
- :    $(kde4-config --localprefix)/share/config/kdebugrc_bak
-
-Make this the content kdebugrc
-#+begin_src conf
-  [plasmoidviewer]
-  InfoOutput=4
-#+end_src
- - 2 :: stdout
- - 4 :: /dev/null
-
-*** The error messaes suck, use js to get more insight
-
-** Halde
-*** With debug output (aka info)
- : plasmoidviewer(31094) SimpleJavaScriptApplet::reportError: "Error in contents/code/main.js on line 1.<br><br>SyntaxError: Parse error"
- : plasmoidviewer(31094) SimpleJavaScriptApplet::reportError: ("<anonymous>()@/home/maik/Projekte/kde/plasmoids/javascript/tmp/contents/code/main.js:1")
- : plasmoidviewer(31094) SimpleJavaScriptApplet::reportError: "Error in contents/code/main.js on line 1.<br><br>SyntaxError: Parse error"
- : plasmoidviewer(31094) SimpleJavaScriptApplet::reportError: ("<anonymous>()@/home/maik/Projekte/kde/plasmoids/javascript/tmp/contents/code/main.js:1")
-
- : plasmoidviewer(31094) SimpleJavaScriptApplet::reportError: "Error in contents/code/main.js on line 1.<br><br>SyntaxError: Parse error"
- : plasmoidviewer(31094) SimpleJavaScriptApplet::reportError: ("<anonymous>()@/home/maik/Projekte/kde/plasmoids/javascript/tmp/contents/code/main.js:1")
-
- : "Error in contents/code/main.js on line 1.<br><br>SyntaxError: Parse error"
- : ("<anonymous>()@/home/maik/Projekte/kde/plasmoids/javascript/tmp/contents/code/main.js:1")
-
- : "Error in contents/code/main.js on line 1.<br><br>SyntaxError: Parse error"
-
-
+* COMMENT  [[file:UI.html][Plasma user interface basics]]
