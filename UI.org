@@ -3,6 +3,8 @@
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 
+[[file:index.html][{Back to index}]]
+
 * Introduction
 The only two UI widget we'll use are a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#Label][Labels]], a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#LinearLayout][Layout]] to arrange them and the
 [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-PlasmoidObject][plasmoid]] itself.
@@ -198,18 +200,3 @@ builds this object graph
 The resulting applet is
 #+caption: More labels
 [[file:images/more_labels.png]]
-
-TODO:
- - dummy layout with fake cpu, mem, wlan and sda values
- - the real deal
-
-Idea: Maybe this is too much.  It might be a good idea to create seperate applets for
- - cpu
- - mem
- - mem and cpu
- - wlan up
- - wlan down
- - wlan up and down
- - sda read
- - sda write
- - sda read and write

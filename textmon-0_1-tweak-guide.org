@@ -3,6 +3,8 @@
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 
+[[file:index.html][{Back to index}]]
+
 * Introcdution
 A number of examples on how to alter TextMon-0.1 are presented.  I'll assume
 you know what is explained in the prelude (TODO link here).

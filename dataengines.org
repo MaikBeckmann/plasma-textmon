@@ -3,6 +3,8 @@
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 
+[[file:index.html][{Back to index}]]
+
 * Hello?
 ** Getting more than one shot
 Our script is run exactly once!  To get more than this single run, we have to

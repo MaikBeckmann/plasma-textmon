@@ -3,6 +3,8 @@
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 
+[[file:index.html][{Back to index}]]
+
 * Hello Javascript
 ** Install a Javascript interpreter
 ** Not Ubuntu
