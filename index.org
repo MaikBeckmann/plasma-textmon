@@ -17,7 +17,7 @@ You most likely want to tweak the settings. This is done by editing the source
 code. The settings dialog shows you how to get there (right click the applet).
 This hacky way of configuring the applet is no shortcoming but by intention.
 
-* [[file:prelude.html][Development Prelude]]
+* [[file:prelude.html][Development prelude]]
 The first step in a new devlopment environment is to get a simple message on the screen
  : hello world!
 The predude shows you how to do exactly that with a stand alone Javascript

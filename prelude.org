@@ -7,7 +7,6 @@
 
 * Hello Javascript
 ** Install a Javascript interpreter
-** Not Ubuntu
 *** js
 This is Mozilla's command line Javascript interpreter.  It's what I'll be using
 throughout this document, like
