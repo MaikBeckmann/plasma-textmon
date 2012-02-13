@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Hack your TextMon(-0.1)"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-13 10:30:48 CET"/>
+<meta name="generated" content="2012-02-13 11:15:43 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -99,22 +99,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Introdution</a>
+<li><a href="#sec-1">1 Introcdution</a>
 <ul>
 <li><a href="#sec-1-1">1.1 The next thing</a></li>
 </ul>
 </li>
 <li><a href="#sec-2">2 Changing the font</a></li>
 <li><a href="#sec-3">3 Changing value decoration</a></li>
-<li><a href="#sec-4">4 Removing cpu or mem entry</a></li>
-<li><a href="#sec-5">5 Removing  wlan or sda</a></li>
-<li><a href="#sec-6">6 Two applets with different settings</a></li>
+<li><a href="#sec-4">4 Removing cpu entry</a></li>
+<li><a href="#sec-5">5 Removing  wlan entry</a></li>
+<li><a href="#sec-6">6 Monitoring eth0 instead of wlan0</a></li>
+<li><a href="#sec-7">7 Two applets with different settings</a></li>
 </ul>
 </div>
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Introdution</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> Introcdution</h2>
 <div class="outline-text-2" id="text-1">
 
 <p>A number of examples on how to alter TextMon-0.1 are presented.  I'll assume
@@ -164,7 +165,7 @@ to 13.  If
 <span class="org-keyword">var</span> <span class="org-variable-name">styleSheet</span> = { <span class="org-string">"font-family"</span>: <span class="org-string">"Liberation Mono"</span>,
                    <span class="org-string">"font-style"</span>: <span class="org-string">"normal"</span>,
                    <span class="org-string">"font-size"</span>: <span class="org-string">"10px"</span>,
-                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span> };  
+                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span> };
 </pre>
 
 <p>
@@ -176,7 +177,7 @@ is changed to use the default monospace font and a bigger font size
 <span class="org-keyword">var</span> <span class="org-variable-name">styleSheet</span> = { <span class="org-string">"font-family"</span>: <span class="org-string">"Monospace"</span>,
                    <span class="org-string">"font-style"</span>: <span class="org-string">"normal"</span>,
                    <span class="org-string">"font-size"</span>: <span class="org-string">"24px"</span>,
-                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span> };  
+                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span> };
 </pre>
 
 <p>
@@ -239,7 +240,7 @@ layout.addItem(separator(<span class="org-string">"}("</span>));
 layout.addItem(labels.wlan);
 layout.addItem(separator(<span class="org-string">")["</span>));
 layout.addItem(labels.sda);
-layout.addItem(separator(<span class="org-string">"]"</span>));  
+layout.addItem(separator(<span class="org-string">"]"</span>));
 </pre>
 
 
@@ -253,11 +254,14 @@ layout.addItem(separator(<span class="org-string">"]"</span>));
 </div>
 
 <div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Removing cpu or mem entry</h2>
+<h2 id="sec-4"><span class="section-number-2">4</span> Removing cpu entry</h2>
 <div class="outline-text-2" id="text-4">
 
-<p>We'll remove the <i>cpu</i> entry from textmon.  This doesn't make much sense, but I
-want you to know how to do it anyways.
+<p>This doesn't make much sense, but I want you to know how to do it anyways.
+</p>
+<p>
+The steps to remove either <i>cpu</i> or <i>mem</i> are analogous.  We will show how it's
+done for <i>cpu</i> here.
 </p>
 <p>
 Comment out or remove line 21:
@@ -307,7 +311,7 @@ Comment out or remove line 70-74
   <span class="org-comment-delimiter">//   </span><span class="org-comment">return  paddedValue + data["units"];</span>
   <span class="org-comment-delimiter">// </span><span class="org-comment">},</span>
 
-<span class="org-string">"mem"</span>: <span class="org-keyword">function</span>(<span class="org-variable-name">data</span>) {  
+<span class="org-string">"mem"</span>: <span class="org-keyword">function</span>(<span class="org-variable-name">data</span>) {
 </pre>
 
 
@@ -324,8 +328,8 @@ Comment out or remove line 164-169:
     <span class="org-comment-delimiter">//   </span><span class="org-comment">labels[label].text = formatter({ value: parseInt(sourceData["value"]),</span>
     <span class="org-comment-delimiter">//                                     </span><span class="org-comment">units: sourceData["units"] });</span>
     <span class="org-comment-delimiter">// </span><span class="org-comment">}</span>
-    <span class="org-comment-delimiter">// </span>
-    <span class="org-comment-delimiter">// </span><span class="org-comment">else </span>
+    <span class="org-comment-delimiter">//</span>
+    <span class="org-comment-delimiter">// </span><span class="org-comment">else</span>
     <span class="org-comment-delimiter">// </span><span class="org-comment">mem</span>
     <span class="org-keyword">if</span> (label === <span class="org-string">"mem"</span>) {
 </pre>
@@ -339,18 +343,16 @@ The sad result
 <p>Without cpu :(</p>
 </div>
 
-<p>
-The steps to remove the <i>mem</i> entry are analogous.
-</p>
 </div>
 
 </div>
 
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> Removing  wlan or sda</h2>
+<h2 id="sec-5"><span class="section-number-2">5</span> Removing  wlan entry</h2>
 <div class="outline-text-2" id="text-5">
 
-<p>We will remove <i>wlan</i> here.  The steps to remove the <i>sda</i> entry are analogous.
+<p>The steps to remove either <i>sda</i> or <i>wlan</i> are analogous.  We will show how
+it's done for <i>wlan</i> here.
 </p>
 <p>
 Comment out or remove line 23-24
@@ -401,7 +403,7 @@ Comment out or remove line 54-57
   <span class="org-comment-delimiter">//   </span><span class="org-comment">down: {value: "----", units: "KB/s"}</span>
   <span class="org-comment-delimiter">// </span><span class="org-comment">},</span>
 
-  <span class="org-string">"sda"</span> : {  
+  <span class="org-string">"sda"</span> : {
 </pre>
 
 
@@ -427,7 +429,7 @@ Comment out or remove line 82-95
   <span class="org-comment-delimiter">//   </span><span class="org-comment">return ret;</span>
   <span class="org-comment-delimiter">// </span><span class="org-comment">},</span>
 
-  <span class="org-string">"sda"</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">readData</span>, <span class="org-variable-name">writeData</span>) {  
+  <span class="org-string">"sda"</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">readData</span>, <span class="org-variable-name">writeData</span>) {
 </pre>
 
 
@@ -456,7 +458,7 @@ Comment out or remove line 192-207
   <span class="org-comment-delimiter">//   </span><span class="org-comment">var formatter = formatters[label];</span>
   <span class="org-comment-delimiter">//   </span><span class="org-comment">labels[label].text = formatter(data["down"], data["up"]);</span>
   <span class="org-comment-delimiter">// </span><span class="org-comment">}</span>
-};  
+};
 </pre>
 
 
@@ -468,15 +470,90 @@ The result
 <p>Without wlan</p>
 </div>
 
-
-
 </div>
 
 </div>
 
 <div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> Two applets with different settings</h2>
+<h2 id="sec-6"><span class="section-number-2">6</span> Monitoring eth0 instead of wlan0</h2>
 <div class="outline-text-2" id="text-6">
+
+<p>Your system may have a different device names for <i>wlan</i> (i.e. <code>ath0</code>) or you
+want to minitor your LAN (<code>eth0</code>) throughput instead.  The location in
+<code>main.js</code> to change these is line 21-28
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">systemmonitor sources we're subscribing to.  Found via</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">: $ plasmaengineexplorer</span>
+<span class="org-keyword">var</span> <span class="org-variable-name">sourceNames</span> = (<span class="org-keyword">function</span> () {
+  <span class="org-keyword">var</span> <span class="org-variable-name">ret</span> = {}
+
+  ret[<span class="org-string">"cpu"</span>] = <span class="org-string">"cpu/system/TotalLoad"</span>;
+  ret[<span class="org-string">"mem"</span>] = <span class="org-string">"mem/physical/application"</span>;
+  ret[<span class="org-string">"wlanDown"</span>] = <span class="org-string">"network/interfaces/wlan0/receiver/data"</span>;
+  ret[<span class="org-string">"wlanUp"</span>] = <span class="org-string">"network/interfaces/wlan0/transmitter/data"</span>;
+  <span class="org-comment-delimiter">//</span>
+  <span class="org-keyword">var</span> <span class="org-variable-name">sdaBase</span> = <span class="org-string">"disk/sda_(8:0)/Rate"</span>;
+  ret[<span class="org-string">"sdaRead"</span>] = sdaBase + <span class="org-string">"/rblk"</span>;
+  ret[<span class="org-string">"sdaWrite"</span>] = sdaBase + <span class="org-string">"/wblk"</span>;
+
+  <span class="org-keyword">return</span> ret;
+})();
+</pre>
+
+
+<p>
+Just as the comment suggest, use <i>plasmaengineexplorer</i> to figure out the
+proper identifiers.  For the down rate of the <code>eth0</code> device this is
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/engine_explorer_eth0.png"  alt="images/textmon-0.1/engine_explorer_eth0.png" /></p>
+<p>eth0</p>
+</div>
+
+<p>
+After the source names are changed
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sourceNames</span> = (<span class="org-keyword">function</span> () {
+  ...
+  ret[<span class="org-string">"lanDown"</span>] = <span class="org-string">"network/interfaces/eth0/receiver/data"</span>;
+  ret[<span class="org-string">"lan0Up"</span>] = <span class="org-string">"network/interfaces/eth0/transmitter/data"</span>;
+  <span class="org-comment-delimiter">//</span>
+  <span class="org-keyword">var</span> <span class="org-variable-name">sdaBase</span> = <span class="org-string">"disk/sda_(8:0)/Rate"</span>;
+  ...
+</pre>
+
+<p>
+you simply replace ~wlan" with "lan" in
+</p><ul>
+<li><code>sourceLabelMap</code>
+</li>
+<li><code>dataCache</code>
+</li>
+<li><code>formatters</code>
+</li>
+<li><code>updateLabels</code>
+</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="images/textmon-0.1/lan_instead_wlan.png"  alt="images/textmon-0.1/lan_instead_wlan.png" /></p>
+<p>lan instead of wlan</p>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Two applets with different settings</h2>
+<div class="outline-text-2" id="text-7">
 
 <p>Next you'll see why the plasma configuration facility makes a lot of sense,
 because we won't use it :P

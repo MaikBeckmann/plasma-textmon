@@ -3,7 +3,7 @@
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 
-* Introdution
+* Introcdution
 A number of examples on how to alter TextMon-0.1 are presented.  I'll assume
 you know what is explained in the prelude (TODO link here).
 
@@ -78,9 +78,11 @@ Or you do something entirely different
 #+caption: Random decoration
 [[file:images/textmon-0.1/random_decoration.png]]
 
-* Removing cpu or mem entry
-We'll remove the /cpu/ entry from textmon.  This doesn't make much sense, but I
-want you to know how to do it anyways.
+* Removing cpu entry
+This doesn't make much sense, but I want you to know how to do it anyways.
+
+The steps to remove either /cpu/ or /mem/ are analogous.  We will show how it's
+done for /cpu/ here.
 
 Comment out or remove line 21:
 #+begin_src js
@@ -138,10 +140,9 @@ The sad result
 #+caption: Without cpu :(
 [[file:images/textmon-0.1/without_cpu.png]]
 
-The steps to remove the /mem/ entry are analogous.
-
-* Removing  wlan or sda
-We will remove /wlan/ here.  The steps to remove the /sda/ entry are analogous.
+* Removing  wlan entry
+The steps to remove either /sda/ or /wlan/ are analogous.  We will show how
+it's done for /wlan/ here.
 
 Comment out or remove line 23-24
 #+begin_src js
@@ -230,6 +231,52 @@ Comment out or remove line 192-207
 The result
 #+caption: Without wlan
 [[file:images/textmon-0.1/without_wlan.png]]
+
+* Monitoring eth0 instead of wlan0
+Your system may have a different device names for /wlan/ (i.e. =ath0=) or you
+want to minitor your LAN (=eth0=) throughput instead.  The location in
+=main.js= to change these is line 21-28
+#+begin_src js
+  // systemmonitor sources we're subscribing to.  Found via
+  //   : $ plasmaengineexplorer
+  var sourceNames = (function () {
+    var ret = {}
+
+    ret["cpu"] = "cpu/system/TotalLoad";
+    ret["mem"] = "mem/physical/application";
+    ret["wlanDown"] = "network/interfaces/wlan0/receiver/data";
+    ret["wlanUp"] = "network/interfaces/wlan0/transmitter/data";
+    //
+    var sdaBase = "disk/sda_(8:0)/Rate";
+    ret["sdaRead"] = sdaBase + "/rblk";
+    ret["sdaWrite"] = sdaBase + "/wblk";
+
+    return ret;
+  })();
+#+end_src
+
+Just as the comment suggest, use /plasmaengineexplorer/ to figure out the
+proper identifiers.  For the down rate of the =eth0= device this is
+#+caption: eth0
+[[file:images/textmon-0.1/engine_explorer_eth0.png]]
+
+After the source names are changed
+#+begin_src js
+  var sourceNames = (function () {
+    ...
+    ret["lanDown"] = "network/interfaces/eth0/receiver/data";
+    ret["lan0Up"] = "network/interfaces/eth0/transmitter/data";
+    //
+    var sdaBase = "disk/sda_(8:0)/Rate";
+    ...
+#+end_src
+you simply replace ~wlan" with "lan" in
+ - =sourceLabelMap=
+ - =dataCache=
+ - =formatters=
+ - =updateLabels=
+#+caption: lan instead of wlan
+[[file:images/textmon-0.1/lan_instead_wlan.png]]
 
 * COMMENT Adding a new source                                          :todo:
 nil
