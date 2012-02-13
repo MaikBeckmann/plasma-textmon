@@ -12,7 +12,7 @@ code. The settings dialog shows you how to get there.  This hacky way of
 configuring the applet is no shortcoming but by intention. I wrote up a little
 guide/tutorial on how to get stared with Javascript applets and how to tweak
 TextMon.
- - http://maikbeckmann.github.com/plasma-textmon/
+ - [[http://maikbeckmann.github.com/plasma-textmon/]]
 It isn't finished by any means, but IMO good enough to do more good than harm.
 
 ** What is plasma?
