@@ -1,0 +1,215 @@
+#+Title: Prelude
+#+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
+#+Language: en
+#+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
+
+* Hello Javascript
+** Install a Javascript interpreter
+** Not Ubuntu
+*** js
+This is Mozilla's command line Javascript interpreter.  It's what I'll be using
+throughout this document, like
+ : % js foobar.js
+
+The package which contains this executable
+  - js :: for ArchLinux, OpenSUSE and Fedora
+  - spidermonkey-bin :: for Debian
+
+It is _not_ available on *Ubuntu*.  You have to use one of the two following.
+
+*** v8
+The =v8= package contains the =d8= Javscript interpreter.  When this documention says
+ : % js foobar.js
+then you can use
+ : % d8 foobar.js
+instead.
+
+*** rhino
+This is an Java implementation.  It will take forever to startup the first time
+it runs, but after that it's ok.  When this documention says
+ : % js foobar.js
+then you can use
+ : % rhino foobar.js
+instead.
+
+Note: Only about Ubuntu I know for certain that it's =rhino= package includes
+the =/usr/bin/rhino= shell script.  On Archlinux you'd have to do
+ : % java -jar /usr/share/java/js.jar foobar.js
+
+** Hello World
+Open your favorite editor and create the file =foobar.js= with the content
+#+begin_src js
+  print("Hello World!");
+#+end_src
+and run it in a shell
+ : % js foobar.js
+ : Hello World!
+
+* Hello Plasma
+** And there was metadata
+We aim to have plasma run our little world script.
+#+begin_src js
+  print("hello world");
+#+end_src
+For this we have to create a plasma package.  A package consists of its
+content, our Javascript file, and meta data that describes this content and its
+role.  The file tree of the simplest possible package looks like this
+ : hello_world
+ : ├── contents
+ : │   └── main.js
+ : └── metadata.desktop
+The simplest possible and barely working meta data is
+#+begin_src conf
+  [Desktop Entry]
+  Type=Service
+  X-Plasma-API=javascript
+  X-Plasma-MainScript=main.js
+#+end_src
+Now change to the directory =hello_world=, which contains the =metadata.desktop=
+file, and execute
+ : plasmoidviewer .
+An empty default applet appears, since we haven't done anything to the user
+interface yet, and the text
+ : hello world
+appears in the shell where we started plasmoidviewer
+#+caption: Empty default applet
+#+label: fig:empty_default
+##+attr_html: width="150"
+[[file:images/empty_default_applet.png]]
+
+** plasmapkg and life ain't easy
+To make our applet be usable for plasma we have to install it.  We'll install
+it into our user directory
+ : % echo $(kde4-config --localprefix)
+which will be something like =/home/YOU/.kde= or =/home/YOU/.kde4=, just paste
+it into the shel and see for yourself.  The follwing command does the
+installation
+ : % plasmapkg -i .
+But it won't work.  It fails with
+ : plasmapkg(24248)/libplasma Plasma::Package::installPackage: Package plugin name not specified
+ : Installation of /home/maik/.../hello_world failed.
+Okay, lets add a name.  The name is provided by =X-KDE-PluginInfo-Name=
+#+begin_src conf
+  [Desktop Entry]
+  Type=Service
+
+  X-KDE-PluginInfo-Name=HelloFoobar
+  X-Plasma-API=javascript
+  X-Plasma-MainScript=main.js
+#+end_src
+Lets try again
+ : % plasmapkg -i .
+ : Successfully installed /home/maik/Projekte/kde/plasmoids/javascript/textmon_tut/hello_world
+Yay!  Now we want to run it.  Plasmoidviewer can to do that as well.  Instead
+of giving a path to it, we give the name we've put into the meta data
+ : % plasmoidviewer HelloFoobar
+But it won't work, again.  You get
+#+caption: Missing X-KDE-ServiceTypes
+#+label: fig:missing_servicetypes
+#+attr_html: width="250"
+[[file:images/missing_servicetypes.png]]
+#
+BUMMER!  But wait, there is more fail to come.  Before I explain what is
+missing, lets try to get rid if the faulty installation.  You generally can
+remove plasma components with
+ : % plasmapkg -r PACKAGENAME
+But
+ : % plasmapkg -r HelloFoobar
+results in
+ : Plugin HelloFoobar is not installed.
+WAT?  That is clearly not correct.  It is a bug in plasmapkg that I'll report
+ASAP, I promise.  I the mean time do this
+ : % rm $(kde4-config --localprefix)/share/kde4/services/plasma-applet-HelloFoobar.desktop
+ : % rm $(kde4-config --localprefix)/share/apps/plasma/plasmoids/HelloFoobar/ -r
+
+What we have to add is the role this /Service/ named /HelloFoobar/ plays.  It's
+a plasma applet:
+#+begin_src conf
+  [Desktop Entry]
+  Type=Service
+
+  X-KDE-PluginInfo-Name=HelloFoobar
+  X-KDE-ServiceTypes=Plasma/Applet
+
+  X-Plasma-API=javascript
+  X-Plasma-MainScript=main.js
+#+end_src
+No we can not only
+ : % plasmapkg -i .
+ : Successfully installed /home/maik/Projekte/kde/plasmoids/javascript/textmon_tut/hello_world
+but also
+: % plasmoidviewer HelloFoobar
+: hello world
+as well as
+ : % plasmapkg -r HelloFoobar
+ : Successfully removed HelloFoobar
+Yay :D
+
+Since we have a package that plasmapkg can chew on without choking I suggest
+you play a bit with the options it provides.  We already saw how to install
+ : % plasmapkg -i /path/to/package/dir/
+ : % plasmapkg -i /path/to/package.plasmoid
+where we used the first version with
+ : % plasmapkg -i .
+We also, though unsuccessfully, used the command line to remove a package
+ : % plasmapkg -r PACKAGENAME
+ : % plasmapkg -r /path/to/package/dir/
+The second one reads the name of the package to remove from the
+=metadata.desktop= file in the directory it was given the path to.  That's why
+ : % plasmapkg -r .
+just reverts the things done by =plasmapkg -i=.  Well, once the bug mentioned
+above is fixed :P.  Finally the plasmapkg command you'll be using most of the
+time is that to upgrading an existing package
+ : % plasmapkg -u /path/to/package/dir/
+ : % plasmapkg -u /path/to/package.plasmoid
+This actually removes the package and installs it again.  For example
+ : % plasmapkg -u .
+and
+ : % plasmapkg -r .
+ : % plasmapkg -i .
+do the very same things.
+
+** Give yourself a treat: Good error messages
+Consider this code
+#+begin_src js
+  array = [1, 2, 3];
+#+end_src
+and break it
+=foobar.js=
+#+begin_src js
+  array = [1, 2 3];
+#+end_src
+Put that into our main.js and see what plasma has to say
+ : % plasmoidviwer .
+We get this:
+#+caption: Syntax Error: Parse Error.  This means: dunno!
+#+label: fig:missing_servicetypes
+#+attr_html: width="250"
+[[file:images/syntax_error.png]]
+#
+Well ok, parsing a programming language is hard.  I'm sure they done as good as
+anybody can ask for, right?  Lets see what the contenders have to say. Here
+Mozilla's js
+ : % js main.js
+ : main.js:1: SyntaxError: missing ] after element list:
+ : main.js:1: array = [1, 2 3];
+ : main.js:1: ..............^
+or Google's v8 (its command line debugger is called d8)
+ :% d8 main.js
+ : main.js:1: SyntaxError: Unexpected number
+ : array = [1, 2 3];
+ :               ^
+ : SyntaxError: Unexpected number
+or rhino, as well done by Mozilla
+ : % rhino main.js
+ : js: "main.js", line 1: missing ] after element list
+ : js: array = [1, 2 3];
+ : js: ...............^
+Rhino is off by one dot, but still: wow!
+
+A missing comma, brace and bracet is an frequent coding error.  QtScript will
+give you the line number, that's it.  If you have no idea what the heck it's
+problem is, do yourself a favor by pasting the code in question into file and
+have one of the above Javascript interpreters a run at it.  They of cause won't
+be able to run it, but they'll find the syntax error with a _sweet_ error
+message.

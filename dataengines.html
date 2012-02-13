@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Data engines</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Data engines"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-02-13 11:35:08 CET"/>
+<meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org-mode.css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Data engines</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Hello?</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Getting more than one shot</a></li>
+<li><a href="#sec-1-2">1.2 A sink with a slot</a></li>
+<li><a href="#sec-1-3">1.3 Connecting the slot to a source</a></li>
+<li><a href="#sec-1-4">1.4 Exploring a data source</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 The <i>systemmonitor</i> date engine</a>
+<ul>
+<li><a href="#sec-2-1">2.1 CPU load</a></li>
+<li><a href="#sec-2-2">2.2 Application memory</a></li>
+<li><a href="#sec-2-3">2.3 Wlan</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1 Down rate</a></li>
+<li><a href="#sec-2-3-2">2.3.2 Up rate</a></li>
+<li><a href="#sec-2-3-3">2.3.3 Joined data</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-4">2.4 Harddisk</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1 Read rate</a></li>
+<li><a href="#sec-2-4-2">2.4.2 Write rate</a></li>
+<li><a href="#sec-2-4-3">2.4.3 Joined data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Hello?</h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Getting more than one shot</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>Our script is run exactly once!  To get more than this single run, we have to
+convince plasma to give us additional cpu cycles.  this is done by defining a
+data sink and connecting it to a source.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> A sink with a slot</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>An object acts as the sink and a function as the slot that connects the source
+to the sink
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"ping"</span>);
+  }
+};
+</pre>
+
+<p>
+The name of the sink Object can be anything
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">CatDog</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"ping"</span>);
+  }
+};
+</pre>
+
+<p>
+The name of the slot function however is to be <code>dataUpdated</code>.  The function
+always receives two parameters.  We'll dicuss their content in a bit.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Connecting the slot to a source</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>A plasma engine provides sources.  They're connected to via their
+<code>connectSource</code> method.  The arguments this method takes are the name of the
+source, the sink object and the desired interval length in which sink's
+<code>dataUpdated</code> slot should be called.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"SourcesServingEngine"</span>)
+<span class="org-keyword">var</span> <span class="org-variable-name">intervalInMilliSeconds</span> = 1000;  <span class="org-comment-delimiter">// </span><span class="org-comment">one second</span>
+engine.connectSource(<span class="org-string">"SourceOfInterest"</span>, sink, intervalInMilliSeconds);
+</pre>
+
+<p>
+This code has a flaw.  The connection might fail of
+</p><ul>
+<li>the source doesn't exist
+</li>
+<li>the sink object doesn't define the <code>dataUpdated</code> slot.
+</li>
+</ul>
+
+<p>This flowing version doesn't really handle these situation, but at least tells
+us about it.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"SourcesServingEngine"</span>)
+<span class="org-keyword">var</span> <span class="org-variable-name">intervalInMilliSeconds</span> = 1000;  <span class="org-comment-delimiter">// </span><span class="org-comment">one second</span>
+<span class="org-keyword">if</span> (! engine.connectSource(<span class="org-string">"SourceOfInterest"</span>, sink, intervalInMilliSeconds) ) {
+  print(<span class="org-string">"connection attempt to SourceOfInterest in SourcesServingEngine failed D:"</span>);
+}
+</pre>
+
+
+<p>
+To actually find a data source and a source it provides we gonna use
+</p><pre class="example">
+% plasmaengineexplorer
+</pre>
+
+
+<div id="fig-plasmaengineexplorer" class="figure">
+<p><img src="images/plasmaengineexplorer.png"  alt="images/plasmaengineexplorer.png" /></p>
+<p>Plasma engine explorer</p>
+</div>
+<p>
+In image <a href="#fig-plasmaengineexplorer">plasmaengineexplorer</a> the source <i>Local</i> of the <i>time</i> data
+engine is expanded.  This code uses it
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"ping"</span>);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<p>
+and results in
+</p><pre class="example">
+ping
+connection established
+main.js ends here
+ping
+ping
+ping
+</pre>
+
+
+<p>
+As you can see, connectSource calls the dataUpdated slot.  So make sure that
+it's already there.  If not
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+sink.dataUpdated = <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+  print(<span class="org-string">"ping"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<p>
+we'll get
+</p><pre class="example">
+% plasmoidviewer .
+connection attempt failed
+main.js ends here
+%
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Exploring a data source</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>So far it is only confirmed that <code>dataUpdated</code> was called back.  Now we take a
+look at the value of the parameters it is called with by the data engine.
+</p>
+<p>
+First the <code>name</code>.  This code for the sink section
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(name);
+  }
+};
+</pre>
+
+<p>
+results in
+</p><pre class="example">
+Local
+connection established
+main.js ends here
+Local
+Local
+...
+</pre>
+
+<p>This is the same name we used with <code>connectSource</code>.  This becomes important
+when we subscribe to more than one data source.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(name);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection to 'Local' in 'time' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to 'Local' in 'time' failed"</span>);
+}
+<span class="org-comment-delimiter">//</span>
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Europe/London"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection to 'Europe/London' in 'time' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to 'Europe/London' in 'time' failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+ % plasmoidviewer .
+Local
+connection to 'Local' in 'time' established
+Europe/London
+connection to 'Europe/London' in 'time' established
+main.js ends here
+Local
+Europe/London
+Local
+Europe/Londo
+</pre>
+
+
+<p>
+Now the <code>data</code>.  We're using the version that only connects to <code>Local</code> in
+<code>time</code> with this slot definition
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"===== data ====="</span>);
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> data) {
+      print(<span class="org-string">"key : "</span> + k);
+      print(<span class="org-string">"data[key] : "</span> + data[k]);
+      print(<span class="org-string">"typeof data[key] : "</span> + <span class="org-keyword">typeof</span> data[k]);
+      print(<span class="org-string">"----"</span>);
+    }
+  }
+};
+</pre>
+
+<p>
+It results in
+</p><pre class="example">
+===== data =====
+key : Timezone Continent
+typeof data[key] : string
+data[key] : Europe
+----
+key : Offset
+typeof data[key] : number
+data[key] : 3600
+----
+key : DateTime
+typeof data[key] : object
+data[key] : Sun Feb 12 2012 09:46:52 GMT+0100 (CET)
+----
+key : Timezone
+typeof data[key] : string
+data[key] : Europe/Berlin
+----
+key : Time
+typeof data[key] : object
+data[key] : 09:46:52
+----
+key : Date
+typeof data[key] : object
+data[key] : Sun Feb 12 2012 00:00:00 GMT+0100 (CET)
+----
+key : Timezone City
+typeof data[key] : string
+data[key] : Berlin
+</pre>
+
+<p>The <code>Offset</code> looks off, doesn't it?.  That's because its unit is seconds.  My
+time zone has an offset of
+</p><pre class="example">
+          3600 s * 1 min
+3600 s =  -------------- = 60 min
+                   60 s
+
+          60 min * 1 h
+60 min =  -------------- = 1 h .
+                60 min
+</pre>
+
+
+<p>
+If you compare this data with what is shown in <a href="#fig-plasmaengineexplorer">plasmaengineexplorer</a>,
+then you'll notice it being exactly the same, except for the actual point in
+time.  For Qt data types that don't have an builtin equivalent in Javascript we
+get an object.
+</p><ul>
+<li><a href="http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types">Conversion between QtScript and C++ types</a>
+</li>
+</ul>
+
+<p>Lets have a peek into what one of these converted Qt types has to offer
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"==== data ====="</span>);
+    <span class="org-keyword">var</span> <span class="org-variable-name">dateTime</span> = data[<span class="org-string">"DateTime"</span>]
+    print(<span class="org-string">'&lt;properties of data["DateTime"]'</span>);
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> dateTime) {
+      print(<span class="org-string">"key : "</span> + k);
+      print(<span class="org-string">'typeof dateTime[key] : '</span> + <span class="org-keyword">typeof</span> dateTime[k]);
+      print(<span class="org-string">'dateTime[key] : '</span> + dateTime[k]);
+    }
+    print(<span class="org-string">'&lt;/properties of data["DateTime"]'</span>);
+  }
+};
+</pre>
+
+<pre class="example">
+==== data =====
+&lt;properties of data["DateTime"]
+&lt;/properties of data["DateTime"]
+</pre>
+
+<p>Nothing?  That is correct.  This shell around an C++ object only hands out you
+a string representation of its value to Javascript.  Though they are not
+showing up with the code above, these objects have the following methods
+</p><ul>
+<li><code>toString()</code>
+</li>
+<li><code>toLocaleString()</code>
+</li>
+<li><code>valueOf()</code>
+</li>
+<li><code>hasOwnProperty(V)</code>
+</li>
+<li><code>isPrototypeOf(V)</code>
+</li>
+<li><code>propertyIsEnumerable(V)</code>
+</li>
+</ul>
+
+<p>The Qt docs just mention their existence
+</p><ul>
+<li><a href="http://doc.qt.nokia.com/4.7-snapshot/ecmascript.html">http://doc.qt.nokia.com/4.7-snapshot/ecmascript.html</a>
+</li>
+</ul>
+
+<p>For real information head over to Mozilla
+</p><ul>
+<li><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object">https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object</a>
+</li>
+</ul>
+
+<p>However, you probably only ever use <code>toString()</code>.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"==== data ====="</span>);
+    <span class="org-keyword">var</span> <span class="org-variable-name">dateTime</span> = data[<span class="org-string">"DateTime"</span>]
+    print(<span class="org-string">"typeof dateTime : "</span> + <span class="org-keyword">typeof</span> dateTime);
+    print(<span class="org-string">"typeof dateTime.toString : "</span> + <span class="org-keyword">typeof</span> dateTime.toString);
+    print(<span class="org-string">"typeof dateTime.toString() : "</span> + <span class="org-keyword">typeof</span> dateTime.toString());
+    print(<span class="org-string">"dateTime.toString() : "</span> + dateTime.toString());
+  }
+};
+</pre>
+
+<pre class="example">
+==== data =====
+typeof dateTime : object
+typeof dateTime.toString : function
+typeof dateTime.toString() : string
+dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> The <i>systemmonitor</i> date engine</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> CPU load</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<div id="fig-cpu_total_load" class="figure">
+<p><img src="images/cpu_total_load.png"  alt="images/cpu_total_load.png" /></p>
+<p>systemmonitor : the system's total cpu load</p>
+</div>
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"==== data ====="</span>);
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> data) {
+      print(<span class="org-string">"key : "</span> + k);
+      print(<span class="org-string">'data[key] : '</span> + data[k]);
+      print(<span class="org-string">"---"</span>)
+    }
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"cpu/system/TotalLoad"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+==== data =====
+key : type
+data[key] : float
+---
+==== data =====
+key : units
+data[key] : %
+---
+key : type
+data[key] : float
+---
+key : value
+data[key] : 1.503759
+---
+key : min
+data[key] : 0
+---
+key : name
+data[key] : CPU Total Load
+---
+key : max
+data[key] : 100
+</pre>
+
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+NaN
+4.834606%
+0.502513%
+1.012658%
+</pre>
+
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-comment-delimiter">// </span><span class="org-comment">No data aviable. God knows why</span>
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) {
+      <span class="org-keyword">return</span>;
+    }
+
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+4.822335%
+0.751880%
+0.501253%
+</pre>
+
+
+
+<ul>
+<li><a href="http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt">http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt</a>
+</li>
+</ul>
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-comment-delimiter">// </span><span class="org-comment">No data aviable. God knows why</span>
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) {
+      <span class="org-keyword">return</span>;
+    }
+
+    print(parseInt(data[<span class="org-string">"value"</span>], 10) + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+5%
+2%
+0%
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Application memory</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"mem/physical/application"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+NaN
+2077064KB
+2079192KB
+2079544KB
+</pre>
+
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(parseInt(data[<span class="org-string">"value"</span>] / 1024, 10) + <span class="org-string">"MB"</span>);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+1934MB
+1932MB
+1932MB
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Wlan</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+</div>
+
+<div id="outline-container-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> Down rate</h4>
+<div class="outline-text-4" id="text-2-3-1">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"network/interfaces/wlan0/receiver/data"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<p>
+connection established
+main.js ends here
+NaN
+89KB/s
+103KB/s
+105KB/s
+</p>
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+124KB/s
+97KB/s
+131KB/s
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> Up rate</h4>
+<div class="outline-text-4" id="text-2-3-2">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"network/interfaces/wlan0/transmitter/data"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+5KB/s
+6KB/s
+6KB/s
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3"><span class="section-number-4">2.3.3</span> Joined data</h4>
+<div class="outline-text-4" id="text-2-3-3">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = (<span class="org-keyword">function</span> () {
+  <span class="org-keyword">var</span> <span class="org-variable-name">obj</span> = {}
+
+  obj.sourceUp = <span class="org-string">"network/interfaces/wlan0/transmitter/data"</span>;
+  obj.sourceDown = <span class="org-string">"network/interfaces/wlan0/receiver/data"</span>;
+  obj.cache = {
+    up: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>},
+    down: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>}
+  };
+
+  obj.dataUpdated = <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">TODO: up and down tauchen</span>
+    <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceUp) {
+      <span class="org-constant">this</span>.cache.up = data;
+    } <span class="org-keyword">else</span> <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceDown) {
+      <span class="org-constant">this</span>.cache.down = data;
+    }
+
+    <span class="org-keyword">var</span> <span class="org-variable-name">msg</span> = <span class="org-string">"down: "</span> + <span class="org-constant">this</span>.cache.down[<span class="org-string">"value"</span>] + <span class="org-constant">this</span>.cache.down[<span class="org-string">"units"</span>];
+    msg += <span class="org-string">" "</span>;
+    msg += <span class="org-string">"up: "</span> + <span class="org-constant">this</span>.cache.up[<span class="org-string">"value"</span>] + <span class="org-constant">this</span>.cache.up[<span class="org-string">"units"</span>];
+    print(msg);
+  }
+
+  <span class="org-keyword">return</span> obj;
+})();
+
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceDown, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceDown + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceDown + <span class="org-string">"' failed"</span>);
+}
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceUp, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceUp + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceUp + <span class="org-string">"' failed"</span>);
+}
+
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection to 'network/interfaces/wlan0/receiver/data' established
+connection to 'network/interfaces/wlan0/transmitter/data' established
+main.js ends here
+down: ----KB/s up: 5KB/s
+down: 105KB/s up: 5KB/s
+down: 105KB/s up: 5KB/s
+down: 91KB/s up: 5KB/s
+down: 91KB/s up: 6KB/s
+down: 147KB/s up: 6KB/s
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Harddisk</h3>
+<div class="outline-text-3" id="text-2-4">
+
+
+</div>
+
+<div id="outline-container-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> Read rate</h4>
+<div class="outline-text-4" id="text-2-4-1">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"disk/sda_(8:0)/Rate/rblk"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+NaN
+0.000000KB/s
+0.000000KB/s
+0.000000KB/s
+</pre>
+
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-comment-delimiter">// </span><span class="org-comment">No data aviable. God knows why</span>
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) {
+      <span class="org-keyword">return</span>;
+    }
+
+    print(parseInt(data[<span class="org-string">"value"</span>], 10) + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+0KB/s
+0KB/s
+0KB/s
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="section-number-4">2.4.2</span> Write rate</h4>
+<div class="outline-text-4" id="text-2-4-2">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-comment-delimiter">// </span><span class="org-comment">No data aviable. God knows why</span>
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) {
+      <span class="org-keyword">return</span>;
+    }
+
+    print(parseInt(data[<span class="org-string">"value"</span>], 10) + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"disk/sda_(8:0)/Rate/wblk"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+0KB/s
+0KB/s
+0KB/s
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3"><span class="section-number-4">2.4.3</span> Joined data</h4>
+<div class="outline-text-4" id="text-2-4-3">
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = (<span class="org-keyword">function</span> () {
+  <span class="org-keyword">var</span> <span class="org-variable-name">obj</span> = {}
+
+  obj.sourceRead = <span class="org-string">"disk/sda_(8:0)/Rate/wblk"</span>;
+  obj.sourceWrite = <span class="org-string">"disk/sda_(8:0)/Rate/rblk"</span>;
+  obj.cache = {
+    read: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>},
+    write: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>}
+  };
+
+  obj.dataUpdated = <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+
+    <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceRead) {
+      <span class="org-constant">this</span>.cache.read = data;
+      <span class="org-constant">this</span>.cache.read[<span class="org-string">"value"</span>] = parseInt(data[<span class="org-string">"value"</span>], 10);
+    } <span class="org-keyword">else</span> <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceWrite) {
+      <span class="org-constant">this</span>.cache.write = data;
+      <span class="org-constant">this</span>.cache.write[<span class="org-string">"value"</span>] = parseInt(data[<span class="org-string">"value"</span>], 10);
+    }
+
+    <span class="org-keyword">var</span> <span class="org-variable-name">msg</span> = <span class="org-string">"read: "</span> + <span class="org-constant">this</span>.cache.read[<span class="org-string">"value"</span>]
+                       + <span class="org-constant">this</span>.cache.read[<span class="org-string">"units"</span>];
+    msg += <span class="org-string">" "</span>;
+    msg += <span class="org-string">"write: "</span> + <span class="org-constant">this</span>.cache.write[<span class="org-string">"value"</span>]
+                     + <span class="org-constant">this</span>.cache.write[<span class="org-string">"units"</span>];
+    print(msg);
+  }
+
+  <span class="org-keyword">return</span> obj;
+})();
+
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceRead, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceRead + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceRead + <span class="org-string">"' failed"</span>);
+}
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceWrite, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceWrite + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceWrite + <span class="org-string">"' failed"</span>);
+}
+
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection to 'disk/sda_(8:0)/Rate/wblk' established
+connection to 'disk/sda_(8:0)/Rate/rblk' established
+main.js ends here
+read: ----KB/s write: 0KB/s
+read: 0KB/s write: 0KB/s
+read: 0KB/s write: 0KB/s
+</pre>
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>

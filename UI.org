@@ -1,0 +1,215 @@
+#+Title: Plasma user interface basics
+#+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
+#+Language: en
+#+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
+
+* Introduction
+The only two UI widget we'll use are a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#Label][Labels]], a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#LinearLayout][Layout]] to arrange them and the
+[[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-PlasmoidObject][plasmoid]] itself.
+
+* Hello plasmoid
+The applet itself is represented by a global object named =plasmoid=.  We gonna
+take a look at what properties it has to offer
+#+begin_src js
+  for(var k in plasmoid) {
+    print(k);
+  }
+#+end_src
+ : objectName
+ : aspectRatioMode
+ : formFactor
+ : location
+ : currentActivity
+ : shouldConserveResources
+ : activeConfig
+ : busy
+ : backgroundHints
+ : immutable
+ : userConfiguring
+ : apiVersion
+ : status
+ : rect
+ : size
+ : associatedApplication
+ : layout
+ : sender
+ : destroyed(QObject*)
+ : destroyed()
+ : releaseVisualFocus()
+ : configNeedsSaving()
+ : formFactorChanged()
+ : locationChanged()
+ : contextChanged()
+ : immutableChanged()
+ : statusChanged()
+ : gc()
+ : formFactor()
+ : aspectRatioMode()
+ : setAspectRatioMode(AspectRatioMode)
+ : setFailedToLaunch(bool,QString)
+ : setFailedToLaunch(bool)
+ : isBusy()
+ : setBusy(bool)
+ : backgroundHints()
+ : setBackgroundHints(BackgroundHints)
+ : setConfigurationRequired(bool,QString)
+ : setConfigurationRequired(bool)
+ : size()
+ : rect()
+ : setActionSeparator(QString)
+ : setAction(QString,QString,QString,QString)
+ : setAction(QString,QString,QString)
+ : setAction(QString,QString)
+ : removeAction(QString)
+ : action(QString)
+ : resize(qreal,qreal)
+ : setMinimumSize(qreal,qreal)
+ : setPreferredSize(qreal,qreal)
+ : activeConfig()
+ : setActiveConfig(QString)
+ : readConfig(QString)
+ : writeConfig(QString,QVariant)
+ : file(QString)
+ : file(QString,QString)
+ : include(QString)
+ : debug(QString)
+ : findChild(QString)
+ : extender()
+ : downloadedFiles()
+ : update(QRectF)
+ : update()
+ : listAddons
+ : loadAddon
+ : addEventListener
+ : removeEventListener
+ : hasExtension
+ : __qt_scope__
+From the number of properties alone you can tell that it must be important :P.
+
+And it is.  The =P= in this graph
+ :             P
+ :            / \
+ :           /   \
+ :          /     \
+ :         /       \
+ :        O         O
+ :       / \       /|\
+ :      /   \     / | \
+ :     O     O   O  O  O
+represents =plasmoid=.  It is the root object of our applet.  All other elemets
+in it are represented by an =O=.  If the applet is destroyed (by closing the
+window of shutting plasma down) it starts a cleanup cascade.  It tells its
+immediate children to kill their children and so on.
+
+Besizes that role it has some methods that control the outer dimensions and
+orientation of the applet.  For example
+#+begin_src js
+  plasmoid.resize(300, 30);
+#+end_src
+#+caption: Resize
+[[file:images/resize.png]]
+#
+The object graph for this applet is rather simple
+ :             P
+We gonna change that now.
+
+* Hello label
+This code
+#+begin_src js
+  l = new Label(plasmoid) // adds it as child of plasmoid
+  l.text = "Hello World";
+#+end_src
+puts a label =l= object into the graph
+ :             P
+ :             |
+ :             |
+ :             l
+
+The result
+#+caption: Hello label
+[[file:images/hello_label.png]]
+#
+This looks broken, doesn't it?  A label on it's own doesn't what to do with
+itself.
+
+* Hello layout
+The label needs some guidance, which will be delivered by an layout =L=
+ :             P
+ :             |
+ :             |
+ :             L
+ :             |
+ :             |
+ :             l
+#+begin_src js
+  layout = new LinearLayout(plasmoid); // add it as child of plasmoid
+
+  l = new Label()
+  l.text = "Hello World";
+  layout.addItem(l); // inserts it as cild of layout
+#+end_src
+The result is
+#+caption: Hello layout
+[[file:images/hello_layout.png]]
+#
+That looks a lot better.  However, I cheated.  You'll see prabably this:
+#+caption: Hello layout, err
+[[file:images/hello_layout_err.png]]
+#
+That is a lovely little bug that only occurs when the applet is run via
+/plasmoidviewer/.  You can fix it buy resizing the plasmoid a tiny bit.
+Actually, we can do that in the script itself
+#+begin_src js
+  layout = new LinearLayout(plasmoid); // add it as child of plasmoid
+
+  l = new Label()
+  l.text = "Hello World";
+  layout.addItem(l); // inserts it as cild of layout
+
+  // ugly little hack to work around layout issue when using plasmoidviewer
+  plasmoid.resize(201, 200)
+  plasmoid.resize(200, 200)
+#+end_src
+I'll use that trick from now on, but won't actually include it in the code
+listings.
+
+* More labels!
+This code
+#+begin_src js
+layout = new LinearLayout(plasmoid); // add it as child of plasmoid
+
+labels = [];
+for(var i = 0; i < 4; i++) {
+  l = new Label()
+  l.text = "l" + i;
+  layout.addItem(l); // inserts it as cild of layout
+
+  labels.push(l); // for later usage
+}
+#+end_src
+builds this object graph
+ :             P
+ :             |
+ :             L
+ :             |
+ :      o----o-----o---o
+ :      |    |     |   |
+ :     l0   l1    l2  l3
+The resulting applet is
+#+caption: More labels
+[[file:images/more_labels.png]]
+
+TODO:
+ - dummy layout with fake cpu, mem, wlan and sda values
+ - the real deal
+
+Idea: Maybe this is too much.  It might be a good idea to create seperate applets for
+ - cpu
+ - mem
+ - mem and cpu
+ - wlan up
+ - wlan down
+ - wlan up and down
+ - sda read
+ - sda write
+ - sda read and write
