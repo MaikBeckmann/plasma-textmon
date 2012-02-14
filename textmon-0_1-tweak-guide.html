@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="Hack your TextMon(-0.1)"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-13 13:35:17 CET"/>
+<meta name="generated" content="2012-02-14 09:24:52 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -159,6 +159,41 @@ we get
 <p>Bigger font</p>
 </div>
 
+<p>
+The CSS properties at your disposal are listed here
+</p><ul>
+<li><a href="http://developer.qt.nokia.com/doc/qt-4.8/stylesheet-reference.html#list-of-properties">Qt stylesheet reference</a>
+</li>
+</ul>
+
+
+<p>
+<b>Note</b> I haven't played much with these beyond setting the <code>font-family</code> and
+ <code>font-size</code>.  I've tried
+</p><ul>
+<li><a href="http://www.w3schools.com/css/css_border.asp">http://www.w3schools.com/css/css_border.asp</a>
+</li>
+</ul>
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">styleSheet</span> = { <span class="org-string">"font-family"</span>: <span class="org-string">"Liberation Mono"</span>,
+                   <span class="org-string">"font-style"</span>: <span class="org-string">"normal"</span>,
+                   <span class="org-string">"font-size"</span>: <span class="org-string">"10px"</span>,
+                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span>,
+                   <span class="org-string">"border-style"</span>: <span class="org-string">"solid"</span>,
+                   <span class="org-string">"border-width"</span>: <span class="org-string">"5px"</span>,
+                   <span class="org-string">"border-color"</span>: <span class="org-string">"white"</span>};
+</pre>
+
+<p>
+This made the applet bigger, so the border was added and set to <code>5px</code>.  The
+border color however wasn't white, but looked the same as the rest of the
+applet background.  I actually like that, because it ensures my plasma desktop
+looks consistent, but I'd really like to know which properties I can use with
+plasma and which not (TODO).
+</p>
 </div>
 
 </div>

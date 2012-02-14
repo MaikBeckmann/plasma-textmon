@@ -31,6 +31,27 @@ we get
 #+caption: Bigger font
 [[file:images/textmon-0.1/bigger_font.png]]
 
+The CSS properties at your disposal are listed here
+ - [[http://developer.qt.nokia.com/doc/qt-4.8/stylesheet-reference.html#list-of-properties][Qt stylesheet reference]]
+
+*Note* I haven't played much with these beyond setting the =font-family= and
+ =font-size=.  I've tried
+ - http://www.w3schools.com/css/css_border.asp
+#+BEGIN_SRC js
+var styleSheet = { "font-family": "Liberation Mono",
+                   "font-style": "normal",
+                   "font-size": "10px",
+                   "color": "white",
+		   "border-style": "solid",
+		   "border-width": "5px",
+                   "border-color": "white"};
+#+END_SRC
+This made the applet bigger, so the border was added and set to =5px=.  The
+border color however wasn't white, but looked the same as the rest of the
+applet background.  I actually like that, because it ensures my plasma desktop
+looks consistent, but I'd really like to know which properties I can use with
+plasma and which not (TODO).
+
 * Changing value decoration
 The code that arranges the labels is at the lines 141-146
 #+begin_src js
