@@ -42,8 +42,9 @@ much simpler flavors TextMon to come, like
   - TextMonMem
   - TextMonWlan
   - TextMonSda
-etc.  Eventually I'll come back to this original applet.  The code will most
-like be much simper, easier to understand and tweak.
+  - ...
+Eventually I'll come back to this original applet.  The code will most likely
+be much simper, easier to understand and less error prone to tweak.
 
 * COMMENT  [[file:UI.html][Plasma user interface basics]]
 * [[http://github.com/MaikBeckmann/plasma-textmon][github repo]]
