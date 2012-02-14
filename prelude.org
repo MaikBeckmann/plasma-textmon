@@ -196,7 +196,7 @@ Mozilla's js
  : main.js:1: array = [1, 2 3];
  : main.js:1: ..............^
 or Google's v8 (its command line debugger is called d8)
- :% d8 main.js
+ : % d8 main.js
  : main.js:1: SyntaxError: Unexpected number
  : array = [1, 2 3];
  :               ^
