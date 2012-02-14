@@ -14,7 +14,7 @@ var styleSheet = { "font-family": "Liberation Mono",
 
 
 // systemmonitor sources we're subscribing to.  Found via
-//   : $ plasmaengineexplorer
+//   : % plasmaengineexplorer
 var sourceNames = (function () {
   var ret = {}
 
