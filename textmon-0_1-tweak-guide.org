@@ -254,7 +254,7 @@ before you continue.  Because
 The location in =main.js= to change the monitored devices is line 21-28
 #+begin_src js
   // systemmonitor sources we're subscribing to.  Found via
-  //   : $ plasmaengineexplorer
+  //   : % plasmaengineexplorer
   var sourceNames = (function () {
     var ret = {}
 
