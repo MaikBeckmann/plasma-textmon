@@ -1,4 +1,4 @@
-#+Title: Hack your TextMon(-0.1)
+#+Title: Hack your TextMon
 #+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
@@ -6,8 +6,8 @@
 [[file:index.html][{Back to index}]]
 
 * Introcdution
-A number of examples on how to alter TextMon-0.1 are presented.  I'll assume
-you know what is explained in the [[file:prelude.html][prelude]].
+A number of examples on how to alter TextMon are presented.  I'll assume you
+know what is explained in the [[file:prelude.html][prelude]].
 
 * Changing the font
 The CSS stylesheet that defines the font appearance is located in line 10
@@ -44,7 +44,7 @@ var styleSheet = { "font-family": "Liberation Mono",
                    "color": "white",
 		   "border-style": "solid",
 		   "border-width": "5px",
-                   "border-color": "white"};
+                   "border-color": "white" };
 #+END_SRC
 This made the applet bigger, so the border was added and set to =5px=.  The
 border color however wasn't white, but looked the same as the rest of the
