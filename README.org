@@ -26,14 +26,14 @@ act as "data engine" or as an widget that visualizes such data.  It however
 never does both.
 
 Components are either native, which means they are written in C++, or they're
-using one of the bindings to a dynamic lanuage, like Python, Ruby and
+using one of the bindings to a dynamic language, like Python, Ruby and
 Javascript.
 
 The Javascript bindings are special as they're part of every plasma
 installation and in that it's API is "simplified" aka. limited.  In return
 components written with Javascript are ensured to be max. portable.
 
-** A glimpse of awesomenss
+** A glimpse of awesomeness
 This is also a tribute to the awesome window manager, where doing such a system
 monitor widget is among the first things you learn. I've came to appreciate
 knowing exactly when my system comes under pressure (cpu, mem, sda) or if a
