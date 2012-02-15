@@ -324,3 +324,6 @@ applet
 
 This isn't too bad, but you can clearly see why a per applet instance
 configuration makes a lot of sense.
+* COMMENT Todos
+** Relpace TextMon screenshots with light colored ones
+These dark ones just look out of place on white background.
