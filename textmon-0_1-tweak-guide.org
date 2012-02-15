@@ -35,8 +35,8 @@ The CSS properties at your disposal are listed here
  - [[http://developer.qt.nokia.com/doc/qt-4.8/stylesheet-reference.html#list-of-properties][Qt stylesheet reference]]
 
 *Note* I haven't played much with these beyond setting the =font-family= and
- =font-size=.  I've tried
- - http://www.w3schools.com/css/css_border.asp
+ =font-size=.  I've tried adding a border
+ - [[http://dev.opera.com/articles/view/30-the-css-layout-model-boxes-border]]
 #+BEGIN_SRC js
 var styleSheet = { "font-family": "Liberation Mono",
                    "font-style": "normal",
