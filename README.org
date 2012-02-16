@@ -1,6 +1,6 @@
 * Minimalistic textual system monitor for plasma
 ** What is this?
-This is plasma widget which displays data emitted by the "systemmonitor" data
+This is a plasma widget which displays data emitted by the "systemmonitor" data
 engine.  By default it shows
 - total cpu load
 - used application memory
