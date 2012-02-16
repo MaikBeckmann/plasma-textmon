@@ -176,13 +176,12 @@ Consider this code
   array = [1, 2, 3];
 #+end_src
 and break it
-=foobar.js=
 #+begin_src js
   array = [1, 2 3];
 #+end_src
-Put that into our main.js and see what plasma has to say
+Put that into our =main.js= and see what plasma has to say
  : % plasmoidviwer .
-We get this:
+which is this:
 #+caption: Syntax Error: Parse Error.  This means: dunno!
 #+label: fig:missing_servicetypes
 #+attr_html: width="250"
@@ -209,8 +208,8 @@ or rhino, as well done by Mozilla
 Rhino is off by one dot, but still: wow!
 
 A missing comma, brace and bracet is an frequent coding error.  QtScript will
-give you the line number, that's it.  If you have no idea what the heck it's
-problem is, do yourself a favor by pasting the code in question into file and
+give you the line number, that's it.  If you have no idea what the heck its
+problem is, do yourself a favor by pasting the code in question into a file and
 have one of the above Javascript interpreters a run at it.  They of cause won't
 be able to run it, but they'll find the syntax error with a _sweet_ error
 message.

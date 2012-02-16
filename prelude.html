@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Prelude"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-14 11:40:04 CET"/>
+<meta name="generated" content="2012-02-16 21:16:42 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -483,7 +483,6 @@ time is that to upgrading an existing package
 
 <p>
 and break it
-<code>foobar.js</code>
 </p>
 
 
@@ -491,12 +490,12 @@ and break it
 </pre>
 
 <p>
-Put that into our main.js and see what plasma has to say
+Put that into our <code>main.js</code> and see what plasma has to say
 </p><pre class="example">
 % plasmoidviwer .
 </pre>
 
-<p>We get this:
+<p>which is this:
 </p>
 <div id="fig-missing_servicetypes" class="figure">
 <p><img src="images/syntax_error.png" width="250" alt="images/syntax_error.png" /></p>
@@ -534,8 +533,8 @@ js: ...............^
 </p>
 <p>
 A missing comma, brace and bracet is an frequent coding error.  QtScript will
-give you the line number, that's it.  If you have no idea what the heck it's
-problem is, do yourself a favor by pasting the code in question into file and
+give you the line number, that's it.  If you have no idea what the heck its
+problem is, do yourself a favor by pasting the code in question into a file and
 have one of the above Javascript interpreters a run at it.  They of cause won't
 be able to run it, but they'll find the syntax error with a <span style="text-decoration:underline;">sweet</span> error
 message.
