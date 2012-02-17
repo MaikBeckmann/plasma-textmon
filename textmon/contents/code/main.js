@@ -31,7 +31,7 @@ var cpu = (function () {
   that.label.text = "---%";
 
   that.dataUpdated = function (name, data) {
-    if (!data["value"]) { return; }
+    if (!data.value) { return; }
     if (name !== this.source) {
       throw("[CODE ERROR] this routine is meant to handle '"
 	    + this.source + "', not '" + name +"'");
