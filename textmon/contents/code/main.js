@@ -12,7 +12,7 @@ var styleSheet = { "font-family": "Liberation Mono",
                    "color": "white" };
 
 /* label factory that sets some properties we want */
-var newLabel = function () {
+function newLabel() {
   var ret = new Label();
   ret.styleSheet = helpers.styleSheetToString(styleSheet);
   ret.wordWrap = false;
@@ -161,7 +161,7 @@ var sda = (function () {
 */
 
 /* Throws if connection fails */
-var checkedConnectSource = function (engine, source, sink) {
+function checkedConnectSource (engine, source, sink) {
   if (!engine.connectSource(source, sink, 1000)) {
     throw("connection attempt to '" + source + "' failed");
   }
