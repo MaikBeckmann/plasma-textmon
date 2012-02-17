@@ -2,7 +2,7 @@
 
 /** Javscript modules */
 if (!plasmoid.include("helpers.js")) {
-  throw("[CODE ERROR] couldn't load helpers.js module");
+  throw ("[CODE ERROR] couldn't load helpers.js module");
 }
 
 /** Font properties */
@@ -17,7 +17,7 @@ function newLabel() {
   ret.styleSheet = helpers.styleSheetToString(styleSheet);
   ret.wordWrap = false;
   return ret;
-};
+}
 
 
 /** cpu */
@@ -165,7 +165,7 @@ function checkedConnectSource (engine, source, sink) {
   if (!engine.connectSource(source, sink, 1000)) {
     throw("connection attempt to '" + source + "' failed");
   }
-};
+}
 
 var engine = dataEngine("systemmonitor");
 
