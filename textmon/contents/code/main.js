@@ -156,27 +156,25 @@ var sda = (function () {
   Connect sinks to their sources.
 */
 
-/* Decorates connecting with some logging code */
-var connectSource = function (engine, source, sink) {
-  if ( engine.connectSource(source, sink, 1000) ) {
-    print("connection to '" + source + "' established");
-  } else {
-    print("connection attempt to '" + source + "' failed");
+/* Throws if connection fails */
+var checkedConnectSource = function (engine, source, sink) {
+  if (!engine.connectSource(source, sink, 1000)) {
+    throw("connection attempt to '" + source + "' failed");
   }
 };
 
 var engine = dataEngine("systemmonitor");
 
 for(var k in wlan.sources) {
-  connectSource(engine,  wlan.sources[k], wlan);
+  checkedConnectSource(engine,  wlan.sources[k], wlan);
 }
 
 for(var k in sda.sources) {
-  connectSource(engine, sda.sources[k], sda);
+  checkedConnectSource(engine, sda.sources[k], sda);
 }
 
-connectSource(engine, cpu.source, cpu);
-connectSource(engine, mem.source, mem);
+checkedConnectSource(engine, cpu.source, cpu);
+checkedConnectSource(engine, mem.source, mem);
 
 
 /** layout */
