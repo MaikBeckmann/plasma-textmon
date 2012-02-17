@@ -1,10 +1,9 @@
 // -*- coding: utf-8 -*-
 
 /** Javscript modules */
-if (! plasmoid.include("helpers.js")) {
+if (!plasmoid.include("helpers.js")) {
   throw("[CODE ERROR] couldn't load helpers.js module");
 }
-
 
 // Font properties
 var styleSheet = { "font-family": "Liberation Mono",
@@ -12,218 +11,185 @@ var styleSheet = { "font-family": "Liberation Mono",
                    "font-size": "10px",
                    "color": "white" };
 
+var layout = new LinearLayout(plasmoid);
 
-// systemmonitor sources we're subscribing to.  Found via
-//   : % plasmaengineexplorer
-var sourceNames = (function () {
-  var ret = {}
 
-  ret["cpu"] = "cpu/system/TotalLoad";
-  ret["mem"] = "mem/physical/application";
-  ret["wlanDown"] = "network/interfaces/wlan0/receiver/data";
-  ret["wlanUp"] = "network/interfaces/wlan0/transmitter/data";
+var cpu = (function () {
+  var obj = {}
+
+  obj.source = "cpu/system/TotalLoad";
+  obj.sources = [obj.source];
+
+  var label = new Label();
+  label.styleSheet = helpers.styleSheetToString(styleSheet);
+  label.wordWrap = false;
+  label.text = "---%"
   //
-  var sdaBase = "disk/sda_(8:0)/Rate";
-  ret["sdaRead"] = sdaBase + "/rblk";
-  ret["sdaWrite"] = sdaBase + "/wblk";
+  obj.layout = layout;
+  obj.label = label;
 
-  return ret;
+  obj.dataUpdated = function (name, data) {
+    if (!data["value"]) { return; }
+    if (name !== this.source) {
+      throw("[CODE ERROR] this routine is meant to handle '"
+	    + this.source + "', not '" + name +"'");
+    }
+
+    var paddedValue = helpers.padStrLeft(parseInt(data["value"], 10).toString(), ' ', 3);
+    this.label.text = paddedValue + data["units"];
+  }
+
+  return obj;
 })();
 
 
-// Names for the labels that show the received values
-var labelNames = ["cpu", "mem", "wlan", "sda"];
+var mem = (function () {
+  var obj = {}
 
+  obj.source = "mem/physical/application";
+  obj.sources = [obj.source];
 
-// Maps the sources to the matching label.
-var sourceLabelMap = (function () {
-  var ret = {};
-  ret[sourceNames.cpu] = "cpu";
-  ret[sourceNames.mem] = "mem";
-  ret[sourceNames.wlanDown] = "wlan";
-  ret[sourceNames.wlanUp] = "wlan";
-  ret[sourceNames.sdaRead] = "sda";
-  ret[sourceNames.sdaWrite] = "sda";
-  return ret;
+  var label = new Label();
+  label.styleSheet = helpers.styleSheetToString(styleSheet);
+  label.wordWrap = false;
+  label.text = "----MB"
+  //
+  obj.layout = layout;
+  obj.label = label;
+
+  obj.dataUpdated = function (name, data) {
+    if (!data["value"]) { return; }
+    if (name !== this.source) {
+      throw("[CODE ERROR] this routine is meant to handle '"
+	    + this.source + "', not '" + name +"'");
+    }
+
+    var paddedValue = helpers.padStrLeft(parseInt(data["value"]/1024, 10).toString(), ' ', 4);
+    this.label.text = paddedValue + "MB";
+  }
+
+  return obj;
 })();
 
 
-// Some labels display the values of more than one source.  For these we have
-// to cache the values.
-var dataCache = {
-  "wlan" : {
-    up:   {value: "----", units: "KB/s"},
-    down: {value: "----", units: "KB/s"}
-  },
+var wlan = (function () {
+  var obj = {}
 
-  "sda" : {
-    read:  {value: "-----", units: "KB/s"},
-    write: {value: "-----", units: "KB/s"}
-  }
-};
+  obj.sourceDown = "network/interfaces/wlan0/receiver/data";
+  obj.sourceUp = "network/interfaces/wlan0/transmitter/data";
+  obj.sources = [obj.sourceDown, obj.sourceUp];
+  obj.cache = {
+    down: {value: "----", units: "KB/s"},
+    up: {value: "----", units: "KB/s"}
+  };
 
-
-// Maps a given label name to a function that renders the data to the text the
-// label displays.
-var formatters = {
-
-  "cpu": function (data) {
-    var value = helpers.checkedValueStr(data["value"], '0');
-    var paddedValue = helpers.padStrLeft(value, ' ', 3);
-    return  paddedValue + data["units"];
-  },
-
-  "mem": function(data) {
-    var value = helpers.checkedValueStr(data["value"], '0');
-    var paddedValue = helpers.padStrLeft(value, ' ', 4);
-    return  paddedValue + data["units"];
-  },
-
-  "wlan": function (downData, upData) {
-    var ret;
-
-    var value = helpers.checkedValueStr(downData["value"], '0');
-    var paddedValue = helpers.padStrLeft(value, ' ', 4);
-    ret = paddedValue + downData["units"] + " d";
-
-    ret += "|";
-
-    var value = helpers.checkedValueStr(upData["value"], '0');
-    var paddedValue = helpers.padStrLeft(value, ' ', 4);
-    ret += paddedValue + upData["units"] + " u";
-    return ret;
-  },
-
-  "sda": function (readData, writeData) {
-    var ret;
-
-    var value = helpers.checkedValueStr(readData["value"], '0');
-    var paddedValue = helpers.padStrLeft(value, ' ', 5);
-    ret = paddedValue + readData["units"] + " r" ;
-
-    ret += "|";
-
-    var value = helpers.checkedValueStr(writeData["value"], '0');
-    var paddedValue = helpers.padStrLeft(value, ' ', 5);
-    ret += paddedValue + writeData["units"] + " w";
-
-    return ret;
-  }
-};
-
-
-// Creates the labels arranges them in a layout.
-var labels = (function (styleSheet, labelNames) {
-  /* every variable declared in here isn't global :D */
-
-  var labels = {}
-  for(var i = 0; i < labelNames.length; i++) {
-    l = new Label();
-    l.text= "---";
-    l.wordWrap = false;
-    l.styleSheet = helpers.styleSheetToString(styleSheet);
-    labels[labelNames[i]] = l;
-  }
-
-  var layout = new LinearLayout(plasmoid);
-  layout.spacing = 0;
-  layout.setContentsMargins(0, 0, 0, 0);
-
-  // The labels which display the actual content
-  var separator = function(sepStr) {
-    var l = new Label();
-    l.text = sepStr;
-    l.wordWrap = false;
-    l.styleSheet = helpers.styleSheetToString(styleSheet);
-    return l;
-  }
+  var label = new Label();
+  label.styleSheet = helpers.styleSheetToString(styleSheet);
+  label.wordWrap = false;
+  label.text = "down:----KB/s up:----KB/s";
   //
-  for(var i in labelNames) {
-    var name = labelNames[i]
-    layout.addItem(separator("{" + name + ":"));
-    layout.addItem(labels[name]);
-    layout.addItem(separator("}"));
-  }
+  obj.layout = layout;
+  obj.label = label;
 
-  return labels;
-})(styleSheet, labelNames);
+  obj.dataUpdated = function (name, data) {
+    if (!data["value"]) { return; }
 
-
-// Takes the data sent from systemmonitor and dispatches the to code which
-// changes the matching label.
-var updateLabels = function (labels, name, sourceData) {
-  if ( !sourceData["value"] ) {
-    return;
-  }
-
-  var label = sourceLabelMap[name];
-  if(typeof label === 'undefined') {
-    throw("[CODE ERROR] unknown label");
-  }
-
-  // cpu
-  if (label === "cpu") {
-    var formatter = formatters[label];
-    labels[label].text = formatter({ value: parseInt(sourceData["value"]),
-                                      units: sourceData["units"] });
-  }
-  // mem
-  else if (label === "mem") {
-    var formatter = formatters[label];
-    labels[label].text = formatter({ value: parseInt(sourceData["value"] / 1024),
-                                      units: "MB" });
-  }
-  // sda
-  else if (label === "sda") {
-    var data = dataCache[label];
-    if (name === sourceNames.sdaRead) {
-      data["read"] = { value: parseInt(sourceData["value"]),
-                       units: sourceData["units"] };
+    if (name == this.sourceDown) {
+      this.cache.down = data;
+      this.cache.down["value"] = parseInt(data["value"], 10).toString();
+    } else if (name == this.sourceUp) {
+      this.cache.up = data;
+      this.cache.up["value"] = parseInt(data["value"], 10).toString();
     }
-    else if (name === sourceNames.sdaWrite) {
-      data["write"] = { value: parseInt(sourceData["value"]),
-                        units: sourceData["units"] };
-    }
-    dataCache[label] = data;
 
-    var formatter = formatters[label];
-    labels[label].text = formatter(data["read"], data["write"]);
-  }
-  // wlan
-  else if (label === "wlan") {
-    var data = dataCache[label];
-    if (name === sourceNames.wlanDown) {
-      data["down"] = { value: sourceData["value"],
-                       units: sourceData["units"] };
-    }
-    else if (name === sourceNames.wlanUp) {
-      data["up"] = { value: sourceData["value"],
-                     units: sourceData["units"] };
-    }
-    dataCache[label] = data;
+    var paddedValue = helpers.padStrLeft(this.cache.down["value"], ' ', 4);
+    var text = "down:" + paddedValue + this.cache.down["units"];
+    text += " ";
 
-    var formatter = formatters[label];
-    labels[label].text = formatter(data["down"], data["up"]);
-  }
-};
-
-
-// Callback we give to the data engine.
-plasmoid.dataUpdated = function (name, sourceData) {
-  updateLabels(labels, name, sourceData);
-};
-
-
-// subscribe to sources
-(function (engine, sources, receiver, interval) {
-  if (typeof receiver.dataUpdated !== "function") {
-    throw("[CODE ERROR] dataUpdated slot isn't set");
+    var paddedValue = helpers.padStrLeft(this.cache.up["value"], ' ', 4);
+    text += "up:" + paddedValue + this.cache.up["units"];
+    this.label.text = text;
   }
 
-  for(var k in sources) {
-    var source = sources[k];
-    if( ! engine.connectSource(source, receiver, interval) ) {
-      throw("Wasn't able to connect to " + source);
+  return obj;
+})();
+
+
+var sda = (function () {
+  var obj = {}
+
+  obj.sourceRead = "disk/sda_(8:0)/Rate/wblk";
+  obj.sourceWrite = "disk/sda_(8:0)/Rate/rblk";
+  obj.sources = [obj.sourceRead, obj.sourceWrite];
+  obj.cache = {
+    read: {value: "----", units: "KB/s"},
+    write: {value: "----", units: "KB/s"}
+  };
+
+  var label = new Label();
+  label.styleSheet = helpers.styleSheetToString(styleSheet);
+  label.wordWrap = false;
+  label.text = "read:-----KB/s write:-----KB/s";
+  //
+  obj.layout = layout;
+  obj.label = label;
+
+  obj.dataUpdated = function (name, data) {
+    if (!data["value"]) { return; }
+
+    if (name == this.sourceRead) {
+      this.cache.read = data;
+      this.cache.read["value"] = parseInt(data["value"], 10).toString();
+    } else if (name == this.sourceWrite) {
+      this.cache.write = data;
+      this.cache.write["value"] = parseInt(data["value"], 10).toString();
     }
+
+    var paddedValue = helpers.padStrLeft(this.cache.read["value"], ' ', 5);
+    var text = "write: " + paddedValue + this.cache.read["units"];
+    text += " ";
+    var paddedValue = helpers.padStrLeft(this.cache.write["value"], ' ', 5);
+    text += "read: " + paddedValue + this.cache.write["units"];
+    this.label.text = text;
   }
-})(dataEngine("systemmonitor"), sourceNames, plasmoid, 1000);
+
+  return obj;
+})();
+
+var engine = dataEngine("systemmonitor");
+
+for(var k in wlan.sources) {
+  var source = wlan.sources[k];
+  if ( engine.connectSource(source, wlan, 1000) ) {
+    print("connection to '" + source + "' established");
+  } else {
+    print("connection attempt to '" + source + "' failed");
+  }
+}
+
+for(var k in sda.sources) {
+  var source = sda.sources[k];
+  if ( engine.connectSource(source, sda, 1000) ) {
+    print("connection to '" + source + "' established");
+  } else {
+    print("connection attempt to '" + source + "' failed");
+  }
+}
+
+if ( engine.connectSource(cpu.source, cpu, 1000) ) {
+  print("connection to '" + cpu.source + "' established");
+} else {
+  print("connection attempt to '" + cpu.source + "' failed");
+}
+
+if ( engine.connectSource(mem.source, mem, 1000) ) {
+  print("connection to '" + mem.source + "' established");
+} else {
+  print("connection attempt to '" + mem.source + "' failed");
+}
+
+
+layout.addItem(cpu.label);
+layout.addItem(mem.label);
+layout.addItem(wlan.label);
+layout.addItem(sda.label);
