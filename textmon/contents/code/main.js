@@ -88,10 +88,10 @@ var wlan = (function () {
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
 
-    if (name == this.sourceDown) {
+    if (name === this.sourceDown) {
       this.cache.down = data;
       this.cache.down.value = parseInt(data.value, 10).toString();
-    } else if (name == this.sourceUp) {
+    } else if (name === this.sourceUp) {
       this.cache.up = data;
       this.cache.up.value = parseInt(data.value, 10).toString();
     }
@@ -131,10 +131,10 @@ var sda = (function () {
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
 
-    if (name == this.sourceRead) {
+    if (name === this.sourceRead) {
       this.cache.read = data;
       this.cache.read.value = parseInt(data.value, 10).toString();
-    } else if (name == this.sourceWrite) {
+    } else if (name === this.sourceWrite) {
       this.cache.write = data;
       this.cache.write.value = parseInt(data.value, 10).toString();
     }
