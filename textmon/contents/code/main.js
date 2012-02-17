@@ -62,7 +62,7 @@ var mem = (function () {
 	     + this.source + "', not '" + name + "'");
     }
 
-    var paddedValue = helpers.padStrLeft(parseInt(data.value/1024, 10).toString(), ' ', 4);
+    var paddedValue = helpers.padStrLeft(parseInt(data.value / 1024, 10).toString(), ' ', 4);
     this.label.text = paddedValue + "MB";
   };
 
