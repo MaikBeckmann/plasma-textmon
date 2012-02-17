@@ -96,13 +96,15 @@ var wlan = (function () {
       this.cache.up.value = parseInt(data.value, 10).toString();
     }
 
-    var paddedValue = helpers.padStrLeft(this.cache.down.value, ' ', 4);
-    var text = "down:" + paddedValue + this.cache.down.units;
+    var down = this.cache.down;
+    var paddedValue = helpers.padStrLeft(down.value, ' ', 4);
+    var text = "down:" + paddedValue + down.units;
     //
     text += " ";
     //
-    var paddedValue = helpers.padStrLeft(this.cache.up.value, ' ', 4);
-    text += "up:" + paddedValue + this.cache.up.units;
+    var up = this.cache.up;
+    var paddedValue = helpers.padStrLeft(up.value, ' ', 4);
+    text += "up:" + paddedValue + up.units;
 
     this.label.text = text;
   }
@@ -137,13 +139,15 @@ var sda = (function () {
       this.cache.write.value = parseInt(data.value, 10).toString();
     }
 
-    var paddedValue = helpers.padStrLeft(this.cache.read.value, ' ', 5);
-    var text = "write: " + paddedValue + this.cache.read.units;
+    var read = this.cache.read;
+    var paddedValue = helpers.padStrLeft(read.value, ' ', 5);
+    var text = "write: " + paddedValue + read.units;
     //
     text += " ";
     //
-    var paddedValue = helpers.padStrLeft(this.cache.write.value, ' ', 5);
-    text += "read: " + paddedValue + this.cache.write.units;
+    var write = this.cache.write;
+    var paddedValue = helpers.padStrLeft(write.value, ' ', 5);
+    text += "read: " + paddedValue + write.units;
 
     this.label.text = text;
   }
