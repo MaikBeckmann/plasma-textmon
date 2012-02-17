@@ -12,7 +12,12 @@ var styleSheet = { "font-family": "Liberation Mono",
                    "color": "white" };
 
 var layout = new LinearLayout(plasmoid);
-
+var newLabel = function () {
+  var ret = new Label();
+  ret.styleSheet = helpers.styleSheetToString(styleSheet);
+  ret.wordWrap = false;
+  return ret;
+}
 
 var cpu = (function () {
   var obj = {}
@@ -20,9 +25,7 @@ var cpu = (function () {
   obj.source = "cpu/system/TotalLoad";
   obj.sources = [obj.source];
 
-  var label = new Label();
-  label.styleSheet = helpers.styleSheetToString(styleSheet);
-  label.wordWrap = false;
+  var label = newLabel();
   label.text = "---%"
   //
   obj.layout = layout;
@@ -49,9 +52,7 @@ var mem = (function () {
   obj.source = "mem/physical/application";
   obj.sources = [obj.source];
 
-  var label = new Label();
-  label.styleSheet = helpers.styleSheetToString(styleSheet);
-  label.wordWrap = false;
+  var label = newLabel();
   label.text = "----MB"
   //
   obj.layout = layout;
@@ -83,9 +84,7 @@ var wlan = (function () {
     up: {value: "----", units: "KB/s"}
   };
 
-  var label = new Label();
-  label.styleSheet = helpers.styleSheetToString(styleSheet);
-  label.wordWrap = false;
+  var label = newLabel();
   label.text = "down:----KB/s up:----KB/s";
   //
   obj.layout = layout;
@@ -126,9 +125,7 @@ var sda = (function () {
     write: {value: "----", units: "KB/s"}
   };
 
-  var label = new Label();
-  label.styleSheet = helpers.styleSheetToString(styleSheet);
-  label.wordWrap = false;
+  var label = newLabel();
   label.text = "read:-----KB/s write:-----KB/s";
   //
   obj.layout = layout;
