@@ -42,7 +42,7 @@ var cpu = (function () {
   };
 
   return that;
-})();
+}());
 
 
 /** mem */
@@ -67,7 +67,7 @@ var mem = (function () {
   };
 
   return that;
-})();
+}());
 
 
 /** wlan */
@@ -110,7 +110,7 @@ var wlan = (function () {
   };
 
   return that;
-})();
+}());
 
 
 /** sda */
@@ -153,7 +153,7 @@ var sda = (function () {
   };
 
   return that;
-})();
+}());
 
 
 /**
