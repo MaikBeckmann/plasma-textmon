@@ -161,7 +161,7 @@ var sda = (function () {
 */
 
 /* Throws if connection fails */
-function checkedConnectSource (engine, source, sink) {
+function checkedConnectSource(engine, source, sink) {
   if (!engine.connectSource(source, sink, 1000)) {
     throw ("connection attempt to '" + source + "' failed");
   }
