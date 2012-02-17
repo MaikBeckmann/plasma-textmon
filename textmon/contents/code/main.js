@@ -39,7 +39,7 @@ var cpu = (function () {
 
     var paddedValue = helpers.padStrLeft(parseInt(data.value, 10).toString(), ' ', 3);
     this.label.text = paddedValue + data.units;
-  }
+  };
 
   return that;
 })();
@@ -64,7 +64,7 @@ var mem = (function () {
 
     var paddedValue = helpers.padStrLeft(parseInt(data.value/1024, 10).toString(), ' ', 4);
     this.label.text = paddedValue + "MB";
-  }
+  };
 
   return that;
 })();
@@ -107,7 +107,7 @@ var wlan = (function () {
     text += "up:" + paddedValue + up.units;
 
     this.label.text = text;
-  }
+  };
 
   return that;
 })();
@@ -150,7 +150,7 @@ var sda = (function () {
     text += "read: " + paddedValue + write.units;
 
     this.label.text = text;
-  }
+  };
 
   return that;
 })();
