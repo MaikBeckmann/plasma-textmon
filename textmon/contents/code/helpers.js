@@ -30,6 +30,9 @@ var helpers  = (function () {
 
   /* left padding of str with padChar */
   var padStrLeft = function (str, padChr, minWidth) {
+    if (typeof str !== 'string') {
+      throw("[CODE ERROR] not a string");
+    }
     if (str.length >= minWidth) {
       return str;
     }
