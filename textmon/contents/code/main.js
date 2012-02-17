@@ -33,8 +33,8 @@ var cpu = (function () {
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
     if (name !== this.source) {
-      throw("[CODE ERROR] this routine is meant to handle '"
-	    + this.source + "', not '" + name +"'");
+      throw ("[CODE ERROR] this routine is meant to handle '"
+	     + this.source + "', not '" + name +"'");
     }
 
     var paddedValue = helpers.padStrLeft(parseInt(data.value, 10).toString(), ' ', 3);
@@ -58,8 +58,8 @@ var mem = (function () {
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
     if (name !== this.source) {
-      throw("[CODE ERROR] this routine is meant to handle '"
-	    + this.source + "', not '" + name +"'");
+      throw ("[CODE ERROR] this routine is meant to handle '"
+	     + this.source + "', not '" + name +"'");
     }
 
     var paddedValue = helpers.padStrLeft(parseInt(data.value/1024, 10).toString(), ' ', 4);
@@ -163,7 +163,7 @@ var sda = (function () {
 /* Throws if connection fails */
 function checkedConnectSource (engine, source, sink) {
   if (!engine.connectSource(source, sink, 1000)) {
-    throw("connection attempt to '" + source + "' failed");
+    throw ("connection attempt to '" + source + "' failed");
   }
 }
 
