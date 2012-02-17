@@ -94,10 +94,12 @@ var wlan = (function () {
 
     var paddedValue = helpers.padStrLeft(this.cache.down["value"], ' ', 4);
     var text = "down:" + paddedValue + this.cache.down["units"];
+    //
     text += " ";
-
+    //
     var paddedValue = helpers.padStrLeft(this.cache.up["value"], ' ', 4);
     text += "up:" + paddedValue + this.cache.up["units"];
+
     this.label.text = text;
   }
 
@@ -132,9 +134,12 @@ var sda = (function () {
 
     var paddedValue = helpers.padStrLeft(this.cache.read["value"], ' ', 5);
     var text = "write: " + paddedValue + this.cache.read["units"];
+    //
     text += " ";
+    //
     var paddedValue = helpers.padStrLeft(this.cache.write["value"], ' ', 5);
     text += "read: " + paddedValue + this.cache.write["units"];
+
     this.label.text = text;
   }
 
@@ -153,13 +158,11 @@ var connectSource = function (engine, source, sink) {
 var engine = dataEngine("systemmonitor");
 
 for(var k in wlan.sources) {
-  var source = wlan.sources[k];
-  connectSource(engine, source, wlan);
+  connectSource(engine,  wlan.sources[k], wlan);
 }
 
 for(var k in sda.sources) {
-  var source = sda.sources[k];
-  connectSource(engine, source, sda);
+  connectSource(engine, sda.sources[k], sda);
 }
 
 connectSource(engine, cpu.source, cpu);
