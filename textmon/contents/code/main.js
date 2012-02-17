@@ -2,7 +2,7 @@
 
 /** Javscript modules */
 if (!plasmoid.include("helpers.js")) {
-  throw ("[CODE ERROR] couldn't load helpers.js module");
+  throw("[CODE ERROR] couldn't load helpers.js module");
 }
 
 /** Font properties */
@@ -34,7 +34,7 @@ var cpu = (function () {
     if (!data.value) { return; }
     if (name !== this.source) {
       throw ("[CODE ERROR] this routine is meant to handle '"
-	     + this.source + "', not '" + name +"'");
+	     + this.source + "', not '" + name + "'");
     }
 
     var paddedValue = helpers.padStrLeft(parseInt(data.value, 10).toString(), ' ', 3);
@@ -59,7 +59,7 @@ var mem = (function () {
     if (!data.value) { return; }
     if (name !== this.source) {
       throw ("[CODE ERROR] this routine is meant to handle '"
-	     + this.source + "', not '" + name +"'");
+	     + this.source + "', not '" + name + "'");
     }
 
     var paddedValue = helpers.padStrLeft(parseInt(data.value/1024, 10).toString(), ' ', 4);
