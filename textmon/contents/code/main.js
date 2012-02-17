@@ -17,18 +17,18 @@ var newLabel = function () {
   ret.styleSheet = helpers.styleSheetToString(styleSheet);
   ret.wordWrap = false;
   return ret;
-}
+};
 
 
 /** cpu */
 var cpu = (function () {
-  var that = {}
+  var that = {};
 
   that.source = "cpu/system/TotalLoad";
   that.sources = [that.source];
 
   that.label = newLabel();
-  that.label.text = "---%"
+  that.label.text = "---%";
 
   that.dataUpdated = function (name, data) {
     if (!data["value"]) { return; }
@@ -47,13 +47,13 @@ var cpu = (function () {
 
 /** mem */
 var mem = (function () {
-  var that = {}
+  var that = {};
 
   that.source = "mem/physical/application";
   that.sources = [that.source];
 
   that.label = newLabel();
-  that.label.text = "----MB"
+  that.label.text = "----MB";
 
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
@@ -72,7 +72,7 @@ var mem = (function () {
 
 /** wlan */
 var wlan = (function () {
-  var that = {}
+  var that = {};
 
   that.sourceDown = "network/interfaces/wlan0/receiver/data";
   that.sourceUp = "network/interfaces/wlan0/transmitter/data";
@@ -115,7 +115,7 @@ var wlan = (function () {
 
 /** sda */
 var sda = (function () {
-  var that = {}
+  var that = {};
 
   that.sourceRead = "disk/sda_(8:0)/Rate/wblk";
   that.sourceWrite = "disk/sda_(8:0)/Rate/rblk";
