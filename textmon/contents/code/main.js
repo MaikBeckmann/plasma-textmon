@@ -153,37 +153,29 @@ var sda = (function () {
   return obj;
 })();
 
+
+var connectSource = function (engine, source, sink) {
+  if ( engine.connectSource(source, sink, 1000) ) {
+    print("connection to '" + source + "' established");
+  } else {
+    print("connection attempt to '" + source + "' failed");
+  }
+};
+
 var engine = dataEngine("systemmonitor");
 
 for(var k in wlan.sources) {
   var source = wlan.sources[k];
-  if ( engine.connectSource(source, wlan, 1000) ) {
-    print("connection to '" + source + "' established");
-  } else {
-    print("connection attempt to '" + source + "' failed");
-  }
+  connectSource(engine, source, wlan);
 }
 
 for(var k in sda.sources) {
   var source = sda.sources[k];
-  if ( engine.connectSource(source, sda, 1000) ) {
-    print("connection to '" + source + "' established");
-  } else {
-    print("connection attempt to '" + source + "' failed");
-  }
+  connectSource(engine, source, sda);
 }
 
-if ( engine.connectSource(cpu.source, cpu, 1000) ) {
-  print("connection to '" + cpu.source + "' established");
-} else {
-  print("connection attempt to '" + cpu.source + "' failed");
-}
-
-if ( engine.connectSource(mem.source, mem, 1000) ) {
-  print("connection to '" + mem.source + "' established");
-} else {
-  print("connection attempt to '" + mem.source + "' failed");
-}
+connectSource(engine, cpu.source, cpu);
+connectSource(engine, mem.source, mem);
 
 
 layout.addItem(cpu.label);
