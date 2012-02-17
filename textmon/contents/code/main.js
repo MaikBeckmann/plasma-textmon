@@ -22,15 +22,15 @@ var newLabel = function () {
 
 /** cpu */
 var cpu = (function () {
-  var obj = {}
+  var that = {}
 
-  obj.source = "cpu/system/TotalLoad";
-  obj.sources = [obj.source];
+  that.source = "cpu/system/TotalLoad";
+  that.sources = [that.source];
 
-  obj.label = newLabel();
-  obj.label.text = "---%"
+  that.label = newLabel();
+  that.label.text = "---%"
 
-  obj.dataUpdated = function (name, data) {
+  that.dataUpdated = function (name, data) {
     if (!data["value"]) { return; }
     if (name !== this.source) {
       throw("[CODE ERROR] this routine is meant to handle '"
@@ -41,21 +41,21 @@ var cpu = (function () {
     this.label.text = paddedValue + data.units;
   }
 
-  return obj;
+  return that;
 })();
 
 
 /** mem */
 var mem = (function () {
-  var obj = {}
+  var that = {}
 
-  obj.source = "mem/physical/application";
-  obj.sources = [obj.source];
+  that.source = "mem/physical/application";
+  that.sources = [that.source];
 
-  obj.label = newLabel();
-  obj.label.text = "----MB"
+  that.label = newLabel();
+  that.label.text = "----MB"
 
-  obj.dataUpdated = function (name, data) {
+  that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
     if (name !== this.source) {
       throw("[CODE ERROR] this routine is meant to handle '"
@@ -66,26 +66,26 @@ var mem = (function () {
     this.label.text = paddedValue + "MB";
   }
 
-  return obj;
+  return that;
 })();
 
 
 /** wlan */
 var wlan = (function () {
-  var obj = {}
+  var that = {}
 
-  obj.sourceDown = "network/interfaces/wlan0/receiver/data";
-  obj.sourceUp = "network/interfaces/wlan0/transmitter/data";
-  obj.sources = [obj.sourceDown, obj.sourceUp];
-  obj.cache = {
+  that.sourceDown = "network/interfaces/wlan0/receiver/data";
+  that.sourceUp = "network/interfaces/wlan0/transmitter/data";
+  that.sources = [that.sourceDown, that.sourceUp];
+  that.cache = {
     down: {value: "----", units: "KB/s"},
     up: {value: "----", units: "KB/s"}
   };
 
-  obj.label = newLabel();
-  obj.label.text = "down:----KB/s up:----KB/s";
+  that.label = newLabel();
+  that.label.text = "down:----KB/s up:----KB/s";
 
-  obj.dataUpdated = function (name, data) {
+  that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
 
     if (name == this.sourceDown) {
@@ -109,26 +109,26 @@ var wlan = (function () {
     this.label.text = text;
   }
 
-  return obj;
+  return that;
 })();
 
 
 /** sda */
 var sda = (function () {
-  var obj = {}
+  var that = {}
 
-  obj.sourceRead = "disk/sda_(8:0)/Rate/wblk";
-  obj.sourceWrite = "disk/sda_(8:0)/Rate/rblk";
-  obj.sources = [obj.sourceRead, obj.sourceWrite];
-  obj.cache = {
+  that.sourceRead = "disk/sda_(8:0)/Rate/wblk";
+  that.sourceWrite = "disk/sda_(8:0)/Rate/rblk";
+  that.sources = [that.sourceRead, that.sourceWrite];
+  that.cache = {
     read: {value: "----", units: "KB/s"},
     write: {value: "----", units: "KB/s"}
   };
 
-  obj.label = newLabel();
-  obj.label.text = "read:-----KB/s write:-----KB/s";
+  that.label = newLabel();
+  that.label.text = "read:-----KB/s write:-----KB/s";
 
-  obj.dataUpdated = function (name, data) {
+  that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
 
     if (name == this.sourceRead) {
@@ -152,7 +152,7 @@ var sda = (function () {
     this.label.text = text;
   }
 
-  return obj;
+  return that;
 })();
 
 
