@@ -37,8 +37,8 @@ var cpu = (function () {
 	    + this.source + "', not '" + name +"'");
     }
 
-    var paddedValue = helpers.padStrLeft(parseInt(data["value"], 10).toString(), ' ', 3);
-    this.label.text = paddedValue + data["units"];
+    var paddedValue = helpers.padStrLeft(parseInt(data.value, 10).toString(), ' ', 3);
+    this.label.text = paddedValue + data.units;
   }
 
   return obj;
@@ -56,13 +56,13 @@ var mem = (function () {
   obj.label.text = "----MB"
 
   obj.dataUpdated = function (name, data) {
-    if (!data["value"]) { return; }
+    if (!data.value) { return; }
     if (name !== this.source) {
       throw("[CODE ERROR] this routine is meant to handle '"
 	    + this.source + "', not '" + name +"'");
     }
 
-    var paddedValue = helpers.padStrLeft(parseInt(data["value"]/1024, 10).toString(), ' ', 4);
+    var paddedValue = helpers.padStrLeft(parseInt(data.value/1024, 10).toString(), ' ', 4);
     this.label.text = paddedValue + "MB";
   }
 
@@ -86,23 +86,23 @@ var wlan = (function () {
   obj.label.text = "down:----KB/s up:----KB/s";
 
   obj.dataUpdated = function (name, data) {
-    if (!data["value"]) { return; }
+    if (!data.value) { return; }
 
     if (name == this.sourceDown) {
       this.cache.down = data;
-      this.cache.down["value"] = parseInt(data["value"], 10).toString();
+      this.cache.down.value = parseInt(data.value, 10).toString();
     } else if (name == this.sourceUp) {
       this.cache.up = data;
-      this.cache.up["value"] = parseInt(data["value"], 10).toString();
+      this.cache.up.value = parseInt(data.value, 10).toString();
     }
 
-    var paddedValue = helpers.padStrLeft(this.cache.down["value"], ' ', 4);
-    var text = "down:" + paddedValue + this.cache.down["units"];
+    var paddedValue = helpers.padStrLeft(this.cache.down.value, ' ', 4);
+    var text = "down:" + paddedValue + this.cache.down.units;
     //
     text += " ";
     //
-    var paddedValue = helpers.padStrLeft(this.cache.up["value"], ' ', 4);
-    text += "up:" + paddedValue + this.cache.up["units"];
+    var paddedValue = helpers.padStrLeft(this.cache.up.value, ' ', 4);
+    text += "up:" + paddedValue + this.cache.up.units;
 
     this.label.text = text;
   }
@@ -127,23 +127,23 @@ var sda = (function () {
   obj.label.text = "read:-----KB/s write:-----KB/s";
 
   obj.dataUpdated = function (name, data) {
-    if (!data["value"]) { return; }
+    if (!data.value) { return; }
 
     if (name == this.sourceRead) {
       this.cache.read = data;
-      this.cache.read["value"] = parseInt(data["value"], 10).toString();
+      this.cache.read.value = parseInt(data.value, 10).toString();
     } else if (name == this.sourceWrite) {
       this.cache.write = data;
-      this.cache.write["value"] = parseInt(data["value"], 10).toString();
+      this.cache.write.value = parseInt(data.value, 10).toString();
     }
 
-    var paddedValue = helpers.padStrLeft(this.cache.read["value"], ' ', 5);
-    var text = "write: " + paddedValue + this.cache.read["units"];
+    var paddedValue = helpers.padStrLeft(this.cache.read.value, ' ', 5);
+    var text = "write: " + paddedValue + this.cache.read.units;
     //
     text += " ";
     //
-    var paddedValue = helpers.padStrLeft(this.cache.write["value"], ' ', 5);
-    text += "read: " + paddedValue + this.cache.write["units"];
+    var paddedValue = helpers.padStrLeft(this.cache.write.value, ' ', 5);
+    text += "read: " + paddedValue + this.cache.write.units;
 
     this.label.text = text;
   }
