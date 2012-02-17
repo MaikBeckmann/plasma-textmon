@@ -5,13 +5,13 @@ if (!plasmoid.include("helpers.js")) {
   throw("[CODE ERROR] couldn't load helpers.js module");
 }
 
-// Font properties
+/** Font properties */
 var styleSheet = { "font-family": "Liberation Mono",
                    "font-style": "normal",
                    "font-size": "10px",
                    "color": "white" };
 
-var layout = new LinearLayout(plasmoid);
+/* label factory that sets some properties we want */
 var newLabel = function () {
   var ret = new Label();
   ret.styleSheet = helpers.styleSheetToString(styleSheet);
@@ -19,6 +19,8 @@ var newLabel = function () {
   return ret;
 }
 
+
+/** cpu */
 var cpu = (function () {
   var obj = {}
 
@@ -43,6 +45,7 @@ var cpu = (function () {
 })();
 
 
+/** mem */
 var mem = (function () {
   var obj = {}
 
@@ -67,6 +70,7 @@ var mem = (function () {
 })();
 
 
+/** wlan */
 var wlan = (function () {
   var obj = {}
 
@@ -107,6 +111,7 @@ var wlan = (function () {
 })();
 
 
+/** sda */
 var sda = (function () {
   var obj = {}
 
@@ -147,6 +152,11 @@ var sda = (function () {
 })();
 
 
+/**
+  Connect sinks to their sources.
+*/
+
+/* Decorates connecting with some logging code */
 var connectSource = function (engine, source, sink) {
   if ( engine.connectSource(source, sink, 1000) ) {
     print("connection to '" + source + "' established");
@@ -169,6 +179,8 @@ connectSource(engine, cpu.source, cpu);
 connectSource(engine, mem.source, mem);
 
 
+/** layout */
+var layout = new LinearLayout(plasmoid);
 layout.addItem(cpu.label);
 layout.addItem(mem.label);
 layout.addItem(wlan.label);
