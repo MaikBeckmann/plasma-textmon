@@ -25,11 +25,8 @@ var cpu = (function () {
   obj.source = "cpu/system/TotalLoad";
   obj.sources = [obj.source];
 
-  var label = newLabel();
-  label.text = "---%"
-  //
-  obj.layout = layout;
-  obj.label = label;
+  obj.label = newLabel();
+  obj.label.text = "---%"
 
   obj.dataUpdated = function (name, data) {
     if (!data["value"]) { return; }
@@ -52,11 +49,8 @@ var mem = (function () {
   obj.source = "mem/physical/application";
   obj.sources = [obj.source];
 
-  var label = newLabel();
-  label.text = "----MB"
-  //
-  obj.layout = layout;
-  obj.label = label;
+  obj.label = newLabel();
+  obj.label.text = "----MB"
 
   obj.dataUpdated = function (name, data) {
     if (!data["value"]) { return; }
@@ -84,11 +78,8 @@ var wlan = (function () {
     up: {value: "----", units: "KB/s"}
   };
 
-  var label = newLabel();
-  label.text = "down:----KB/s up:----KB/s";
-  //
-  obj.layout = layout;
-  obj.label = label;
+  obj.label = newLabel();
+  obj.label.text = "down:----KB/s up:----KB/s";
 
   obj.dataUpdated = function (name, data) {
     if (!data["value"]) { return; }
@@ -125,11 +116,8 @@ var sda = (function () {
     write: {value: "----", units: "KB/s"}
   };
 
-  var label = newLabel();
-  label.text = "read:-----KB/s write:-----KB/s";
-  //
-  obj.layout = layout;
-  obj.label = label;
+  obj.label = newLabel();
+  obj.label.text = "read:-----KB/s write:-----KB/s";
 
   obj.dataUpdated = function (name, data) {
     if (!data["value"]) { return; }
