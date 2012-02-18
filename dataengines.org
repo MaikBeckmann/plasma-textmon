@@ -14,13 +14,13 @@ derives from this is the brevity.  I like to keep that, but add a sensible
 flow.
 
 * Getting more than one shot
-Our script is run exactly once!  To get more than this single run, we have to
-convince plasma to give us additional cpu cycles.  this is done by defining a
-data sink and connecting it to a source.
+When plasma loads our applet, the main script is run exactly once!  To get more
+than that, we have to convince plasma to give us additional cpu cycles.  This
+is always done by asking for a periodic delivery of data.
 
 * A sink with a slot
-An object acts as the sink and a function as the slot that connects the source
-to the sink
+To ask for data we first have to define an object that acts as the data sink.
+What makes it a data sink is having a slot named =dataUpdated=.
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -28,7 +28,7 @@ to the sink
     }
   };
 #+end_src
-The name of the sink Object can be anything
+The name of the sink Object is however arbitrary
 #+begin_src js
   var CatDog = {
     dataUpdated: function (name, data) {
@@ -36,24 +36,25 @@ The name of the sink Object can be anything
     }
   };
 #+end_src
-The name of the slot function however is to be =dataUpdated=.  The function
-always receives two parameters.  We'll dicuss their content in a bit.
+We'll dicuss the content of the slot function's parameters =name=, =data= in a
+bit.
 
 * Connecting the slot to a source
-A plasma engine provides sources.  They're connected to via their
-=connectSource= method.  The arguments this method takes are the name of the
-source, the sink object and the desired interval length in which sink's
-=dataUpdated= slot should be called.
+The inquery for data is formulates by connecting our sink to a source.  A
+plasma engine provides sources.  They're connected to via their =connectSource=
+method.  The arguments this method takes are the name of the source, the sink
+object and the desired interval length in which sink's =dataUpdated= slot
+should be called.
 #+begin_src js
   var engine = dataEngine("SourcesServingEngine")
   var intervalInMilliSeconds = 1000;  // one second
   engine.connectSource("SourceOfInterest", sink, intervalInMilliSeconds);
 #+end_src
-This code has a flaw.  The connection might fail of
+This code has a flaw however.  The connection might fail because
  - the source doesn't exist
  - the sink object doesn't define the =dataUpdated= slot.
-This flowing version doesn't really handle these situation, but at least tells
-us about it.
+This flowing doesn't really handle these situation, but at least tells us about
+it.
 #+begin_src js
   var engine = dataEngine("SourcesServingEngine")
   var intervalInMilliSeconds = 1000;  // one second
@@ -62,15 +63,15 @@ us about it.
   }
 #+end_src
 
-To actually find a data source and a source it provides we gonna use
+To find a data engine and the sources it provides we gonna use
  : % plasmaengineexplorer
 #+caption: Plasma engine explorer
 #+label: fig:plasmaengineexplorer
 ##+attr_html: width="605"
 [[file:images/plasmaengineexplorer.png]]
 #
-In image \ref{fig:plasmaengineexplorer} the source /Local/ of the /time/ data
-engine is expanded.  This code uses it
+Image \ref{fig:plasmaengineexplorer} shows the source /Local/ of the /time/
+data engine.  This code uses it
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -94,9 +95,9 @@ and results in
  : ping
  : ping
  : ping
-
-As you can see, connectSource calls the dataUpdated slot.  So make sure that
-it's already there.  If not
+Note that besides the periodically calls by the data engine, =dataUpdated= is
+called once when being connected via =connectSource=.  Make sure that it's
+already there, or the connection will fail as demonstrated by this code
 #+begin_src js
   var sink = {};
 
@@ -113,7 +114,7 @@ it's already there.  If not
 
   print("main.js ends here");
 #+end_src
-we'll get
+which results in
  : % plasmoidviewer .
  : connection attempt failed
  : main.js ends here
