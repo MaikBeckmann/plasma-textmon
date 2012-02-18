@@ -6,6 +6,13 @@
 
 [[file:index.html][{Back to index}]]
 
+* TODOs
+** Wording
+I'm not happy with the wording.  It feels like a mere collection of code
+snippets, glued together with some laconic sentences.  The good thing that
+derives from this is the brevity.  I like to keep that, but add a sensible
+flow.
+
 * Getting more than one shot
 Our script is run exactly once!  To get more than this single run, we have to
 convince plasma to give us additional cpu cycles.  this is done by defining a
