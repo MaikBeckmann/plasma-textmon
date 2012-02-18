@@ -1,3 +1,4 @@
+# -*- eval:(ispell-change-dictionary "en_US") -*-
 #+Title: Data engines
 #+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
 #+Language: en
