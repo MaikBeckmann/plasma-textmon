@@ -121,26 +121,36 @@ which results in
  : %
 
 * Exploring a data source
-So far it is only confirmed that =dataUpdated= was called back.  Now we take a
-look at the value of the parameters it is called with by the data engine.
+So far it is only confirmed that =dataUpdated= was called back by the data
+engine.  Now we take a look at the value of the parameters it is called with.
 
-First the =name=.  This code for the sink section
+** =name=
+Consider this code
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
       print(name);
     }
   };
+
+  var engine = dataEngine("time");
+  if ( engine.connectSource("Local", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
 #+end_src
-results in
+which results in the following output
  : Local
  : connection established
  : main.js ends here
  : Local
  : Local
  : ...
-This is the same name we used with =connectSource=.  This becomes important
-when we subscribe to more than one data source.
+The content of =name= is the same as the one we gave to =connectSource=.  This
+becomes important when we subscribe a single sink to more than one data source.
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -154,7 +164,7 @@ when we subscribe to more than one data source.
   } else {
     print("connection attempt to 'Local' in 'time' failed");
   }
-  //
+
   if ( engine.connectSource("Europe/London", sink, 1000) ) {
     print("connection to 'Europe/London' in 'time' established");
   } else {
@@ -174,8 +184,8 @@ when we subscribe to more than one data source.
  : Local
  : Europe/Londo
 
-Now the =data=.  We're using the version that only connects to =Local= in
-=time= with this slot definition
+** =data=
+Every time the data engine sends its data, the output of this sink
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -189,7 +199,7 @@ Now the =data=.  We're using the version that only connects to =Local= in
     }
   };
 #+end_src
-It results in
+is similar to
  : ===== data =====
  : key : Timezone Continent
  : typeof data[key] : string
@@ -230,9 +240,12 @@ time zone has an offset of
 
 If you compare this data with what is shown in \ref{fig:plasmaengineexplorer},
 then you'll notice it being exactly the same, except for the actual point in
-time.  For Qt data types that don't have an builtin equivalent in Javascript we
-get an object.
- - [[http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types][Conversion between QtScript and C++ types]]
+time.  The /Type/ entry for each source in the image is the names of a Qt C++
+data type.  Some of them have an equivalent in Javascript, like
+ - =QString= <--> =string= .
+For Qt data types that don't have an builtin equivalent in Javascript we get an
+object
+ - [[http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types][Conversion between QtScript and C++ types]] .
 Lets have a peek into what one of these converted Qt types has to offer
 #+begin_src js
   var sink = {
@@ -252,9 +265,11 @@ Lets have a peek into what one of these converted Qt types has to offer
  : ==== data =====
  : <properties of data["DateTime"]
  : </properties of data["DateTime"]
-Nothing?  That is correct.  This shell around an C++ object only hands out you
-a string representation of its value to Javascript.  Though they are not
-showing up with the code above, these objects have the following methods
+Nothing?  That is correct.  These Javascript shells around a C++ object only
+hand out a string representation of their value.
+
+Though they are not showing up with the code above, these objects have the
+following methods
  - =toString()=
  - =toLocaleString()=
  - =valueOf()=
@@ -675,4 +690,3 @@ NaN
  : read: ----KB/s write: 0KB/s
  : read: 0KB/s write: 0KB/s
  : read: 0KB/s write: 0KB/s
-
