@@ -301,11 +301,71 @@ However, you probably only ever use =toString()=.
 
 * The /systemmonitor/ date engine
 ** CPU load
+*** The kde system monitor (aka. ksysguard)
+Go and start kde's system monitor with
+ : % ksysguard
+Yes, ksysguard, not ksysmon.  Makes sense, right?  No it does not!  I'm
+actually german and I bet my socks on this being a funny little translation
+error that sticked :P .  However, lets take a look at it.
+#+caption: kde system monitor aka. ksysguard
+#+label: fig:ksysguard
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard.png]]
+#
+The first tab displays the system processes with their properties., while the
+second one contains line graphs for certain values, among them the total cpu
+load.  These two tabs predefined, you can't add or remove anything.  This isn't
+the case for user defined tabs, so lets create one
+ - File -> New Tab...
+#+caption: Tinker Tab
+#+label: fig:ksysguard_tinkertab
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_tinkertab.png]]
+#
+To the right is the /Sensor Browser/.  Expand /CPU Load/ and in there /System/.
+Drag the /Total Load(float)/ Item over to the tab interior and drop it.  A
+popup appears, asking you how the stream of values should be displayed.  Select
+/LineGraph/ and be amazed.
+#+caption: Cpu load
+#+label: fig:ksysguard_cpu
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_cpu.png]]
+#
+You can try the other display types be right clicking the current display
+widget, select remove and drag over another item from the /Sensor Browser/.
+Mess around to your heart's content.  Done?  Remove the display widget if there
+is one and add again the line graph for /Total Load(float)/.  Right click the
+line graph and this time don't select /Remove Display/ but /Properties/.  The
+/Sensors/ Tab in the windows that comes up shows the name of the sensor
+ - =/cpu/system/TotalLoad=
+Take a good look at it, we will soon see it again.
+
+#+caption: Cpu sensor
+#+label: fig:ksysguard-cpu-total
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_cpu_sensor.png]]
+#
+
+*** The /systemmonitor/ data engine
+# Now get the curve from the cpu line graph in ksysguard to why we instead want
+# to use plasmaengineexplorer.  Meh
+
+Plasma fixed the translation error and calls the data engine that represents
+ksysguar /systemmonitor/.  You can take a look what it has to offer by starting
+ : % plasmaengineexplorer
+and selecting it as /Data Engine/.  What you'll see should look familar
 #+caption: systemmonitor : the system's total cpu load
-#+label: fig:cpu_total_load
+#+label: fig:systemmonitor-cpu-total
 ##+attr_html: width="605"
 [[file:images/cpu_total_load.png]]
+That's right, there it is again
+ - =/cpu/system/TotalLoad=
+The name of the /Sensor/ in \ref{fig:ksysguard-cpu-total} is the same as the
+source =name= in the /systemmonitor/ data engine.  This is true for all sensors
+you can find in ksysguard.
 
+*** Enough pictures, code!
+Without further ado, here the code which subscribes to the cpu load source
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -327,6 +387,7 @@ However, you probably only ever use =toString()=.
 
   print("main.js ends here");
 #+end_src
+and prints its content on the screen
  : ==== data =====
  : key : type
  : data[key] : float
@@ -350,6 +411,7 @@ However, you probably only ever use =toString()=.
  : key : max
  : data[key] : 100
 
+A nicer to look at interpretation is
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -364,6 +426,10 @@ However, you probably only ever use =toString()=.
  : 0.502513%
  : 1.012658%
 
+But wait, =NaN=?  See also the first data block in the verbose output.  It
+stops after key =type=.  Something is afoot and I do not know what.  My guess
+is that is a bug in the ksysguard component that nobody bothered to fix,
+because it can easily be worked around like this
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -381,9 +447,12 @@ However, you probably only ever use =toString()=.
  : 4.822335%
  : 0.751880%
  : 0.501253%
+(TODO: poke #plasma on freenode about it).
 
-
+When you put your applet into the panel, then space is precious.  I'd argue
+that the decimal digits don't add enough imformation to be included.  Use
 - http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt
+to drop them
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -403,10 +472,20 @@ However, you probably only ever use =toString()=.
  : 0%
 
 ** Application memory
+Same as for the cpu load
+#+caption: ksysguard : used application memory
+#+label: fig:ksysguard-appmeme
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_appmem.png]]
+Here code and output
+
+
 #+begin_src js
+
   var sink = {
     dataUpdated: function (name, data) {
-      print(data["value"] + data["units"]);
+      if (!data["value"]) { return; }
+      print(parseInt(data["value"]) +  data["units"]);
     }
   };
 
@@ -421,11 +500,10 @@ However, you probably only ever use =toString()=.
 #+end_src
  : connection established
  : main.js ends here
- : NaN
- : 2077064KB
- : 2079192KB
- : 2079544KB
-
+ : 1731100KB
+ : 1730956KB
+ : 1732552KB
+Hm, these values are rather big.  Lets convert them from =KB= to =MB=
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -433,17 +511,41 @@ However, you probably only ever use =toString()=.
       print(parseInt(data["value"] / 1024, 10) + "MB");
     }
   };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("mem/physical/application", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
 #+end_src
  : connection established
  : main.js ends here
- : 1934MB
- : 1932MB
- : 1932MB
+ : 1665MB
+ : 1665MB
+ : 1666MB
+Much better!
+
 ** Wlan
-*** Down rate
+The follow image shows the source names for wifi up and down rates.
+#+caption: ksysguard : wlan down and up rate
+#+label: fig:ksysguard-wlan
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_wlan.png]]
+#
+Note two things: Firstly, why didn't I put both sensors in the same line graph?
+It used to work, but doesn't in [[https://bugs.kde.org/show_bug.cgi?id%3D290504][kde-4.8.0]].  Secondly, there are not one but two
+sources we're interested in.
+
+*** Each of the two source by itself
+The first source is the rate with which the bits are dripping out of our wlan
+cable.
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
+      if (!data["value"]) { return; }
       print(data["value"] + data["units"]);
     }
   };
@@ -457,28 +559,14 @@ However, you probably only ever use =toString()=.
 
   print("main.js ends here");
 #+end_src
-connection established
-main.js ends here
-NaN
-89KB/s
-103KB/s
-105KB/s
-
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      if (!data["value"]) { return; }
-      print(data["value"] + data["units"]);
-    }
-  };
-#+end_src
  : connection established
  : main.js ends here
  : 124KB/s
  : 97KB/s
  : 131KB/s
 
-*** Up rate
+The second one is the rate with which the FBI is uploading your files onto
+their servers
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -502,11 +590,19 @@ NaN
  : 5KB/s
  : 6KB/s
  : 6KB/s
+slowly but steady =>:]=
 
-*** Joined data
+*** Joining the data
+The goal is to print both values on the screen each time one of the sources was
+updated:
+ : down: 91KB/s up: 5KB/s
+ : down: 91KB/s up: 6KB/s
+ : down: 147KB/s up: 6KB/s
+
+But there is a problem.  When yource A is updated, we don't have the values of
+source B and vice versa.  The solution: a cache.
 #+begin_src js
-  var sink = (function () {
-    var obj = {}
+  var sink = (function () { var obj = {}
 
     obj.sourceUp = "network/interfaces/wlan0/transmitter/data";
     obj.sourceDown = "network/interfaces/wlan0/receiver/data";
@@ -518,11 +614,11 @@ NaN
     obj.dataUpdated = function (name, data) {
       if (!data["value"]) { return; }
 
-      // TODO: up and down tauchen
-      if (name == this.sourceUp) {
-        this.cache.up = data;
-      } else if (name == this.sourceDown) {
+
+      if (name == this.sourceDown) {
         this.cache.down = data;
+      } else  if (name == this.sourceUp) {
+        this.cache.up = data;
       }
 
       var msg = "down: " + this.cache.down["value"] + this.cache.down["units"];
@@ -563,76 +659,12 @@ NaN
  : down: 147KB/s up: 6KB/s
 
 ** Harddisk
-*** Read rate
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      print(data["value"] + data["units"]);
-    }
-  };
-
-  var engine = dataEngine("systemmonitor");
-  if ( engine.connectSource("disk/sda_(8:0)/Rate/rblk", sink, 1000) ) {
-    print("connection established");
-  } else {
-    print("connection attempt failed");
-  }
-
-  print("main.js ends here");
-#+end_src
- : connection established
- : main.js ends here
- : NaN
- : 0.000000KB/s
- : 0.000000KB/s
- : 0.000000KB/s
-
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      // No data aviable. God knows why
-      if (!data["value"]) {
-        return;
-      }
-
-      print(parseInt(data["value"], 10) + data["units"]);
-    }
-  };
-#+end_src
- : connection established
- : main.js ends here
- : 0KB/s
- : 0KB/s
- : 0KB/s
-
-*** Write rate
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      // No data aviable. God knows why
-      if (!data["value"]) {
-        return;
-      }
-
-      print(parseInt(data["value"], 10) + data["units"]);
-    }
-  };
-
-  var engine = dataEngine("systemmonitor");
-  if ( engine.connectSource("disk/sda_(8:0)/Rate/wblk", sink, 1000) ) {
-    print("connection established");
-  } else {
-    print("connection attempt failed");
-  }
-
-  print("main.js ends here");
-#+end_src
- : connection established
- : main.js ends here
- : 0KB/s
- : 0KB/s
- : 0KB/s
-*** Joined data
+This equivalent to the wlan case.
+#+caption: ksysguard : sda read and write rate
+#+label: fig:ksysguard-sda
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_sda.png]]
+#
 #+begin_src js
   var sink = (function () {
     var obj = {}
