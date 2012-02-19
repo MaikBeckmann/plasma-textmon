@@ -98,13 +98,13 @@ var wlan = (function () {
 
     var down = this.cache.down;
     var paddedValue = helpers.padStrLeft(down.value, ' ', 4);
-    var text = "down:" + paddedValue + down.units;
+    var text = paddedValue + down.units + " d";
     //
-    text += " ";
+    text += "|";
     //
     var up = this.cache.up;
     var paddedValue = helpers.padStrLeft(up.value, ' ', 4);
-    text += "up:" + paddedValue + up.units;
+    text += paddedValue + up.units + " u";
 
     this.label.text = text;
   };
@@ -141,13 +141,13 @@ var sda = (function () {
 
     var read = this.cache.read;
     var paddedValue = helpers.padStrLeft(read.value, ' ', 5);
-    var text = "write:" + paddedValue + read.units;
+    var text = paddedValue + read.units + " r";
     //
-    text += " ";
+    text += "|";
     //
     var write = this.cache.write;
     var paddedValue = helpers.padStrLeft(write.value, ' ', 5);
-    text += "read:" + paddedValue + write.units;
+    text += paddedValue + write.units + " w";
 
     this.label.text = text;
   };
@@ -181,9 +181,21 @@ checkedConnectSource(engine, cpu.source, cpu);
 checkedConnectSource(engine, mem.source, mem);
 
 
-/** layout */
+/** Layout */
+
+// The labels which display the actual content
+function sep(sepStr) {
+  var l = new Label();
+  l.text = sepStr;
+  l.wordWrap = false;
+  l.styleSheet = helpers.styleSheetToString(styleSheet);
+  return l;
+}
+
 var layout = new LinearLayout(plasmoid);
-layout.addItem(cpu.label);
-layout.addItem(mem.label);
-layout.addItem(wlan.label);
-layout.addItem(sda.label);
+layout.spacing = 0;
+layout.setContentsMargins(0, 0, 0, 0);
+layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));
+layout.addItem(sep("{mem:"));  layout.addItem(mem.label);  layout.addItem(sep("}"));
+layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
+layout.addItem(sep("{sda:"));  layout.addItem(sda.label);  layout.addItem(sep("}"));
