@@ -6,7 +6,7 @@ if (!plasmoid.include("helpers.js")) {
 }
 
 /** Font properties */
-var styleSheet = { "font-family": "Liberation Mono",
+var styleSheet = { "font-family": "Monospace",
                    "font-style": "normal",
                    "font-size": "10px",
                    "color": "white" };
