@@ -141,13 +141,13 @@ var sda = (function () {
 
     var read = this.cache.read;
     var paddedValue = helpers.padStrLeft(read.value, ' ', 5);
-    var text = "write: " + paddedValue + read.units;
+    var text = "write:" + paddedValue + read.units;
     //
     text += " ";
     //
     var write = this.cache.write;
     var paddedValue = helpers.padStrLeft(write.value, ' ', 5);
-    text += "read: " + paddedValue + write.units;
+    text += "read:" + paddedValue + write.units;
 
     this.label.text = text;
   };
