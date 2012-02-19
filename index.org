@@ -30,7 +30,11 @@ The main script of a plasma applet is run exactly once.  To get another chance
 of doing something you have to tell plasma why and how often.  The answer to
 the "why" is always the same: data.
 
-* [[file:UI.html][Plasma user interface basics]]
+* [[file:ui-basics.html][Plasma user interface basics]]
+A few basics that cover all our needs.  There aren't much, since the only two
+UI widgets we'll use are labels, a layout to arrange them and the applet
+itself.
+
 * [[file:hacking-textmon.html][Hacking TextMon]]
 A number of examples on how to alter TextMon are presented.
 
