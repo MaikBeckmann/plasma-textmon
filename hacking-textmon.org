@@ -165,57 +165,7 @@ Comment out or remove
   //     var paddedValue = helpers.padStrLeft(down.value, ' ', 4);
   //     var text = paddedValue + down.units + " d";
   //     //
-  //     text += " ";
-  //     //
-  //     var up = this.cache.up;
-  //     var paddedValue = helpers.padStrLeft(up.value, ' ', 4);
-  //     text += paddedValue + up.units + " u";
-
-  //     this.label.text = text;
-  //   };
-
-  //   return that;
-  // }());
-#+end_src
-
-Remove "wlan" from line 35
-#+begin_src js
-  var labelNames = ["cpu", "mem", "sda"];
-#+end_src
-
-Comment out or remove
-#+begin_src js
-  // /** wlan */
-  // var wlan = (function () {
-  //   var that = {};
-
-  //   that.sourceDown = "network/interfaces/wlan0/receiver/data";
-  //   that.sourceUp = "network/interfaces/wlan0/transmitter/data";
-  //   that.sources = [that.sourceDown, that.sourceUp];
-  //   that.cache = {
-  //     down: {value: "----", units: "KB/s"},
-  //     up: {value: "----", units: "KB/s"}
-  //   };
-
-  //   that.label = newLabel();
-  //   that.label.text = "----KB/s d up:----KB/s u";
-
-  //   that.dataUpdated = function (name, data) {
-  //     if (!data.value) { return; }
-
-  //     if (name === this.sourceDown) {
-  //       this.cache.down = data;
-  //       this.cache.down.value = parseInt(data.value, 10).toString();
-  //     } else if (name === this.sourceUp) {
-  //       this.cache.up = data;
-  //       this.cache.up.value = parseInt(data.value, 10).toString();
-  //     }
-
-  //     var down = this.cache.down;
-  //     var paddedValue = helpers.padStrLeft(down.value, ' ', 4);
-  //     var text = paddedValue + down.units + " d";
-  //     //
-  //     text += " ";
+  //     text += "|";
   //     //
   //     var up = this.cache.up;
   //     var paddedValue = helpers.padStrLeft(up.value, ' ', 4);
