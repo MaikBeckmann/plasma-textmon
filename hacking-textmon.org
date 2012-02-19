@@ -121,7 +121,6 @@ Comment out or remove
 
 Comment out or remove
 #+begin_src js
-var sourceLabelMap = (function () {
   // layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));
 #+end_src
 
