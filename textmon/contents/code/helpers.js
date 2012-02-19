@@ -1,26 +1,30 @@
 // -*- coding: utf-8 -*-
-
+/*jslint vars: true, maxerr: 50, indent: 2 */
+"use strict";
 
 /** Module `helpers' */
 var helpers  = (function () {
-  var concatToString = function (list, term) {
+  function concatToString(list, term) {
+    var i, len;
     var ret = "";
-    for(var i = 0; i < list.length;  i++) {
+    for (i = 0, len = list.length; i < len;  i += 1) {
       ret = ret + list[i] + term;
     }
     return ret;
-  };
+  }
 
-  var styleSheetToString = function (styles) {
-    var lines = []
-    for(var k in styles) {
-      lines.push("" + k + ": " + styles[k] + ";");
+  function styleSheetToString(styles) {
+    var lines = [];
+    var k;
+    for (k in styles) {
+      if (styles.hasOwnProperty(k)) {
+        lines.push(k + ": " + styles[k] + ";");
+      }
     }
     return concatToString(lines, "\n");
-  };
+  }
 
-
-  var checkedValueStr = function (obj, deflt) {
+  function checkedValueStr(obj, deflt) {
     var ret = deflt;
     if (obj) {
       ret = obj.toString();
@@ -29,28 +33,29 @@ var helpers  = (function () {
   }
 
   /* left padding of str with padChar */
-  var padStrLeft = function (str, padChr, minWidth) {
+  function padStrLeft(str, padChr, minWidth) {
+    var i;
     if (typeof str !== 'string') {
-      throw("[CODE ERROR] not a string");
+      throw ("[CODE ERROR] not a string");
     }
     if (str.length >= minWidth) {
       return str;
     }
 
-    var padChr = padChr[0]; // just to be sure it's exactly one char
-    var n = minWidth - str.length
-    for (var i = 0; i < n; i++) {
+    padChr = padChr[0]; // just to be sure it's exactly one char
+    var n = minWidth - str.length;
+    for (i = 0; i < n; i += 1) {
       str = padChr + str;
     }
 
     return str;
   }
 
-  return  {
+  return {
     checkedValueStr: checkedValueStr,
     padStrLeft: padStrLeft,
     concatToString: concatToString,
     styleSheetToString: styleSheetToString
   };
-})(); // Module `helpers'
+}()); // Module `helpers'
 
