@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="Hacking TextMon"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-19 14:42:53 CET"/>
+<meta name="generated" content="2012-02-19 16:57:16 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -234,10 +234,10 @@ Or you do something entirely different
 </p>
 
 
-<pre class="src src-js">layout.addItem(cpu.label);  layout.addItem(sep(<span class="org-string">"|"</span>));
-layout.addItem(mem.label);  layout.addItem(sep(<span class="org-string">"|"</span>));
-layout.addItem(wlan.label); layout.addItem(sep(<span class="org-string">"|"</span>));
-layout.addItem(sda.label);
+<pre class="src src-js">layout.addItem(cpu.label)
+layout.addItem(sep(<span class="org-string">"{"</span>)); layout.addItem(mem.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"["</span>)); layout.addItem(wlan.label); layout.addItem(sep(<span class="org-string">"]"</span>));
+layout.addItem(sep(<span class="org-string">"("</span>)); layout.addItem(sda.label);  layout.addItem(sep(<span class="org-string">")"</span>));
 </pre>
 
 
@@ -305,8 +305,7 @@ Comment out or remove
 </p>
 
 
-<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sourceLabelMap</span> = (<span class="org-keyword">function</span> () {
-  <span class="org-comment-delimiter">// </span><span class="org-comment">layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));</span>
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));</span>
 </pre>
 
 
@@ -347,7 +346,7 @@ Comment out or remove
 <span class="org-comment-delimiter">//   </span><span class="org-comment">};</span>
 
 <span class="org-comment-delimiter">//   </span><span class="org-comment">that.label = newLabel();</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label.text = "----KB/s d up:----KB/s u";</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label.text = "----KB/s d|----KB/s u";</span>
 
 <span class="org-comment-delimiter">//   </span><span class="org-comment">that.dataUpdated = function (name, data) {</span>
 <span class="org-comment-delimiter">//     </span><span class="org-comment">if (!data.value) { return; }</span>
@@ -364,65 +363,7 @@ Comment out or remove
 <span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(down.value, ' ', 4);</span>
 <span class="org-comment-delimiter">//     </span><span class="org-comment">var text = paddedValue + down.units + " d";</span>
 <span class="org-comment-delimiter">//     </span><span class="org-comment">//</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">text += " ";</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">//</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">var up = this.cache.up;</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(up.value, ' ', 4);</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">text += paddedValue + up.units + " u";</span>
-
-<span class="org-comment-delimiter">//     </span><span class="org-comment">this.label.text = text;</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">};</span>
-
-<span class="org-comment-delimiter">//   </span><span class="org-comment">return that;</span>
-<span class="org-comment-delimiter">// </span><span class="org-comment">}());</span>
-</pre>
-
-
-<p>
-Remove "wlan" from line 35
-</p>
-
-
-<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">labelNames</span> = [<span class="org-string">"cpu"</span>, <span class="org-string">"mem"</span>, <span class="org-string">"sda"</span>];
-</pre>
-
-
-<p>
-Comment out or remove
-</p>
-
-
-<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">/** wlan */</span>
-<span class="org-comment-delimiter">// </span><span class="org-comment">var wlan = (function () {</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">var that = {};</span>
-
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sourceDown = "network/interfaces/wlan0/receiver/data";</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sourceUp = "network/interfaces/wlan0/transmitter/data";</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sources = [that.sourceDown, that.sourceUp];</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.cache = {</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">down: {value: "----", units: "KB/s"},</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">up: {value: "----", units: "KB/s"}</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">};</span>
-
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label = newLabel();</span>
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label.text = "----KB/s d up:----KB/s u";</span>
-
-<span class="org-comment-delimiter">//   </span><span class="org-comment">that.dataUpdated = function (name, data) {</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">if (!data.value) { return; }</span>
-
-<span class="org-comment-delimiter">//     </span><span class="org-comment">if (name === this.sourceDown) {</span>
-<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.down = data;</span>
-<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.down.value = parseInt(data.value, 10).toString();</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">} else if (name === this.sourceUp) {</span>
-<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.up = data;</span>
-<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.up.value = parseInt(data.value, 10).toString();</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">}</span>
-
-<span class="org-comment-delimiter">//     </span><span class="org-comment">var down = this.cache.down;</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(down.value, ' ', 4);</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">var text = paddedValue + down.units + " d";</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">//</span>
-<span class="org-comment-delimiter">//     </span><span class="org-comment">text += " ";</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">text += "|";</span>
 <span class="org-comment-delimiter">//     </span><span class="org-comment">//</span>
 <span class="org-comment-delimiter">//     </span><span class="org-comment">var up = this.cache.up;</span>
 <span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(up.value, ' ', 4);</span>
@@ -452,7 +393,7 @@ Comment out or remove
 </p>
 
 
-<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">layout.addItem(wlan.label); layout.addItem(sep("|"));</span>
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));</span>
 </pre>
 
 
@@ -472,8 +413,8 @@ The result
 <h2 id="sec-6"><span class="section-number-2">6</span> Monitoring eth0 instead of wlan0</h2>
 <div class="outline-text-2" id="text-6">
 
-<p>Your system may have a different device names for <i>wlan</i> (i.e. <code>ath0</code>) or you
-want to minitor your LAN (<code>eth0</code>) throughput instead.
+<p>Your system may have a different device name for <i>wlan</i> (i.e. <code>ath0</code>) or you
+want to monitor your LAN (<code>eth0</code>) throughput instead.
 </p>
 <p>
 Though it isn't strictly necessary, I recommend reading on <a href="dataengines.html">plasma data engines</a>
@@ -481,21 +422,23 @@ before you continue.  Because
 </p><ul>
 <li>it's interesting
 </li>
-<li>you'll know what to do when something goes wrong here
+<li>it's the heart beating heart of TextMon
+</li>
+<li>you'll know what to do when something goes wrong here.
 </li>
 </ul>
 
 
 <p>
 Use <i>plasmaengineexplorer</i> to figure out the proper source names.  For the down
-rate of the <code>eth0</code> device this is
+rate of the <code>eth0</code> device it looks like this:
 </p>
 <div class="figure">
 <p><img src="images/textmon-0.1/engine_explorer_eth0.png"  alt="images/textmon-0.1/engine_explorer_eth0.png" /></p>
 <p>eth0</p>
 </div>
 <p>
-The down rate it is
+As you can see the source name for the down rate is
 </p><pre class="example">
 network/interfaces/eth0/receiver/data
 </pre>
@@ -505,7 +448,9 @@ network/interfaces/eth0/receiver/data
 network/interfaces/eth0/transmitter/data
 </pre>
 
-<p>Now compare this with the following code
+
+<p>
+Now compare this with the following code
 </p>
 
 
@@ -522,37 +467,6 @@ That is right, you can just search and replace "wlan" with "eth"
 </p>
 
 
-<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sourceNames</span> = (<span class="org-keyword">function</span> () {
-  ...
-  ret[<span class="org-string">"lanDown"</span>] = <span class="org-string">"network/interfaces/eth0/receiver/data"</span>;
-  ret[<span class="org-string">"lan0Up"</span>] = <span class="org-string">"network/interfaces/eth0/transmitter/data"</span>;
-  <span class="org-comment-delimiter">//</span>
-  <span class="org-keyword">var</span> <span class="org-variable-name">sdaBase</span> = <span class="org-string">"disk/sda_(8:0)/Rate"</span>;
-  ...
-</pre>
-
-<p>
-you simply replace ~wlan" with "lan" in
-</p><ul>
-<li><code>sourceLabelMap</code>
-</li>
-<li><code>dataCache</code>
-</li>
-<li><code>formatters</code>
-</li>
-<li><code>updateLabels</code>
-</li>
-</ul>
-
-
-<div class="figure">
-<p><img src="images/textmon-0.1/lan_instead_wlan.png"  alt="images/textmon-0.1/lan_instead_wlan.png" /></p>
-<p>lan instead of wlan</p>
-</div>
-
-
-
-
 <pre class="src src-js"><span class="org-comment-delimiter">/** </span><span class="org-comment">eth */</span>
 <span class="org-keyword">var</span> <span class="org-variable-name">eth</span> = (<span class="org-keyword">function</span> () {
   <span class="org-keyword">var</span> <span class="org-variable-name">that</span> = {};
@@ -564,7 +478,7 @@ you simply replace ~wlan" with "lan" in
 
 
 <p>
-Change
+What's left is to adjust two places to the change we just made.  Change
 </p>
 
 
@@ -583,9 +497,8 @@ to
 }
 </pre>
 
-
 <p>
-Change
+and
 </p><pre class="example">
 layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
 </pre>
@@ -596,7 +509,9 @@ layout.addItem(sep("{lan:")); layout.addItem(eth.label); layout.addItem(sep("}")
 </pre>
 
 
-
+<p>
+The result:
+</p>
 <div class="figure">
 <p><img src="images/textmon-0.1/lan_instead_wlan.png"  alt="images/textmon-0.1/lan_instead_wlan.png" /></p>
 <p>lan instead of wlan</p>
