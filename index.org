@@ -31,6 +31,9 @@ of doing something you have to tell plasma why and how often.  The answer to
 the "why" is always the same: data.
 
 * [[file:UI.html][Plasma user interface basics]]
+* [[file:hacking-textmon.html][Hacking TextMon]]
+A number of examples on how to alter TextMon are presented.
+
 * [[http://github.com/MaikBeckmann/plasma-textmon][github repo]]
 There you'll find the applet sources and the [[http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages][sources]] for this documentation
 (emacs .org files).
