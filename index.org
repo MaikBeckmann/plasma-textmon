@@ -41,15 +41,3 @@ A number of examples on how to alter TextMon are presented.
 * [[http://github.com/MaikBeckmann/plasma-textmon][github repo]]
 There you'll find the applet sources and the [[http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages][sources]] for this documentation
 (emacs .org files).
-* COMMENT The next thing
-The actual point of TextMon is to give you an hands-on hacking entry point to
-writing plasma applets.  While starting to document TextMon I've learned a lot
-new things, which aren't reflected in TextMon-0.1 .  There are new and foremost
-much simpler flavors TextMon to come, like
-  - TextMonCpu
-  - TextMonMem
-  - TextMonWlan
-  - TextMonSda
-  - ...
-Eventually I'll come back to this original applet.  The code will most likely
-be much simpler, easier to understand and less error prone to tweak.
