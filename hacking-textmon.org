@@ -194,23 +194,25 @@ The result
 [[file:images/textmon-0.1/without_wlan.png]]
 
 * Monitoring eth0 instead of wlan0
-Your system may have a different device names for /wlan/ (i.e. =ath0=) or you
-want to minitor your LAN (=eth0=) throughput instead.
+Your system may have a different device name for /wlan/ (i.e. =ath0=) or you
+want to monitor your LAN (=eth0=) throughput instead.
 
 Though it isn't strictly necessary, I recommend reading on [[file:dataengines.html][plasma data engines]]
 before you continue.  Because
  - it's interesting
- - you'll know what to do when something goes wrong here
+ - it's the heart beating heart of TextMon
+ - you'll know what to do when something goes wrong here.
 
 Use /plasmaengineexplorer/ to figure out the proper source names.  For the down
-rate of the =eth0= device this is
+rate of the =eth0= device it looks like this:
 #+caption: eth0
 [[file:images/textmon-0.1/engine_explorer_eth0.png]]
 #
-The down rate it is
+As you can see the source name for the down rate is
 : network/interfaces/eth0/receiver/data
 and for the up rate
 : network/interfaces/eth0/transmitter/data
+
 Now compare this with the following code
 #+BEGIN_SRC js
   /** wlan */
@@ -248,7 +250,7 @@ you simply replace ~wlan" with "lan" in
     that.sources = [that.sourceDown, that.sourceUp];
 #+end_src
 
-Change
+What's left is to adjust two places to the change we just made.  Change
 #+BEGIN_SRC js
   for(var k in wlan.sources) {
     checkedConnectSource(engine,  wlan.sources[k], wlan);
@@ -260,12 +262,12 @@ to
     checkedConnectSource(engine,  eth.sources[k], eth);
   }
 #+END_SRC
-
-Change
+and
  : layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
 to
  : layout.addItem(sep("{lan:")); layout.addItem(eth.label); layout.addItem(sep("}"));
 
+The result:
 #+caption: lan instead of wlan
 [[file:images/textmon-0.1/lan_instead_wlan.png]]
 
