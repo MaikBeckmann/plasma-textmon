@@ -224,23 +224,6 @@ Now compare this with the following code
 #+END_SRC
 That is right, you can just search and replace "wlan" with "eth"
 #+begin_src js
-  var sourceNames = (function () {
-    ...
-    ret["lanDown"] = "network/interfaces/eth0/receiver/data";
-    ret["lan0Up"] = "network/interfaces/eth0/transmitter/data";
-    //
-    var sdaBase = "disk/sda_(8:0)/Rate";
-    ...
-#+end_src
-you simply replace ~wlan" with "lan" in
- - =sourceLabelMap=
- - =dataCache=
- - =formatters=
- - =updateLabels=
-#+caption: lan instead of wlan
-[[file:images/textmon-0.1/lan_instead_wlan.png]]
-
-#+begin_src js
   /** eth */
   var eth = (function () {
     var that = {};
