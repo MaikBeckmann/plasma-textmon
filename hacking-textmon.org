@@ -187,7 +187,7 @@ Comment out or remove
 
 Comment out or remove
 #+begin_src js
-  // layout.addItem(wlan.label); layout.addItem(sep("|"));
+  // layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
 #+end_src
 
 The result
