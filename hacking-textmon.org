@@ -73,10 +73,10 @@ we'll get
 [[file:images/textmon-0.1/without_device_names.png]]
 Or you do something entirely different
 #+begin_src js
-  layout.addItem(cpu.label);  layout.addItem(sep("|"));
-  layout.addItem(mem.label);  layout.addItem(sep("|"));
-  layout.addItem(wlan.label); layout.addItem(sep("|"));
-  layout.addItem(sda.label);
+  layout.addItem(cpu.label)
+  layout.addItem(sep("{")); layout.addItem(mem.label);  layout.addItem(sep("}"));
+  layout.addItem(sep("[")); layout.addItem(wlan.label); layout.addItem(sep("]"));
+  layout.addItem(sep("(")); layout.addItem(sda.label);  layout.addItem(sep(")"));
 #+end_src
 #+caption: Random decoration
 [[file:images/textmon-0.1/random_decoration.png]]
@@ -147,7 +147,7 @@ Comment out or remove
   //   };
 
   //   that.label = newLabel();
-  //   that.label.text = "----KB/s d up:----KB/s u";
+  //   that.label.text = "----KB/s d|----KB/s u";
 
   //   that.dataUpdated = function (name, data) {
   //     if (!data.value) { return; }
@@ -286,7 +286,7 @@ to
  : text += " ";
 in the function body of =dataUpdated= in the =sda= and =wlan= objects.
 
- : that.label.text = "down:----KB/s up:----KB/s";
+ : that.label.text = "----KB/s d|----KB/s u";
 to
  : that.label.text = "----KB/s d up:----KB/s u";
 
@@ -301,7 +301,7 @@ to
 ** sda
  : that.label.text = "read:-----KB/s write:-----KB/s";
 to
- : that.label.text = "-----KB/s r -----KB/s w";
+ : that.label.text = "-----KB/s r|-----KB/s w";
 
  : var text = "write:" + paddedValue + read.units;
 to
