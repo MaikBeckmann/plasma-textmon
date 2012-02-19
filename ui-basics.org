@@ -6,8 +6,8 @@
 [[file:index.html][{Back to index}]]
 
 * Introduction
-The only two UI widget we'll use are a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#Label][Labels]], a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#LinearLayout][Layout]] to arrange them and the
-[[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-PlasmoidObject][plasmoid]] itself.
+The only two UI widget we'll use are [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#Label][Labels]], a [[http://techbase.kde.org/Development/Tutorials/Plasma/JavaScript/API-UIElements#LinearLayout][Layout]] to arrange them and the
+applet itself.
 
 * Hello plasmoid
 The applet itself is represented by a global object named =plasmoid=.  We gonna

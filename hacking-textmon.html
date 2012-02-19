@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Hacking TextMon</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="Hacking TextMon"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-02-19 16:57:16 CET"/>
+<meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org-mode.css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Hacking TextMon</h1>
+
+<p><a href="index.html">{Back to index}</a>
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Introcdution</a></li>
+<li><a href="#sec-2">2 Changing the font</a></li>
+<li><a href="#sec-3">3 Changing value decoration</a></li>
+<li><a href="#sec-4">4 Removing cpu entry</a></li>
+<li><a href="#sec-5">5 Removing wlan entry</a></li>
+<li><a href="#sec-6">6 Monitoring eth0 instead of wlan0</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introcdution</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>A number of examples on how to alter TextMon are presented.  I'll assume you
+know what is explained in the <a href="prelude.html">prelude</a>.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Changing the font</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>The CSS stylesheet that defines the font appearance is located in line 10
+to 13.  If
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">Font properties</span>
+<span class="org-keyword">var</span> <span class="org-variable-name">styleSheet</span> = { <span class="org-string">"font-family"</span>: <span class="org-string">"Liberation Mono"</span>,
+                   <span class="org-string">"font-style"</span>: <span class="org-string">"normal"</span>,
+                   <span class="org-string">"font-size"</span>: <span class="org-string">"10px"</span>,
+                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span> };
+</pre>
+
+<p>
+is changed to use the default monospace font and a bigger font size
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">Font properties</span>
+<span class="org-keyword">var</span> <span class="org-variable-name">styleSheet</span> = { <span class="org-string">"font-family"</span>: <span class="org-string">"Monospace"</span>,
+                   <span class="org-string">"font-style"</span>: <span class="org-string">"normal"</span>,
+                   <span class="org-string">"font-size"</span>: <span class="org-string">"24px"</span>,
+                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span> };
+</pre>
+
+<p>
+we get
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/bigger_font.png"  alt="images/textmon-0.1/bigger_font.png" /></p>
+<p>Bigger font</p>
+</div>
+
+<p>
+The CSS properties at your disposal are listed here
+</p><ul>
+<li><a href="http://developer.qt.nokia.com/doc/qt-4.8/stylesheet-reference.html#list-of-properties">Qt stylesheet reference</a>
+</li>
+</ul>
+
+
+<p>
+<b>Note</b> I haven't played much with these beyond setting the <code>font-family</code> and
+ <code>font-size</code>.  I've tried adding a border
+</p><ul>
+<li><a href="http://dev.opera.com/articles/view/30-the-css-layout-model-boxes-border">http://dev.opera.com/articles/view/30-the-css-layout-model-boxes-border</a>
+</li>
+</ul>
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">styleSheet</span> = { <span class="org-string">"font-family"</span>: <span class="org-string">"Liberation Mono"</span>,
+                   <span class="org-string">"font-style"</span>: <span class="org-string">"normal"</span>,
+                   <span class="org-string">"font-size"</span>: <span class="org-string">"10px"</span>,
+                   <span class="org-string">"color"</span>: <span class="org-string">"white"</span>,
+                   <span class="org-string">"border-style"</span>: <span class="org-string">"solid"</span>,
+                   <span class="org-string">"border-width"</span>: <span class="org-string">"5px"</span>,
+                   <span class="org-string">"border-color"</span>: <span class="org-string">"white"</span> };
+</pre>
+
+<p>
+This made the applet bigger, so the border was added and set to <code>5px</code>.  The
+border color however wasn't white, but looked the same as the rest of the
+applet background.  I actually like that, because it ensures my plasma desktop
+looks consistent, but I'd really like to know which properties I can use with
+plasma and which not (TODO).
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Changing value decoration</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>The code that arranges the labels is at the lines 141-146
+</p>
+
+
+<pre class="src src-js">layout.addItem(sep(<span class="org-string">"{cpu:"</span>));  layout.addItem(cpu.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"{mem:"</span>));  layout.addItem(mem.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"{wlan:"</span>)); layout.addItem(wlan.label); layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"{sda:"</span>));  layout.addItem(sda.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+</pre>
+
+<p>
+If we change remove the device name
+</p>
+
+
+<pre class="src src-js">layout.addItem(sep(<span class="org-string">"{"</span>)); layout.addItem(cpu.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"{"</span>)); layout.addItem(mem.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"{"</span>)); layout.addItem(wlan.label); layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"{"</span>)); layout.addItem(sda.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+</pre>
+
+<p>
+we'll get
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/without_device_names.png"  alt="images/textmon-0.1/without_device_names.png" /></p>
+<p>Without device names</p>
+</div>
+<p>
+Or you do something entirely different
+</p>
+
+
+<pre class="src src-js">layout.addItem(cpu.label)
+layout.addItem(sep(<span class="org-string">"{"</span>)); layout.addItem(mem.label);  layout.addItem(sep(<span class="org-string">"}"</span>));
+layout.addItem(sep(<span class="org-string">"["</span>)); layout.addItem(wlan.label); layout.addItem(sep(<span class="org-string">"]"</span>));
+layout.addItem(sep(<span class="org-string">"("</span>)); layout.addItem(sda.label);  layout.addItem(sep(<span class="org-string">")"</span>));
+</pre>
+
+
+<div class="figure">
+<p><img src="images/textmon-0.1/random_decoration.png"  alt="images/textmon-0.1/random_decoration.png" /></p>
+<p>Random decoration</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Removing cpu entry</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>This doesn't make much sense, but I want you to know how to do it anyways.
+</p>
+<p>
+The steps to remove either <i>cpu</i> or <i>mem</i> are analogous.  We will show how it's
+done for <i>cpu</i> here.
+</p>
+<p>
+Comment out or remove
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">/** cpu */</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">var cpu = (function () {</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">var that = {};</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.source = "cpu/system/TotalLoad";</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sources = [that.source];</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label = newLabel();</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label.text = "---%";</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.dataUpdated = function (name, data) {</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">if (!data.value) { return; }</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">if (name !== this.source) {</span>
+<span class="org-comment-delimiter">//       </span><span class="org-comment">throw ("[CODE ERROR] this routine is meant to handle '"</span>
+<span class="org-comment-delimiter">//              </span><span class="org-comment">+ this.source + "', not '" + name + "'");</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">}</span>
+
+<span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(parseInt(data.value, 10).toString(), ' ', 3);</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">this.label.text = paddedValue + data.units;</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">};</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">return that;</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">}());</span>
+</pre>
+
+
+<p>
+Comment out or remove
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">checkedConnectSource(engine, cpu.source, cpu);</span>
+</pre>
+
+
+<p>
+Comment out or remove
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));</span>
+</pre>
+
+
+<p>
+The sad result
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/without_cpu.png"  alt="images/textmon-0.1/without_cpu.png" /></p>
+<p>Without cpu :(</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Removing wlan entry</h2>
+<div class="outline-text-2" id="text-5">
+
+<p>The steps to remove either <i>sda</i> or <i>wlan</i> are analogous.  We will show how
+it's done for <i>wlan</i> here.
+</p>
+<p>
+Comment out or remove
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">/** wlan */</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">var wlan = (function () {</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">var that = {};</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sourceDown = "network/interfaces/wlan0/receiver/data";</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sourceUp = "network/interfaces/wlan0/transmitter/data";</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.sources = [that.sourceDown, that.sourceUp];</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.cache = {</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">down: {value: "----", units: "KB/s"},</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">up: {value: "----", units: "KB/s"}</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">};</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label = newLabel();</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.label.text = "----KB/s d|----KB/s u";</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">that.dataUpdated = function (name, data) {</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">if (!data.value) { return; }</span>
+
+<span class="org-comment-delimiter">//     </span><span class="org-comment">if (name === this.sourceDown) {</span>
+<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.down = data;</span>
+<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.down.value = parseInt(data.value, 10).toString();</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">} else if (name === this.sourceUp) {</span>
+<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.up = data;</span>
+<span class="org-comment-delimiter">//       </span><span class="org-comment">this.cache.up.value = parseInt(data.value, 10).toString();</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">}</span>
+
+<span class="org-comment-delimiter">//     </span><span class="org-comment">var down = this.cache.down;</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(down.value, ' ', 4);</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">var text = paddedValue + down.units + " d";</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">//</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">text += "|";</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">//</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">var up = this.cache.up;</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">var paddedValue = helpers.padStrLeft(up.value, ' ', 4);</span>
+<span class="org-comment-delimiter">//     </span><span class="org-comment">text += paddedValue + up.units + " u";</span>
+
+<span class="org-comment-delimiter">//     </span><span class="org-comment">this.label.text = text;</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">};</span>
+
+<span class="org-comment-delimiter">//   </span><span class="org-comment">return that;</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">}());</span>
+</pre>
+
+
+<p>
+Comment out or remove
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">for(var k in wlan.sources) {</span>
+<span class="org-comment-delimiter">//   </span><span class="org-comment">checkedConnectSource(engine,  wlan.sources[k], wlan);</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">}</span>
+</pre>
+
+
+<p>
+Comment out or remove
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">// </span><span class="org-comment">layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));</span>
+</pre>
+
+
+<p>
+The result
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/without_wlan.png"  alt="images/textmon-0.1/without_wlan.png" /></p>
+<p>Without wlan</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Monitoring eth0 instead of wlan0</h2>
+<div class="outline-text-2" id="text-6">
+
+<p>Your system may have a different device name for <i>wlan</i> (i.e. <code>ath0</code>) or you
+want to monitor your LAN (<code>eth0</code>) throughput instead.
+</p>
+<p>
+Though it isn't strictly necessary, I recommend reading on <a href="dataengines.html">plasma data engines</a>
+before you continue.  Because
+</p><ul>
+<li>it's interesting
+</li>
+<li>it's the heart beating heart of TextMon
+</li>
+<li>you'll know what to do when something goes wrong here.
+</li>
+</ul>
+
+
+<p>
+Use <i>plasmaengineexplorer</i> to figure out the proper source names.  For the down
+rate of the <code>eth0</code> device it looks like this:
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/engine_explorer_eth0.png"  alt="images/textmon-0.1/engine_explorer_eth0.png" /></p>
+<p>eth0</p>
+</div>
+<p>
+As you can see the source name for the down rate is
+</p><pre class="example">
+network/interfaces/eth0/receiver/data
+</pre>
+
+<p>and for the up rate
+</p><pre class="example">
+network/interfaces/eth0/transmitter/data
+</pre>
+
+
+<p>
+Now compare this with the following code
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">/** </span><span class="org-comment">wlan */</span>
+<span class="org-keyword">var</span> <span class="org-variable-name">wlan</span> = (<span class="org-keyword">function</span> () {
+  <span class="org-keyword">var</span> <span class="org-variable-name">that</span> = {};
+
+  that.sourceDown = <span class="org-string">"network/interfaces/wlan0/receiver/data"</span>;
+  that.sourceUp = <span class="org-string">"network/interfaces/wlan0/transmitter/data"</span>;
+</pre>
+
+<p>
+That is right, you can just search and replace "wlan" with "eth"
+</p>
+
+
+<pre class="src src-js"><span class="org-comment-delimiter">/** </span><span class="org-comment">eth */</span>
+<span class="org-keyword">var</span> <span class="org-variable-name">eth</span> = (<span class="org-keyword">function</span> () {
+  <span class="org-keyword">var</span> <span class="org-variable-name">that</span> = {};
+
+  that.sourceDown = <span class="org-string">"network/interfaces/eth0/receiver/data"</span>;
+  that.sourceUp = <span class="org-string">"network/interfaces/eth0/transmitter/data"</span>;
+  that.sources = [that.sourceDown, that.sourceUp];
+</pre>
+
+
+<p>
+What's left is to adjust two places to the change we just made.  Change
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> wlan.sources) {
+  checkedConnectSource(engine,  wlan.sources[k], wlan);
+}
+</pre>
+
+<p>
+to
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> eth.sources) {
+  checkedConnectSource(engine,  eth.sources[k], eth);
+}
+</pre>
+
+<p>
+and
+</p><pre class="example">
+layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
+</pre>
+
+<p>to
+</p><pre class="example">
+layout.addItem(sep("{lan:")); layout.addItem(eth.label); layout.addItem(sep("}"));
+</pre>
+
+
+<p>
+The result:
+</p>
+<div class="figure">
+<p><img src="images/textmon-0.1/lan_instead_wlan.png"  alt="images/textmon-0.1/lan_instead_wlan.png" /></p>
+<p>lan instead of wlan</p>
+</div>
+
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

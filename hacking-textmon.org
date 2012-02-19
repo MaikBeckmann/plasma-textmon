@@ -1,0 +1,297 @@
+# -*- eval:(ispell-change-dictionary "en_US") -*-
+#+Title: Hacking TextMon
+#+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
+#+Language: en
+#+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
+
+[[file:index.html][{Back to index}]]
+
+* Introcdution
+A number of examples on how to alter TextMon are presented.  I'll assume you
+know what is explained in the [[file:prelude.html][prelude]].
+
+* Changing the font
+The CSS stylesheet that defines the font appearance is located in line 10
+to 13.  If
+#+begin_src js
+  // Font properties
+  var styleSheet = { "font-family": "Liberation Mono",
+                     "font-style": "normal",
+                     "font-size": "10px",
+                     "color": "white" };
+#+end_src
+is changed to use the default monospace font and a bigger font size
+#+begin_src js
+  // Font properties
+  var styleSheet = { "font-family": "Monospace",
+                     "font-style": "normal",
+                     "font-size": "24px",
+                     "color": "white" };
+#+end_src
+we get
+#+caption: Bigger font
+[[file:images/textmon-0.1/bigger_font.png]]
+
+The CSS properties at your disposal are listed here
+ - [[http://developer.qt.nokia.com/doc/qt-4.8/stylesheet-reference.html#list-of-properties][Qt stylesheet reference]]
+
+*Note* I haven't played much with these beyond setting the =font-family= and
+ =font-size=.  I've tried adding a border
+ - [[http://dev.opera.com/articles/view/30-the-css-layout-model-boxes-border]]
+#+BEGIN_SRC js
+var styleSheet = { "font-family": "Liberation Mono",
+                   "font-style": "normal",
+                   "font-size": "10px",
+                   "color": "white",
+		   "border-style": "solid",
+		   "border-width": "5px",
+                   "border-color": "white" };
+#+END_SRC
+This made the applet bigger, so the border was added and set to =5px=.  The
+border color however wasn't white, but looked the same as the rest of the
+applet background.  I actually like that, because it ensures my plasma desktop
+looks consistent, but I'd really like to know which properties I can use with
+plasma and which not (TODO).
+
+* Changing value decoration
+The code that arranges the labels is at the lines 141-146
+#+begin_src js
+  layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));
+  layout.addItem(sep("{mem:"));  layout.addItem(mem.label);  layout.addItem(sep("}"));
+  layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
+  layout.addItem(sep("{sda:"));  layout.addItem(sda.label);  layout.addItem(sep("}"));
+#+end_src
+If we change remove the device name
+#+begin_src js
+  layout.addItem(sep("{")); layout.addItem(cpu.label);  layout.addItem(sep("}"));
+  layout.addItem(sep("{")); layout.addItem(mem.label);  layout.addItem(sep("}"));
+  layout.addItem(sep("{")); layout.addItem(wlan.label); layout.addItem(sep("}"));
+  layout.addItem(sep("{")); layout.addItem(sda.label);  layout.addItem(sep("}"));
+#+end_src
+we'll get
+#+caption: Without device names
+[[file:images/textmon-0.1/without_device_names.png]]
+Or you do something entirely different
+#+begin_src js
+  layout.addItem(cpu.label)
+  layout.addItem(sep("{")); layout.addItem(mem.label);  layout.addItem(sep("}"));
+  layout.addItem(sep("[")); layout.addItem(wlan.label); layout.addItem(sep("]"));
+  layout.addItem(sep("(")); layout.addItem(sda.label);  layout.addItem(sep(")"));
+#+end_src
+#+caption: Random decoration
+[[file:images/textmon-0.1/random_decoration.png]]
+
+* Removing cpu entry
+This doesn't make much sense, but I want you to know how to do it anyways.
+
+The steps to remove either /cpu/ or /mem/ are analogous.  We will show how it's
+done for /cpu/ here.
+
+Comment out or remove
+#+begin_src js
+  // /** cpu */
+  // var cpu = (function () {
+  //   var that = {};
+
+  //   that.source = "cpu/system/TotalLoad";
+  //   that.sources = [that.source];
+
+  //   that.label = newLabel();
+  //   that.label.text = "---%";
+
+  //   that.dataUpdated = function (name, data) {
+  //     if (!data.value) { return; }
+  //     if (name !== this.source) {
+  //       throw ("[CODE ERROR] this routine is meant to handle '"
+  //              + this.source + "', not '" + name + "'");
+  //     }
+
+  //     var paddedValue = helpers.padStrLeft(parseInt(data.value, 10).toString(), ' ', 3);
+  //     this.label.text = paddedValue + data.units;
+  //   };
+
+  //   return that;
+  // }());
+#+end_src
+
+Comment out or remove
+#+begin_src js
+  // checkedConnectSource(engine, cpu.source, cpu);
+#+end_src
+
+Comment out or remove
+#+begin_src js
+  // layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));
+#+end_src
+
+The sad result
+#+caption: Without cpu :(
+[[file:images/textmon-0.1/without_cpu.png]]
+
+* Removing wlan entry
+The steps to remove either /sda/ or /wlan/ are analogous.  We will show how
+it's done for /wlan/ here.
+
+Comment out or remove
+#+begin_src js
+  // /** wlan */
+  // var wlan = (function () {
+  //   var that = {};
+
+  //   that.sourceDown = "network/interfaces/wlan0/receiver/data";
+  //   that.sourceUp = "network/interfaces/wlan0/transmitter/data";
+  //   that.sources = [that.sourceDown, that.sourceUp];
+  //   that.cache = {
+  //     down: {value: "----", units: "KB/s"},
+  //     up: {value: "----", units: "KB/s"}
+  //   };
+
+  //   that.label = newLabel();
+  //   that.label.text = "----KB/s d|----KB/s u";
+
+  //   that.dataUpdated = function (name, data) {
+  //     if (!data.value) { return; }
+
+  //     if (name === this.sourceDown) {
+  //       this.cache.down = data;
+  //       this.cache.down.value = parseInt(data.value, 10).toString();
+  //     } else if (name === this.sourceUp) {
+  //       this.cache.up = data;
+  //       this.cache.up.value = parseInt(data.value, 10).toString();
+  //     }
+
+  //     var down = this.cache.down;
+  //     var paddedValue = helpers.padStrLeft(down.value, ' ', 4);
+  //     var text = paddedValue + down.units + " d";
+  //     //
+  //     text += "|";
+  //     //
+  //     var up = this.cache.up;
+  //     var paddedValue = helpers.padStrLeft(up.value, ' ', 4);
+  //     text += paddedValue + up.units + " u";
+
+  //     this.label.text = text;
+  //   };
+
+  //   return that;
+  // }());
+#+end_src
+
+Comment out or remove
+#+begin_src js
+  // for(var k in wlan.sources) {
+  //   checkedConnectSource(engine,  wlan.sources[k], wlan);
+  // }
+#+end_src
+
+Comment out or remove
+#+begin_src js
+  // layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
+#+end_src
+
+The result
+#+caption: Without wlan
+[[file:images/textmon-0.1/without_wlan.png]]
+
+* Monitoring eth0 instead of wlan0
+Your system may have a different device name for /wlan/ (i.e. =ath0=) or you
+want to monitor your LAN (=eth0=) throughput instead.
+
+Though it isn't strictly necessary, I recommend reading on [[file:dataengines.html][plasma data engines]]
+before you continue.  Because
+ - it's interesting
+ - it's the heart beating heart of TextMon
+ - you'll know what to do when something goes wrong here.
+
+Use /plasmaengineexplorer/ to figure out the proper source names.  For the down
+rate of the =eth0= device it looks like this:
+#+caption: eth0
+[[file:images/textmon-0.1/engine_explorer_eth0.png]]
+#
+As you can see the source name for the down rate is
+: network/interfaces/eth0/receiver/data
+and for the up rate
+: network/interfaces/eth0/transmitter/data
+
+Now compare this with the following code
+#+BEGIN_SRC js
+  /** wlan */
+  var wlan = (function () {
+    var that = {};
+
+    that.sourceDown = "network/interfaces/wlan0/receiver/data";
+    that.sourceUp = "network/interfaces/wlan0/transmitter/data";
+#+END_SRC
+That is right, you can just search and replace "wlan" with "eth"
+#+begin_src js
+  /** eth */
+  var eth = (function () {
+    var that = {};
+
+    that.sourceDown = "network/interfaces/eth0/receiver/data";
+    that.sourceUp = "network/interfaces/eth0/transmitter/data";
+    that.sources = [that.sourceDown, that.sourceUp];
+#+end_src
+
+What's left is to adjust two places to the change we just made.  Change
+#+BEGIN_SRC js
+  for(var k in wlan.sources) {
+    checkedConnectSource(engine,  wlan.sources[k], wlan);
+  }
+#+END_SRC
+to
+#+BEGIN_SRC js
+  for(var k in eth.sources) {
+    checkedConnectSource(engine,  eth.sources[k], eth);
+  }
+#+END_SRC
+and
+ : layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
+to
+ : layout.addItem(sep("{lan:")); layout.addItem(eth.label); layout.addItem(sep("}"));
+
+The result:
+#+caption: lan instead of wlan
+[[file:images/textmon-0.1/lan_instead_wlan.png]]
+
+* COMMENT My personal setup
+Changes I made to suit my personal preferences
+** decorators
+#+begin_src js
+  layout.addItem(cpu.label);  layout.addItem(sep("|"));
+  layout.addItem(mem.label);  layout.addItem(sep("|"));
+  layout.addItem(wlan.label); layout.addItem(sep("|"));
+  layout.addItem(sda.label);
+#+end_src
+
+** wlan
+To make sense, you also have to change
+ : text += "|";
+to
+ : text += " ";
+in the function body of =dataUpdated= in the =sda= and =wlan= objects.
+
+ : that.label.text = "----KB/s d|----KB/s u";
+to
+ : that.label.text = "----KB/s d up:----KB/s u";
+
+
+ : text += "up:" + paddedValue + up.units;
+to
+
+ : var text = "down:" + paddedValue + down.units;
+to
+ : var text = paddedValue + down.units + " d";
+
+** sda
+ : that.label.text = "read:-----KB/s write:-----KB/s";
+to
+ : that.label.text = "-----KB/s r|-----KB/s w";
+
+ : var text = "write:" + paddedValue + read.units;
+to
+ : var text = paddedValue + read.units + " r";
+
+ : text += "read: " + paddedValue + write.units;
+to
+ : text += paddedValue + write.units + " w";

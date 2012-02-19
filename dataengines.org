@@ -1,3 +1,4 @@
+# -*- eval:(ispell-change-dictionary "en_US") -*-
 #+Title: Data engines
 #+Author: Maik Beckmann &lt;beckmann.maik@googlemail.com&gt;
 #+Language: en
@@ -5,14 +6,21 @@
 
 [[file:index.html][{Back to index}]]
 
+* TODOs
+** Wording
+I'm not happy with the wording.  It feels like a mere collection of code
+snippets, glued together with some laconic sentences.  The good thing that
+derives from this is the brevity.  I like to keep that, but add a sensible
+flow.
+
 * Getting more than one shot
-Our script is run exactly once!  To get more than this single run, we have to
-convince plasma to give us additional cpu cycles.  this is done by defining a
-data sink and connecting it to a source.
+When plasma loads our applet, the main script is run exactly once!  To get more
+than that, we have to convince plasma to give us additional cpu cycles.  This
+is always done by asking for a periodic delivery of data.
 
 * A sink with a slot
-An object acts as the sink and a function as the slot that connects the source
-to the sink
+To ask for data we first have to define an object that acts as the data sink.
+What makes it a data sink is having a slot named =dataUpdated=.
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -20,7 +28,7 @@ to the sink
     }
   };
 #+end_src
-The name of the sink Object can be anything
+The name of the sink Object is however arbitrary
 #+begin_src js
   var CatDog = {
     dataUpdated: function (name, data) {
@@ -28,24 +36,25 @@ The name of the sink Object can be anything
     }
   };
 #+end_src
-The name of the slot function however is to be =dataUpdated=.  The function
-always receives two parameters.  We'll dicuss their content in a bit.
+We'll dicuss the content of the slot function's parameters =name=, =data= in a
+bit.
 
 * Connecting the slot to a source
-A plasma engine provides sources.  They're connected to via their
-=connectSource= method.  The arguments this method takes are the name of the
-source, the sink object and the desired interval length in which sink's
-=dataUpdated= slot should be called.
+The inquery for data is formulates by connecting our sink to a source.  A
+plasma engine provides sources.  They're connected to via their =connectSource=
+method.  The arguments this method takes are the name of the source, the sink
+object and the desired interval length in which sink's =dataUpdated= slot
+should be called.
 #+begin_src js
   var engine = dataEngine("SourcesServingEngine")
   var intervalInMilliSeconds = 1000;  // one second
   engine.connectSource("SourceOfInterest", sink, intervalInMilliSeconds);
 #+end_src
-This code has a flaw.  The connection might fail of
+This code has a flaw however.  The connection might fail because
  - the source doesn't exist
  - the sink object doesn't define the =dataUpdated= slot.
-This flowing version doesn't really handle these situation, but at least tells
-us about it.
+This flowing doesn't really handle these situation, but at least tells us about
+it.
 #+begin_src js
   var engine = dataEngine("SourcesServingEngine")
   var intervalInMilliSeconds = 1000;  // one second
@@ -54,15 +63,15 @@ us about it.
   }
 #+end_src
 
-To actually find a data source and a source it provides we gonna use
+To find a data engine and the sources it provides we gonna use
  : % plasmaengineexplorer
 #+caption: Plasma engine explorer
 #+label: fig:plasmaengineexplorer
 ##+attr_html: width="605"
 [[file:images/plasmaengineexplorer.png]]
 #
-In image \ref{fig:plasmaengineexplorer} the source /Local/ of the /time/ data
-engine is expanded.  This code uses it
+Image \ref{fig:plasmaengineexplorer} shows the source /Local/ of the /time/
+data engine.  This code uses it
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -86,9 +95,9 @@ and results in
  : ping
  : ping
  : ping
-
-As you can see, connectSource calls the dataUpdated slot.  So make sure that
-it's already there.  If not
+Note that besides the periodically calls by the data engine, =dataUpdated= is
+called once when being connected via =connectSource=.  Make sure that it's
+already there, or the connection will fail as demonstrated by this code
 #+begin_src js
   var sink = {};
 
@@ -105,33 +114,43 @@ it's already there.  If not
 
   print("main.js ends here");
 #+end_src
-we'll get
+which results in
  : % plasmoidviewer .
  : connection attempt failed
  : main.js ends here
  : %
 
 * Exploring a data source
-So far it is only confirmed that =dataUpdated= was called back.  Now we take a
-look at the value of the parameters it is called with by the data engine.
+So far it is only confirmed that =dataUpdated= was called back by the data
+engine.  Now we take a look at the value of the parameters it is called with.
 
-First the =name=.  This code for the sink section
+** =name=
+Consider this code
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
       print(name);
     }
   };
+
+  var engine = dataEngine("time");
+  if ( engine.connectSource("Local", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
 #+end_src
-results in
+which results in the following output
  : Local
  : connection established
  : main.js ends here
  : Local
  : Local
  : ...
-This is the same name we used with =connectSource=.  This becomes important
-when we subscribe to more than one data source.
+The content of =name= is the same as the one we gave to =connectSource=.  This
+becomes important when we subscribe a single sink to more than one data source.
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -145,7 +164,7 @@ when we subscribe to more than one data source.
   } else {
     print("connection attempt to 'Local' in 'time' failed");
   }
-  //
+
   if ( engine.connectSource("Europe/London", sink, 1000) ) {
     print("connection to 'Europe/London' in 'time' established");
   } else {
@@ -165,8 +184,8 @@ when we subscribe to more than one data source.
  : Local
  : Europe/Londo
 
-Now the =data=.  We're using the version that only connects to =Local= in
-=time= with this slot definition
+** =data=
+Every time the data engine sends its data, the output of this sink
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -180,7 +199,7 @@ Now the =data=.  We're using the version that only connects to =Local= in
     }
   };
 #+end_src
-It results in
+is similar to
  : ===== data =====
  : key : Timezone Continent
  : typeof data[key] : string
@@ -221,9 +240,12 @@ time zone has an offset of
 
 If you compare this data with what is shown in \ref{fig:plasmaengineexplorer},
 then you'll notice it being exactly the same, except for the actual point in
-time.  For Qt data types that don't have an builtin equivalent in Javascript we
-get an object.
- - [[http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types][Conversion between QtScript and C++ types]]
+time.  The /Type/ entry for each source in the image is the names of a Qt C++
+data type.  Some of them have an equivalent in Javascript, like
+ - =QString= <--> =string= .
+For Qt data types that don't have an builtin equivalent in Javascript we get an
+object
+ - [[http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types][Conversion between QtScript and C++ types]] .
 Lets have a peek into what one of these converted Qt types has to offer
 #+begin_src js
   var sink = {
@@ -243,9 +265,11 @@ Lets have a peek into what one of these converted Qt types has to offer
  : ==== data =====
  : <properties of data["DateTime"]
  : </properties of data["DateTime"]
-Nothing?  That is correct.  This shell around an C++ object only hands out you
-a string representation of its value to Javascript.  Though they are not
-showing up with the code above, these objects have the following methods
+Nothing?  That is correct.  These Javascript shells around a C++ object only
+hand out a string representation of their value.
+
+Though they are not showing up with the code above, these objects have the
+following methods
  - =toString()=
  - =toLocaleString()=
  - =valueOf()=
@@ -275,13 +299,73 @@ However, you probably only ever use =toString()=.
  : typeof dateTime.toString() : string
  : dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
 
-*  COMMENT The /systemmonitor/ date engine
+* The /systemmonitor/ date engine
 ** CPU load
+*** The kde system monitor (aka. ksysguard)
+Go and start kde's system monitor with
+ : % ksysguard
+Yes, ksysguard, not ksysmon.  Makes sense, right?  No it does not!  I'm
+actually german and I bet my socks on this being a funny little translation
+error that sticked :P .  However, lets take a look at it.
+#+caption: kde system monitor aka. ksysguard
+#+label: fig:ksysguard
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard.png]]
+#
+The first tab displays the system processes with their properties., while the
+second one contains line graphs for certain values, among them the total cpu
+load.  These two tabs predefined, you can't add or remove anything.  This isn't
+the case for user defined tabs, so lets create one
+ - File -> New Tab...
+#+caption: Tinker Tab
+#+label: fig:ksysguard_tinkertab
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_tinkertab.png]]
+#
+To the right is the /Sensor Browser/.  Expand /CPU Load/ and in there /System/.
+Drag the /Total Load(float)/ Item over to the tab interior and drop it.  A
+popup appears, asking you how the stream of values should be displayed.  Select
+/LineGraph/ and be amazed.
+#+caption: Cpu load
+#+label: fig:ksysguard_cpu
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_cpu.png]]
+#
+You can try the other display types be right clicking the current display
+widget, select remove and drag over another item from the /Sensor Browser/.
+Mess around to your heart's content.  Done?  Remove the display widget if there
+is one and add again the line graph for /Total Load(float)/.  Right click the
+line graph and this time don't select /Remove Display/ but /Properties/.  The
+/Sensors/ Tab in the windows that comes up shows the name of the sensor
+ - =/cpu/system/TotalLoad=
+Take a good look at it, we will soon see it again.
+
+#+caption: Cpu sensor
+#+label: fig:ksysguard-cpu-total
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_cpu_sensor.png]]
+#
+
+*** The /systemmonitor/ data engine
+# Now get the curve from the cpu line graph in ksysguard to why we instead want
+# to use plasmaengineexplorer.  Meh
+
+Plasma fixed the translation error and calls the data engine that represents
+ksysguar /systemmonitor/.  You can take a look what it has to offer by starting
+ : % plasmaengineexplorer
+and selecting it as /Data Engine/.  What you'll see should look familar
 #+caption: systemmonitor : the system's total cpu load
-#+label: fig:cpu_total_load
+#+label: fig:systemmonitor-cpu-total
 ##+attr_html: width="605"
 [[file:images/cpu_total_load.png]]
+That's right, there it is again
+ - =/cpu/system/TotalLoad=
+The name of the /Sensor/ in \ref{fig:ksysguard-cpu-total} is the same as the
+source =name= in the /systemmonitor/ data engine.  This is true for all sensors
+you can find in ksysguard.
 
+*** Enough pictures, code!
+Without further ado, here the code which subscribes to the cpu load source
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -303,6 +387,7 @@ However, you probably only ever use =toString()=.
 
   print("main.js ends here");
 #+end_src
+and prints its content on the screen
  : ==== data =====
  : key : type
  : data[key] : float
@@ -326,6 +411,7 @@ However, you probably only ever use =toString()=.
  : key : max
  : data[key] : 100
 
+A nicer to look at interpretation is
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -340,6 +426,10 @@ However, you probably only ever use =toString()=.
  : 0.502513%
  : 1.012658%
 
+But wait, =NaN=?  See also the first data block in the verbose output.  It
+stops after key =type=.  Something is afoot and I do not know what.  My guess
+is that is a bug in the ksysguard component that nobody bothered to fix,
+because it can easily be worked around like this
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -357,9 +447,12 @@ However, you probably only ever use =toString()=.
  : 4.822335%
  : 0.751880%
  : 0.501253%
+(TODO: poke #plasma on freenode about it).
 
-
+When you put your applet into the panel, then space is precious.  I'd argue
+that the decimal digits don't add enough imformation to be included.  Use
 - http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt
+to drop them
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -379,10 +472,20 @@ However, you probably only ever use =toString()=.
  : 0%
 
 ** Application memory
+Same as for the cpu load
+#+caption: ksysguard : used application memory
+#+label: fig:ksysguard-appmeme
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_appmem.png]]
+Here code and output
+
+
 #+begin_src js
+
   var sink = {
     dataUpdated: function (name, data) {
-      print(data["value"] + data["units"]);
+      if (!data["value"]) { return; }
+      print(parseInt(data["value"]) +  data["units"]);
     }
   };
 
@@ -397,11 +500,10 @@ However, you probably only ever use =toString()=.
 #+end_src
  : connection established
  : main.js ends here
- : NaN
- : 2077064KB
- : 2079192KB
- : 2079544KB
-
+ : 1731100KB
+ : 1730956KB
+ : 1732552KB
+Hm, these values are rather big.  Lets convert them from =KB= to =MB=
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -409,17 +511,41 @@ However, you probably only ever use =toString()=.
       print(parseInt(data["value"] / 1024, 10) + "MB");
     }
   };
+
+  var engine = dataEngine("systemmonitor");
+  if ( engine.connectSource("mem/physical/application", sink, 1000) ) {
+    print("connection established");
+  } else {
+    print("connection attempt failed");
+  }
+
+  print("main.js ends here");
 #+end_src
  : connection established
  : main.js ends here
- : 1934MB
- : 1932MB
- : 1932MB
+ : 1665MB
+ : 1665MB
+ : 1666MB
+Much better!
+
 ** Wlan
-*** Down rate
+The follow image shows the source names for wifi up and down rates.
+#+caption: ksysguard : wlan down and up rate
+#+label: fig:ksysguard-wlan
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_wlan.png]]
+#
+Note two things: Firstly, why didn't I put both sensors in the same line graph?
+It used to work, but doesn't in [[https://bugs.kde.org/show_bug.cgi?id%3D290504][kde-4.8.0]].  Secondly, there are not one but two
+sources we're interested in.
+
+*** Each of the two source by itself
+The first source is the rate with which the bits are dripping out of our wlan
+cable.
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
+      if (!data["value"]) { return; }
       print(data["value"] + data["units"]);
     }
   };
@@ -433,28 +559,14 @@ However, you probably only ever use =toString()=.
 
   print("main.js ends here");
 #+end_src
-connection established
-main.js ends here
-NaN
-89KB/s
-103KB/s
-105KB/s
-
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      if (!data["value"]) { return; }
-      print(data["value"] + data["units"]);
-    }
-  };
-#+end_src
  : connection established
  : main.js ends here
  : 124KB/s
  : 97KB/s
  : 131KB/s
 
-*** Up rate
+The second one is the rate with which the FBI is uploading your files onto
+their servers
 #+begin_src js
   var sink = {
     dataUpdated: function (name, data) {
@@ -478,11 +590,19 @@ NaN
  : 5KB/s
  : 6KB/s
  : 6KB/s
+slowly but steady =>:]=
 
-*** Joined data
+*** Joining the data
+The goal is to print both values on the screen each time one of the sources was
+updated:
+ : down: 91KB/s up: 5KB/s
+ : down: 91KB/s up: 6KB/s
+ : down: 147KB/s up: 6KB/s
+
+But there is a problem.  When yource A is updated, we don't have the values of
+source B and vice versa.  The solution: a cache.
 #+begin_src js
-  var sink = (function () {
-    var obj = {}
+  var sink = (function () { var obj = {}
 
     obj.sourceUp = "network/interfaces/wlan0/transmitter/data";
     obj.sourceDown = "network/interfaces/wlan0/receiver/data";
@@ -494,11 +614,11 @@ NaN
     obj.dataUpdated = function (name, data) {
       if (!data["value"]) { return; }
 
-      // TODO: up and down tauchen
-      if (name == this.sourceUp) {
-        this.cache.up = data;
-      } else if (name == this.sourceDown) {
+
+      if (name == this.sourceDown) {
         this.cache.down = data;
+      } else  if (name == this.sourceUp) {
+        this.cache.up = data;
       }
 
       var msg = "down: " + this.cache.down["value"] + this.cache.down["units"];
@@ -539,76 +659,12 @@ NaN
  : down: 147KB/s up: 6KB/s
 
 ** Harddisk
-*** Read rate
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      print(data["value"] + data["units"]);
-    }
-  };
-
-  var engine = dataEngine("systemmonitor");
-  if ( engine.connectSource("disk/sda_(8:0)/Rate/rblk", sink, 1000) ) {
-    print("connection established");
-  } else {
-    print("connection attempt failed");
-  }
-
-  print("main.js ends here");
-#+end_src
- : connection established
- : main.js ends here
- : NaN
- : 0.000000KB/s
- : 0.000000KB/s
- : 0.000000KB/s
-
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      // No data aviable. God knows why
-      if (!data["value"]) {
-        return;
-      }
-
-      print(parseInt(data["value"], 10) + data["units"]);
-    }
-  };
-#+end_src
- : connection established
- : main.js ends here
- : 0KB/s
- : 0KB/s
- : 0KB/s
-
-*** Write rate
-#+begin_src js
-  var sink = {
-    dataUpdated: function (name, data) {
-      // No data aviable. God knows why
-      if (!data["value"]) {
-        return;
-      }
-
-      print(parseInt(data["value"], 10) + data["units"]);
-    }
-  };
-
-  var engine = dataEngine("systemmonitor");
-  if ( engine.connectSource("disk/sda_(8:0)/Rate/wblk", sink, 1000) ) {
-    print("connection established");
-  } else {
-    print("connection attempt failed");
-  }
-
-  print("main.js ends here");
-#+end_src
- : connection established
- : main.js ends here
- : 0KB/s
- : 0KB/s
- : 0KB/s
-*** Joined data
+This equivalent to the wlan case.
+#+caption: ksysguard : sda read and write rate
+#+label: fig:ksysguard-sda
+##+attr_html: width="605"
+[[file:images/dataengines/ksysguard_sda.png]]
+#
 #+begin_src js
   var sink = (function () {
     var obj = {}
@@ -666,4 +722,3 @@ NaN
  : read: ----KB/s write: 0KB/s
  : read: 0KB/s write: 0KB/s
  : read: 0KB/s write: 0KB/s
-

@@ -30,23 +30,14 @@ The main script of a plasma applet is run exactly once.  To get another chance
 of doing something you have to tell plasma why and how often.  The answer to
 the "why" is always the same: data.
 
-* [[file:textmon-0_1-tweak-guide.html][Hacking TextMon]]
+* [[file:ui-basics.html][Plasma user interface basics]]
+A few basics that cover all our needs.  There aren't much, since the only two
+UI widgets we'll use are labels, a layout to arrange them and the applet
+itself.
+
+* [[file:hacking-textmon.html][Hacking TextMon]]
 A number of examples on how to alter TextMon are presented.
 
-* The next thing
-The actual point of TextMon is to give you an hands-on hacking entry point to
-writing plasma applets.  While starting to document TextMon I've learned a lot
-new things, which aren't reflected in TextMon-0.1 .  There are new and foremost
-much simpler flavors TextMon to come, like
-  - TextMonCpu
-  - TextMonMem
-  - TextMonWlan
-  - TextMonSda
-  - ...
-Eventually I'll come back to this original applet.  The code will most likely
-be much simpler, easier to understand and less error prone to tweak.
-
-* COMMENT  [[file:UI.html][Plasma user interface basics]]
 * [[http://github.com/MaikBeckmann/plasma-textmon][github repo]]
 There you'll find the applet sources and the [[http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages][sources]] for this documentation
 (emacs .org files).

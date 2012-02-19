@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="Data engines"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-13 13:26:02 CET"/>
+<meta name="generated" content="2012-02-18 18:33:26 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -101,32 +101,82 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Getting more than one shot</a></li>
-<li><a href="#sec-2">2 A sink with a slot</a></li>
-<li><a href="#sec-3">3 Connecting the slot to a source</a></li>
-<li><a href="#sec-4">4 Exploring a data source</a></li>
+<li><a href="#sec-1">1 TODOs</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Wording</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 Getting more than one shot</a></li>
+<li><a href="#sec-3">3 A sink with a slot</a></li>
+<li><a href="#sec-4">4 Connecting the slot to a source</a></li>
+<li><a href="#sec-5">5 Exploring a data source</a>
+<ul>
+<li><a href="#sec-5-1">5.1 <code>name</code></a></li>
+<li><a href="#sec-5-2">5.2 <code>data</code></a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 The <i>systemmonitor</i> date engine</a>
+<ul>
+<li><a href="#sec-6-1">6.1 CPU load</a>
+<ul>
+<li><a href="#sec-6-1-1">6.1.1 The kde system monitor (aka. ksysguard)</a></li>
+<li><a href="#sec-6-1-2">6.1.2 The <i>systemmonitor</i> data engine</a></li>
+<li><a href="#sec-6-1-3">6.1.3 Enough pictures, code!</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-2">6.2 Application memory</a></li>
+<li><a href="#sec-6-3">6.3 Wlan</a>
+<ul>
+<li><a href="#sec-6-3-1">6.3.1 Each of the two source by itself</a></li>
+<li><a href="#sec-6-3-2">6.3.2 Joining the data</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-4">6.4 Harddisk</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Getting more than one shot</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> TODOs</h2>
 <div class="outline-text-2" id="text-1">
 
-<p>Our script is run exactly once!  To get more than this single run, we have to
-convince plasma to give us additional cpu cycles.  this is done by defining a
-data sink and connecting it to a source.
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Wording</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>I'm not happy with the wording.  It feels like a mere collection of code
+snippets, glued together with some laconic sentences.  The good thing that
+derives from this is the brevity.  I like to keep that, but add a sensible
+flow.
 </p>
+</div>
 </div>
 
 </div>
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> A sink with a slot</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> Getting more than one shot</h2>
 <div class="outline-text-2" id="text-2">
 
-<p>An object acts as the sink and a function as the slot that connects the source
-to the sink
+<p>When plasma loads our applet, the main script is run exactly once!  To get more
+than that, we have to convince plasma to give us additional cpu cycles.  This
+is always done by asking for a periodic delivery of data.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> A sink with a slot</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>To ask for data we first have to define an object that acts as the data sink.
+What makes it a data sink is having a slot named <code>dataUpdated</code>.
 </p>
 
 
@@ -138,7 +188,7 @@ to the sink
 </pre>
 
 <p>
-The name of the sink Object can be anything
+The name of the sink Object is however arbitrary
 </p>
 
 
@@ -150,21 +200,22 @@ The name of the sink Object can be anything
 </pre>
 
 <p>
-The name of the slot function however is to be <code>dataUpdated</code>.  The function
-always receives two parameters.  We'll dicuss their content in a bit.
+We'll dicuss the content of the slot function's parameters <code>name</code>, <code>data</code> in a
+bit.
 </p>
 </div>
 
 </div>
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Connecting the slot to a source</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Connecting the slot to a source</h2>
+<div class="outline-text-2" id="text-4">
 
-<p>A plasma engine provides sources.  They're connected to via their
-<code>connectSource</code> method.  The arguments this method takes are the name of the
-source, the sink object and the desired interval length in which sink's
-<code>dataUpdated</code> slot should be called.
+<p>The inquery for data is formulates by connecting our sink to a source.  A
+plasma engine provides sources.  They're connected to via their <code>connectSource</code>
+method.  The arguments this method takes are the name of the source, the sink
+object and the desired interval length in which sink's <code>dataUpdated</code> slot
+should be called.
 </p>
 
 
@@ -174,7 +225,7 @@ engine.connectSource(<span class="org-string">"SourceOfInterest"</span>, sink, i
 </pre>
 
 <p>
-This code has a flaw.  The connection might fail of
+This code has a flaw however.  The connection might fail because
 </p><ul>
 <li>the source doesn't exist
 </li>
@@ -182,8 +233,8 @@ This code has a flaw.  The connection might fail of
 </li>
 </ul>
 
-<p>This flowing version doesn't really handle these situation, but at least tells
-us about it.
+<p>This flowing doesn't really handle these situation, but at least tells us about
+it.
 </p>
 
 
@@ -196,7 +247,7 @@ us about it.
 
 
 <p>
-To actually find a data source and a source it provides we gonna use
+To find a data engine and the sources it provides we gonna use
 </p><pre class="example">
 % plasmaengineexplorer
 </pre>
@@ -207,8 +258,8 @@ To actually find a data source and a source it provides we gonna use
 <p>Plasma engine explorer</p>
 </div>
 <p>
-In image <a href="#fig-plasmaengineexplorer">plasmaengineexplorer</a> the source <i>Local</i> of the <i>time</i> data
-engine is expanded.  This code uses it
+Image <a href="#fig-plasmaengineexplorer">plasmaengineexplorer</a> shows the source <i>Local</i> of the <i>time</i>
+data engine.  This code uses it
 </p>
 
 
@@ -239,10 +290,9 @@ ping
 ping
 </pre>
 
-
-<p>
-As you can see, connectSource calls the dataUpdated slot.  So make sure that
-it's already there.  If not
+<p>Note that besides the periodically calls by the data engine, <code>dataUpdated</code> is
+called once when being connected via <code>connectSource</code>.  Make sure that it's
+already there, or the connection will fail as demonstrated by this code
 </p>
 
 
@@ -263,7 +313,7 @@ print(<span class="org-string">"main.js ends here"</span>);
 </pre>
 
 <p>
-we'll get
+which results in
 </p><pre class="example">
 % plasmoidviewer .
 connection attempt failed
@@ -276,15 +326,21 @@ main.js ends here
 
 </div>
 
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Exploring a data source</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Exploring a data source</h2>
+<div class="outline-text-2" id="text-5">
 
-<p>So far it is only confirmed that <code>dataUpdated</code> was called back.  Now we take a
-look at the value of the parameters it is called with by the data engine.
+<p>So far it is only confirmed that <code>dataUpdated</code> was called back by the data
+engine.  Now we take a look at the value of the parameters it is called with.
 </p>
-<p>
-First the <code>name</code>.  This code for the sink section
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> <code>name</code></h3>
+<div class="outline-text-3" id="text-5-1">
+
+<p>Consider this code
 </p>
 
 
@@ -293,10 +349,19 @@ First the <code>name</code>.  This code for the sink section
     print(name);
   }
 };
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"time"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Local"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
 </pre>
 
 <p>
-results in
+which results in the following output
 </p><pre class="example">
 Local
 connection established
@@ -306,8 +371,8 @@ Local
 ...
 </pre>
 
-<p>This is the same name we used with <code>connectSource</code>.  This becomes important
-when we subscribe to more than one data source.
+<p>The content of <code>name</code> is the same as the one we gave to <code>connectSource</code>.  This
+becomes important when we subscribe a single sink to more than one data source.
 </p>
 
 
@@ -323,7 +388,7 @@ when we subscribe to more than one data source.
 } <span class="org-keyword">else</span> {
   print(<span class="org-string">"connection attempt to 'Local' in 'time' failed"</span>);
 }
-<span class="org-comment-delimiter">//</span>
+
 <span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"Europe/London"</span>, sink, 1000) ) {
   print(<span class="org-string">"connection to 'Europe/London' in 'time' established"</span>);
 } <span class="org-keyword">else</span> {
@@ -347,9 +412,15 @@ Europe/Londo
 </pre>
 
 
-<p>
-Now the <code>data</code>.  We're using the version that only connects to <code>Local</code> in
-<code>time</code> with this slot definition
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> <code>data</code></h3>
+<div class="outline-text-3" id="text-5-2">
+
+<p>Every time the data engine sends its data, the output of this sink
 </p>
 
 
@@ -367,7 +438,7 @@ Now the <code>data</code>.  We're using the version that only connects to <code>
 </pre>
 
 <p>
-It results in
+is similar to
 </p><pre class="example">
 ===== data =====
 key : Timezone Continent
@@ -415,10 +486,17 @@ time zone has an offset of
 <p>
 If you compare this data with what is shown in <a href="#fig-plasmaengineexplorer">plasmaengineexplorer</a>,
 then you'll notice it being exactly the same, except for the actual point in
-time.  For Qt data types that don't have an builtin equivalent in Javascript we
-get an object.
+time.  The <i>Type</i> entry for each source in the image is the names of a Qt C++
+data type.  Some of them have an equivalent in Javascript, like
 </p><ul>
-<li><a href="http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types">Conversion between QtScript and C++ types</a>
+<li><code>QString</code> &lt;&ndash;&gt; <code>string</code> .
+</li>
+</ul>
+
+<p>For Qt data types that don't have an builtin equivalent in Javascript we get an
+object
+</p><ul>
+<li><a href="http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types">Conversion between QtScript and C++ types</a> .
 </li>
 </ul>
 
@@ -447,9 +525,12 @@ get an object.
 &lt;/properties of data["DateTime"]
 </pre>
 
-<p>Nothing?  That is correct.  This shell around an C++ object only hands out you
-a string representation of its value to Javascript.  Though they are not
-showing up with the code above, these objects have the following methods
+<p>Nothing?  That is correct.  These Javascript shells around a C++ object only
+hand out a string representation of their value.
+</p>
+<p>
+Though they are not showing up with the code above, these objects have the
+following methods
 </p><ul>
 <li><code>toString()</code>
 </li>
@@ -502,8 +583,597 @@ dateTime.toString() : Sun Feb 12 2012 11:45:39 GMT+0100 (CET)
 </pre>
 
 
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> The <i>systemmonitor</i> date engine</h2>
+<div class="outline-text-2" id="text-6">
 
 
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> CPU load</h3>
+<div class="outline-text-3" id="text-6-1">
+
+
+</div>
+
+<div id="outline-container-6-1-1" class="outline-4">
+<h4 id="sec-6-1-1"><span class="section-number-4">6.1.1</span> The kde system monitor (aka. ksysguard)</h4>
+<div class="outline-text-4" id="text-6-1-1">
+
+<p>Go and start kde's system monitor with
+</p><pre class="example">
+% ksysguard
+</pre>
+
+<p>Yes, ksysguard, not ksysmon.  Makes sense, right?  No it does not!  I'm
+actually german and I bet my socks on this being a funny little translation
+error that sticked :P .  However, lets take a look at it.
+</p>
+<div id="fig-ksysguard" class="figure">
+<p><img src="images/dataengines/ksysguard.png"  alt="images/dataengines/ksysguard.png" /></p>
+<p>kde system monitor aka. ksysguard</p>
+</div>
+<p>
+The first tab displays the system processes with their properties., while the
+second one contains line graphs for certain values, among them the total cpu
+load.  These two tabs predefined, you can't add or remove anything.  This isn't
+the case for user defined tabs, so lets create one
+</p><ul>
+<li>File -&gt; New Tab&hellip;
+</li>
+</ul>
+
+
+<div id="fig-ksysguard_tinkertab" class="figure">
+<p><img src="images/dataengines/ksysguard_tinkertab.png"  alt="images/dataengines/ksysguard_tinkertab.png" /></p>
+<p>Tinker Tab</p>
+</div>
+<p>
+To the right is the <i>Sensor Browser</i>.  Expand <i>CPU Load</i> and in there <i>System</i>.
+Drag the <i>Total Load(float)</i> Item over to the tab interior and drop it.  A
+popup appears, asking you how the stream of values should be displayed.  Select
+<i>LineGraph</i> and be amazed.
+</p>
+<div id="fig-ksysguard_cpu" class="figure">
+<p><img src="images/dataengines/ksysguard_cpu.png"  alt="images/dataengines/ksysguard_cpu.png" /></p>
+<p>Cpu load</p>
+</div>
+<p>
+You can try the other display types be right clicking the current display
+widget, select remove and drag over another item from the <i>Sensor Browser</i>.
+Mess around to your heart's content.  Done?  Remove the display widget if there
+is one and add again the line graph for <i>Total Load(float)</i>.  Right click the
+line graph and this time don't select <i>Remove Display</i> but <i>Properties</i>.  The
+<i>Sensors</i> Tab in the windows that comes up shows the name of the sensor
+</p><ul>
+<li><code>/cpu/system/TotalLoad</code>
+</li>
+</ul>
+
+<p>Take a good look at it, we will soon see it again.
+</p>
+
+<div id="fig-ksysguard-cpu-total" class="figure">
+<p><img src="images/dataengines/ksysguard_cpu_sensor.png"  alt="images/dataengines/ksysguard_cpu_sensor.png" /></p>
+<p>Cpu sensor</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-6-1-2" class="outline-4">
+<h4 id="sec-6-1-2"><span class="section-number-4">6.1.2</span> The <i>systemmonitor</i> data engine</h4>
+<div class="outline-text-4" id="text-6-1-2">
+
+
+<p>
+Plasma fixed the translation error and calls the data engine that represents
+ksysguar <i>systemmonitor</i>.  You can take a look what it has to offer by starting
+</p><pre class="example">
+% plasmaengineexplorer
+</pre>
+
+<p>and selecting it as <i>Data Engine</i>.  What you'll see should look familar
+</p>
+<div id="fig-systemmonitor-cpu-total" class="figure">
+<p><img src="images/cpu_total_load.png"  alt="images/cpu_total_load.png" /></p>
+<p>systemmonitor : the system's total cpu load</p>
+</div>
+<p>
+That's right, there it is again
+</p><ul>
+<li><code>/cpu/system/TotalLoad</code>
+</li>
+</ul>
+
+<p>The name of the <i>Sensor</i> in <a href="#fig-ksysguard-cpu-total">ksysguard-cpu-total</a> is the same as the
+source <code>name</code> in the <i>systemmonitor</i> data engine.  This is true for all sensors
+you can find in ksysguard.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-1-3" class="outline-4">
+<h4 id="sec-6-1-3"><span class="section-number-4">6.1.3</span> Enough pictures, code!</h4>
+<div class="outline-text-4" id="text-6-1-3">
+
+<p>Without further ado, here the code which subscribes to the cpu load source
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(<span class="org-string">"==== data ====="</span>);
+    <span class="org-keyword">for</span>(<span class="org-keyword">var</span> <span class="org-variable-name">k</span> <span class="org-keyword">in</span> data) {
+      print(<span class="org-string">"key : "</span> + k);
+      print(<span class="org-string">'data[key] : '</span> + data[k]);
+      print(<span class="org-string">"---"</span>)
+    }
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"cpu/system/TotalLoad"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<p>
+and prints its content on the screen
+</p><pre class="example">
+==== data =====
+key : type
+data[key] : float
+---
+==== data =====
+key : units
+data[key] : %
+---
+key : type
+data[key] : float
+---
+key : value
+data[key] : 1.503759
+---
+key : min
+data[key] : 0
+---
+key : name
+data[key] : CPU Total Load
+---
+key : max
+data[key] : 100
+</pre>
+
+
+<p>
+A nicer to look at interpretation is
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+NaN
+4.834606%
+0.502513%
+1.012658%
+</pre>
+
+
+<p>
+But wait, <code>NaN</code>?  See also the first data block in the verbose output.  It
+stops after key <code>type</code>.  Something is afoot and I do not know what.  My guess
+is that is a bug in the ksysguard component that nobody bothered to fix,
+because it can easily be worked around like this
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-comment-delimiter">// </span><span class="org-comment">No data aviable. God knows why</span>
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) {
+      <span class="org-keyword">return</span>;
+    }
+
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+4.822335%
+0.751880%
+0.501253%
+</pre>
+
+<p>(TODO: poke #plasma on freenode about it).
+</p>
+<p>
+When you put your applet into the panel, then space is precious.  I'd argue
+that the decimal digits don't add enough imformation to be included.  Use
+</p><ul>
+<li><a href="http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt">http://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/parseInt</a>
+</li>
+</ul>
+
+<p>to drop them
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-comment-delimiter">// </span><span class="org-comment">No data aviable. God knows why</span>
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) {
+      <span class="org-keyword">return</span>;
+    }
+
+    print(parseInt(data[<span class="org-string">"value"</span>], 10) + data[<span class="org-string">"units"</span>]);
+  }
+};
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+5%
+2%
+0%
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> Application memory</h3>
+<div class="outline-text-3" id="text-6-2">
+
+<p>Same as for the cpu load
+</p>
+<div id="fig-ksysguard-appmeme" class="figure">
+<p><img src="images/dataengines/ksysguard_appmem.png"  alt="images/dataengines/ksysguard_appmem.png" /></p>
+<p>ksysguard : used application memory</p>
+</div>
+<p>
+Here code and output
+</p>
+
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(parseInt(data[<span class="org-string">"value"</span>]) +  data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"mem/physical/application"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+1731100KB
+1730956KB
+1732552KB
+</pre>
+
+<p>Hm, these values are rather big.  Lets convert them from <code>KB</code> to <code>MB</code>
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(parseInt(data[<span class="org-string">"value"</span>] / 1024, 10) + <span class="org-string">"MB"</span>);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"mem/physical/application"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+1665MB
+1665MB
+1666MB
+</pre>
+
+<p>Much better!
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> Wlan</h3>
+<div class="outline-text-3" id="text-6-3">
+
+<p>The follow image shows the source names for wifi up and down rates.
+</p>
+<div id="fig-ksysguard-wlan" class="figure">
+<p><img src="images/dataengines/ksysguard_wlan.png"  alt="images/dataengines/ksysguard_wlan.png" /></p>
+<p>ksysguard : wlan down and up rate</p>
+</div>
+<p>
+Note two things: Firstly, why didn't I put both sensors in the same line graph?
+It used to work, but doesn't in <a href="https://bugs.kde.org/show_bug.cgi?id=290504">kde-4.8.0</a>.  Secondly, there are not one but two
+sources we're interested in.
+</p>
+
+</div>
+
+<div id="outline-container-6-3-1" class="outline-4">
+<h4 id="sec-6-3-1"><span class="section-number-4">6.3.1</span> Each of the two source by itself</h4>
+<div class="outline-text-4" id="text-6-3-1">
+
+<p>The first source is the rate with which the bits are dripping out of our wlan
+cable.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"network/interfaces/wlan0/receiver/data"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+124KB/s
+97KB/s
+131KB/s
+</pre>
+
+
+<p>
+The second one is the rate with which the FBI is uploading your files onto
+their servers
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = {
+  <span class="org-function-name">dataUpdated</span>: <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+    print(data[<span class="org-string">"value"</span>] + data[<span class="org-string">"units"</span>]);
+  }
+};
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+<span class="org-keyword">if</span> ( engine.connectSource(<span class="org-string">"network/interfaces/wlan0/transmitter/data"</span>, sink, 1000) ) {
+  print(<span class="org-string">"connection established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt failed"</span>);
+}
+
+print(<span class="org-string">"main.js ends here"</span>);
+
+</pre>
+
+<pre class="example">
+connection established
+main.js ends here
+5KB/s
+6KB/s
+6KB/s
+</pre>
+
+<p>slowly but steady <code>&gt;:]</code>
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-3-2" class="outline-4">
+<h4 id="sec-6-3-2"><span class="section-number-4">6.3.2</span> Joining the data</h4>
+<div class="outline-text-4" id="text-6-3-2">
+
+<p>The goal is to print both values on the screen each time one of the sources was
+updated:
+</p><pre class="example">
+down: 91KB/s up: 5KB/s
+down: 91KB/s up: 6KB/s
+down: 147KB/s up: 6KB/s
+</pre>
+
+
+<p>
+But there is a problem.  When yource A is updated, we don't have the values of
+source B and vice versa.  The solution: a cache.
+</p>
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = (<span class="org-keyword">function</span> () { <span class="org-keyword">var</span> <span class="org-variable-name">obj</span> = {}
+
+  obj.sourceUp = <span class="org-string">"network/interfaces/wlan0/transmitter/data"</span>;
+  obj.sourceDown = <span class="org-string">"network/interfaces/wlan0/receiver/data"</span>;
+  obj.cache = {
+    up: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>},
+    down: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>}
+  };
+
+  obj.dataUpdated = <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+
+
+    <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceDown) {
+      <span class="org-constant">this</span>.cache.down = data;
+    } <span class="org-keyword">else</span>  <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceUp) {
+      <span class="org-constant">this</span>.cache.up = data;
+    }
+
+    <span class="org-keyword">var</span> <span class="org-variable-name">msg</span> = <span class="org-string">"down: "</span> + <span class="org-constant">this</span>.cache.down[<span class="org-string">"value"</span>] + <span class="org-constant">this</span>.cache.down[<span class="org-string">"units"</span>];
+    msg += <span class="org-string">" "</span>;
+    msg += <span class="org-string">"up: "</span> + <span class="org-constant">this</span>.cache.up[<span class="org-string">"value"</span>] + <span class="org-constant">this</span>.cache.up[<span class="org-string">"units"</span>];
+    print(msg);
+  }
+
+  <span class="org-keyword">return</span> obj;
+})();
+
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceDown, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceDown + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceDown + <span class="org-string">"' failed"</span>);
+}
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceUp, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceUp + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceUp + <span class="org-string">"' failed"</span>);
+}
+
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection to 'network/interfaces/wlan0/receiver/data' established
+connection to 'network/interfaces/wlan0/transmitter/data' established
+main.js ends here
+down: ----KB/s up: 5KB/s
+down: 105KB/s up: 5KB/s
+down: 105KB/s up: 5KB/s
+down: 91KB/s up: 5KB/s
+down: 91KB/s up: 6KB/s
+down: 147KB/s up: 6KB/s
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6-4" class="outline-3">
+<h3 id="sec-6-4"><span class="section-number-3">6.4</span> Harddisk</h3>
+<div class="outline-text-3" id="text-6-4">
+
+<p>This equivalent to the wlan case.
+</p>
+<div id="fig-ksysguard-sda" class="figure">
+<p><img src="images/dataengines/ksysguard_sda.png"  alt="images/dataengines/ksysguard_sda.png" /></p>
+<p>ksysguard : sda read and write rate</p>
+</div>
+
+
+
+<pre class="src src-js"><span class="org-keyword">var</span> <span class="org-variable-name">sink</span> = (<span class="org-keyword">function</span> () {
+  <span class="org-keyword">var</span> <span class="org-variable-name">obj</span> = {}
+
+  obj.sourceRead = <span class="org-string">"disk/sda_(8:0)/Rate/wblk"</span>;
+  obj.sourceWrite = <span class="org-string">"disk/sda_(8:0)/Rate/rblk"</span>;
+  obj.cache = {
+    read: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>},
+    write: {value: <span class="org-string">"----"</span>, units: <span class="org-string">"KB/s"</span>}
+  };
+
+  obj.dataUpdated = <span class="org-keyword">function</span> (<span class="org-variable-name">name</span>, <span class="org-variable-name">data</span>) {
+    <span class="org-keyword">if</span> (!data[<span class="org-string">"value"</span>]) { <span class="org-keyword">return</span>; }
+
+    <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceRead) {
+      <span class="org-constant">this</span>.cache.read = data;
+      <span class="org-constant">this</span>.cache.read[<span class="org-string">"value"</span>] = parseInt(data[<span class="org-string">"value"</span>], 10);
+    } <span class="org-keyword">else</span> <span class="org-keyword">if</span> (name == <span class="org-constant">this</span>.sourceWrite) {
+      <span class="org-constant">this</span>.cache.write = data;
+      <span class="org-constant">this</span>.cache.write[<span class="org-string">"value"</span>] = parseInt(data[<span class="org-string">"value"</span>], 10);
+    }
+
+    <span class="org-keyword">var</span> <span class="org-variable-name">msg</span> = <span class="org-string">"read: "</span> + <span class="org-constant">this</span>.cache.read[<span class="org-string">"value"</span>]
+                       + <span class="org-constant">this</span>.cache.read[<span class="org-string">"units"</span>];
+    msg += <span class="org-string">" "</span>;
+    msg += <span class="org-string">"write: "</span> + <span class="org-constant">this</span>.cache.write[<span class="org-string">"value"</span>]
+                     + <span class="org-constant">this</span>.cache.write[<span class="org-string">"units"</span>];
+    print(msg);
+  }
+
+  <span class="org-keyword">return</span> obj;
+})();
+
+
+<span class="org-keyword">var</span> <span class="org-variable-name">engine</span> = dataEngine(<span class="org-string">"systemmonitor"</span>);
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceRead, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceRead + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceRead + <span class="org-string">"' failed"</span>);
+}
+
+<span class="org-keyword">if</span> ( engine.connectSource(sink.sourceWrite, sink, 1000) ) {
+  print(<span class="org-string">"connection to '"</span> +  sink.sourceWrite + <span class="org-string">"' established"</span>);
+} <span class="org-keyword">else</span> {
+  print(<span class="org-string">"connection attempt to '"</span> + sink.sourceWrite + <span class="org-string">"' failed"</span>);
+}
+
+
+print(<span class="org-string">"main.js ends here"</span>);
+</pre>
+
+<pre class="example">
+connection to 'disk/sda_(8:0)/Rate/wblk' established
+connection to 'disk/sda_(8:0)/Rate/rblk' established
+main.js ends here
+read: ----KB/s write: 0KB/s
+read: 0KB/s write: 0KB/s
+read: 0KB/s write: 0KB/s
+</pre>
+
+</div>
 </div>
 </div>
 </div>
