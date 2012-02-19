@@ -83,7 +83,7 @@ var wlan = (function () {
   };
 
   that.label = newLabel();
-  that.label.text = "down:----KB/s up:----KB/s";
+  that.label.text = "----KB/s d|----KB/s u";
 
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
@@ -126,7 +126,7 @@ var sda = (function () {
   };
 
   that.label = newLabel();
-  that.label.text = "read:-----KB/s write:-----KB/s";
+  that.label.text = "-----KB/s r|-----KB/s w";
 
   that.dataUpdated = function (name, data) {
     if (!data.value) { return; }
