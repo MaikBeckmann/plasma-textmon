@@ -1,19 +1,30 @@
 * Minimalistic textual system monitor for plasma
 ** What is this?
-This is a plasma widget which displays data emitted by the "systemmonitor" data
-engine.  By default it shows
+This is a DIY plasma widget which displays data emitted by the "systemmonitor"
+data engine.  By default it shows
 - total cpu load
 - used application memory
 - wlan down and up rate
 - sda read and write rate
 
-You most likely want to tweak the settings. This is done by editing the source
-code. The settings dialog shows you how to get there.  This hacky way of
-configuring the applet is no shortcoming but by intention. I wrote up a little
-guide/tutorial on how to get stared with Javascript applets and how to tweak
-TextMon.
+You most likely want to tweak the settings, like changing the text color to
+black if your theme is light colored or monitor eth0 rather than wlan0.  This
+is done by editing the source code. The settings dialog shows you how to get
+there.
+
+This hacky way of configuring the applet is no shortcoming but by
+intention. TextMon isn't meant to be an end user plasmoid.  It may serve your
+needs out of the box, but its true nature is to be an entry point for you
+coding your own plasma applets.
+
+The by far most work isn't done in the 'master' branch, but in the
+documentation branch 'gh-pages'.  Github serves its content at this url
  - [[http://maikbeckmann.github.com/plasma-textmon/]]
-It isn't finished by any means, but IMO good enough to do more good than harm.
+It so far covers
+ - Getting 'hello world' with a Plasma Javascript applet on the screen
+ - Data engines in general and the one named 'systemmonitor' in particular.
+   This document is the heart of this project!
+ - Some basics for the few UI elements we use.
 
 ** What is plasma?
 Plasma Workspaces is the umbrella term for all graphical environments provided
