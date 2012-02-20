@@ -22,16 +22,16 @@ by KDE
  - [[http://en.wikipedia.org/wiki/KDE_Software_Compilation_4][Wikipedia on KDE]]
 
 Plasma is implemented as a framework which loads components.  A Component can
-act as "data engine" or as an widget that visualizes such data.  It however
+act as "data engine" or as a widget that visualizes such data.  It however
 never does both.
 
 Components are either native, which means they are written in C++, or they're
-using one of the bindings to a dynamic language, like Python, Ruby and
+using one of the bindings to dynamic languages like Python, Ruby and
 Javascript.
 
 The Javascript bindings are special as they're part of every plasma
-installation and in that it's API is "simplified" aka. limited.  In return
-components written with Javascript are ensured to be max. portable.
+installation and in that its API is "simplified" aka. limited.  In return
+components written in Javascript are ensured to be maximal portable.
 
 ** A glimpse of awesomeness
 This is also a tribute to the awesome window manager, where doing such a system
