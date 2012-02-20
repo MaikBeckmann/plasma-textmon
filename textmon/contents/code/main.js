@@ -2,7 +2,7 @@
 
 /** Javscript modules */
 if (!plasmoid.include("helpers.js")) {
-  throw("[CODE ERROR] couldn't load helpers.js module");
+  throw ("[CODE ERROR] couldn't load helpers.js module");
 }
 
 /** Font properties */
@@ -183,18 +183,17 @@ checkedConnectSource(engine, mem.source, mem);
 
 /** Layout */
 
-// The labels which display the actual content
-function sep(sepStr) {
-  var l = new Label();
-  l.text = sepStr;
-  l.wordWrap = false;
-  l.styleSheet = helpers.styleSheetToString(styleSheet);
-  return l;
-}
-
 var layout = new LinearLayout(plasmoid);
 layout.spacing = 0;
 layout.setContentsMargins(0, 0, 0, 0);
+
+/* separator factory */
+function sep(sepStr) {
+  var l = newLabel()
+  l.text = sepStr;
+  return l;
+}
+
 layout.addItem(sep("{cpu:"));  layout.addItem(cpu.label);  layout.addItem(sep("}"));
 layout.addItem(sep("{mem:"));  layout.addItem(mem.label);  layout.addItem(sep("}"));
 layout.addItem(sep("{wlan:")); layout.addItem(wlan.label); layout.addItem(sep("}"));
