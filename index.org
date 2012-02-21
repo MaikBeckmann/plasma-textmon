@@ -4,19 +4,22 @@
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 #+options: toc:nil
 
-TextMon is minimalistic textual system monitor, meant to be an entry point for
-coding kde plasma applets in Javascript and yet be useful enough for everday
-usage.
+TextMon is /Do It Yourself/ textual system monitor, meant to be an entry point
+for coding kde plasma applets in Javascript.
 
 [[file:images/code_monster.png]]
 
 * Getting started
 Go to the [[http://github.com/MaikBeckmann/plasma-textmon/downloads][download]] section, get =textmon.plasmoid= and install it via
  : % plasmapkg -i textmon.plasmoid
+Now [[http://userbase.kde.org/Plasma#Widgets][add the widget]] called 'TextMon' to the desktop or panel.
 
-You most likely want to tweak the settings. This is done by editing the source
-code. The settings dialog shows you how to get there (right click the applet).
-This hacky way of configuring the applet is no shortcoming but by intention.
+You most likely want to tweak the settings. This is done by editing the [[http://github.com/MaikBeckmann/plasma-textmon/blob/master/textmon/contents/code/main.js][source
+code]]. The settings dialog shows you how to get there (right click the applet).
+Here a number of examples on how to customize TextMon
+ - [[file:hacking-textmon.html][Hacking TextMon]]
+
+The rest of the document is about writing TextMon from scratch.
 
 * [[file:prelude.html][Development prelude]]
 The first step in a new devlopment environment is to get a simple message on the screen
@@ -35,9 +38,6 @@ the "why" is always the same: data.
 A few basics that cover all our needs.  There aren't much, since the only two
 UI widgets we'll use are labels, a layout to arrange them and the applet
 itself.
-
-* [[file:hacking-textmon.html][Hacking TextMon]]
-A number of examples on how to alter TextMon are presented.
 
 * [[http://github.com/MaikBeckmann/plasma-textmon][github repo]]
 There you'll find the applet sources and the [[http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages][sources]] for this documentation
