@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="Digitize your TextMon :D"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-19 14:43:17 CET"/>
+<meta name="generated" content="2012-02-21 22:40:41 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -94,9 +94,8 @@
 <div id="content">
 <h1 class="title">Digitize your TextMon :D</h1>
 
-<p>TextMon is minimalistic textual system monitor, meant to be an entry point for
-coding kde plasma applets in Javascript and yet be useful enough for everday
-usage.
+<p>TextMon is <i>Do It Yourself</i> textual system monitor, meant to be an entry point
+for coding kde plasma applets in Javascript.
 </p>
 <p>
 <img src="images/code_monster.png"  alt="images/code_monster.png" />
@@ -111,11 +110,19 @@ usage.
 % plasmapkg -i textmon.plasmoid
 </pre>
 
+<p>Now <a href="http://userbase.kde.org/Plasma#Widgets">add the widget</a> called 'TextMon' to the desktop or panel.
+</p>
+<p>
+You most likely want to tweak the settings. This is done by editing the <a href="http://github.com/MaikBeckmann/plasma-textmon/blob/master/textmon/contents/code/main.js">source code</a>. The settings dialog shows you how to get there (right click the applet).
+Here a number of examples on how to customize TextMon
+</p><ul>
+<li><a href="hacking-textmon.html">Hacking TextMon</a>
+</li>
+</ul>
+
 
 <p>
-You most likely want to tweak the settings. This is done by editing the source
-code. The settings dialog shows you how to get there (right click the applet).
-This hacky way of configuring the applet is no shortcoming but by intention.
+The rest of the document is about writing TextMon from scratch.
 </p>
 </div>
 
@@ -164,18 +171,8 @@ itself.
 </div>
 
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> <a href="hacking-textmon.html">Hacking TextMon</a></h2>
+<h2 id="sec-5"><span class="section-number-2">5</span> <a href="http://github.com/MaikBeckmann/plasma-textmon">github repo</a></h2>
 <div class="outline-text-2" id="text-5">
-
-<p>A number of examples on how to alter TextMon are presented.
-</p>
-</div>
-
-</div>
-
-<div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> <a href="http://github.com/MaikBeckmann/plasma-textmon">github repo</a></h2>
-<div class="outline-text-2" id="text-6">
 
 <p>There you'll find the applet sources and the <a href="http://github.com/MaikBeckmann/plasma-textmon/tree/gh-pages">sources</a> for this documentation
 (emacs .org files).
