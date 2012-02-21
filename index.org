@@ -3,9 +3,10 @@
 #+Language: en
 #+Style: <link rel="stylesheet" type="text/css" href="org-mode.css"/>
 #+options: toc:nil
-#+text: TextMon is minimalistic textual system monitor, meant to be an entry point for
-#+text: coding kde plasma applets in Javascript and yet be useful enough for everday
-#+text: usage.
+
+TextMon is minimalistic textual system monitor, meant to be an entry point for
+coding kde plasma applets in Javascript and yet be useful enough for everday
+usage.
 
 [[file:images/code_monster.png]]
 
