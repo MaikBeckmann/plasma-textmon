@@ -131,11 +131,11 @@ The result
 #+caption: Hello label
 [[file:images/hello_label.png]]
 #
-This looks broken, doesn't it?  A label on it's own doesn't what to do with
+This looks broken, doesn't it?  A label on its own doesn't know what to do with
 itself.
 
 * Hello layout
-The label needs some guidance, which will be delivered by an layout =L=
+The label needs some guidance, which will be delivered by a layout =L=
  :             P
  :             |
  :             |
@@ -148,7 +148,7 @@ The label needs some guidance, which will be delivered by an layout =L=
 
   l = new Label()
   l.text = "Hello World";
-  layout.addItem(l); // inserts it as cild of layout
+  layout.addItem(l); // inserts it as child of layout
 #+end_src
 The result is
 #+caption: Hello layout
