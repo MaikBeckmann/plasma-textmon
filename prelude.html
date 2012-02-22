@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Prelude"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-21 23:55:41 CET"/>
+<meta name="generated" content="2012-02-22 20:55:31 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -101,23 +101,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Hello Javascript</a>
+<li><a href="#sec-1">1 Introduction</a></li>
+<li><a href="#sec-2">2 Hello JavaScript</a>
 <ul>
-<li><a href="#sec-1-1">1.1 Install a Javascript interpreter</a>
+<li><a href="#sec-2-1">2.1 Install a JavaScript interpreter</a>
 <ul>
-<li><a href="#sec-1-1-1">1.1.1 js</a></li>
-<li><a href="#sec-1-1-2">1.1.2 v8</a></li>
-<li><a href="#sec-1-1-3">1.1.3 rhino</a></li>
+<li><a href="#sec-2-1-1">2.1.1 Mozilla js</a></li>
+<li><a href="#sec-2-1-2">2.1.2 Mozilla rhino</a></li>
+<li><a href="#sec-2-1-3">2.1.3 Google v8</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">1.2 Hello World</a></li>
+<li><a href="#sec-2-2">2.2 Hello World</a></li>
 </ul>
 </li>
-<li><a href="#sec-2">2 Hello Plasma</a>
+<li><a href="#sec-3">3 Hello Plasma</a>
 <ul>
-<li><a href="#sec-2-1">2.1 And there was metadata</a></li>
-<li><a href="#sec-2-2">2.2 plasmapkg and life ain't easy</a></li>
-<li><a href="#sec-2-3">2.3 Give yourself a treat: Good error messages</a></li>
+<li><a href="#sec-3-1">3.1 And there was metadata</a></li>
+<li><a href="#sec-3-2">3.2 plasmapkg and life ain't easy</a></li>
+<li><a href="#sec-3-3">3.3 Give yourself a treat: Good error messages</a></li>
 </ul>
 </li>
 </ul>
@@ -125,32 +126,64 @@
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Hello Javascript</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 
+<p>Coding a program is meaningless if you don't know how to run it.  This page
+shows how to do that plus some pitfalls specific to Plasma and how to work
+around them.
+</p>
+</div>
 
 </div>
 
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Install a Javascript interpreter</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Hello JavaScript</h2>
+<div class="outline-text-2" id="text-2">
 
+<p>This is the program
+</p>
+
+
+<pre class="src src-js">print(<span class="org-string">"Hello World!"</span>);
+</pre>
+
+<p>
+But how run it?
+</p>
 
 </div>
 
-<div id="outline-container-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> js</h4>
-<div class="outline-text-4" id="text-1-1-1">
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Install a JavaScript interpreter</h3>
+<div class="outline-text-3" id="text-2-1">
 
-<p>This is Mozilla's command line Javascript interpreter.  It's what I'll be using
-throughout this document, like
+<p>Plasma or a web browser does ton of things at any given point.  Our tiny first
+program isn't really that important to them.  To start off simple we gonna use
+a JavaScript interpreter instead.  It's task it to run our code and nothing
+else.
+</p>
+<p>
+This is a bit of a mess, because of all distros the most popular (Ubuntu)
+hasn't got the one JavaScript interpreter everyone else offers: Mozilla's <i>js</i>.
+Ubuntu users should use <a href="#sec-2-1-2">rhino</a> instead.
+</p>
+
+</div>
+
+<div id="outline-container-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> Mozilla js</h4>
+<div class="outline-text-4" id="text-2-1-1">
+
+<p>This is a stand alone version of the JavaScript engine used in Firefox called
+<a href="http://developer.mozilla.org/en/SpiderMonkey">SpiderMonkey</a>.  It's what I'll be using throughout this document, like
 </p><pre class="example">
 % js foobar.js
 </pre>
 
 
 <p>
-The package which contains this executable is
+The package which contains the <code>js</code> executable is
 </p><ul>
 <li><b>js</b> for ArchLinux, OpenSUSE and Fedora
 </li>
@@ -160,43 +193,30 @@ The package which contains this executable is
 
 
 <p>
-It is <span style="text-decoration:underline;">not</span> available on <b>Ubuntu</b>.  You have to use one of the two following.
+If you're not on Ubuntu, <a href="#sec-2-2">proceed</a>.  If you are on <b>Ubuntu</b>: no <i>js</i> for you!  It
+is not in the repos.  I suggest you use <a href="#sec-2-1-2">rhino</a> instead.
 </p>
 </div>
 
 </div>
 
-<div id="outline-container-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> v8</h4>
-<div class="outline-text-4" id="text-1-1-2">
+<div id="outline-container-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> Mozilla rhino</h4>
+<div class="outline-text-4" id="text-2-1-2">
 
-<p>The <code>v8</code> package contains the <code>d8</code> Javscript interpreter.  When this documention says
-</p><pre class="example">
-% js foobar.js
-</pre>
-
-<p>then you can use
-</p><pre class="example">
-% d8 foobar.js
-</pre>
-
-<p>instead.
+<p>Back in the day when Netspace was still around they planned to rewrite their
+<a href="http://en.wikipedia.org/wiki/Netscape_Navigator">Netscape Navigator</a> in Java.  This is the origin of <a href="http://www.mozilla.org/rhino/">rhino</a>, a JavaScript
+implementation entirely written in Java.  Like its C sibling it's open source
+and maintained by the Mozilla foundation.
 </p>
-</div>
-
-</div>
-
-<div id="outline-container-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> rhino</h4>
-<div class="outline-text-4" id="text-1-1-3">
-
-<p>This is an Java implementation.  It will take forever to startup the first time
-it runs, but after that it's ok.  When this documention says
+<p>
+It will take forever to startup the first time you run it, but after that it's
+ok.  When this documention says
 </p><pre class="example">
 % js foobar.js
 </pre>
 
-<p>then you can use
+<p>use
 </p><pre class="example">
 % rhino foobar.js
 </pre>
@@ -204,23 +224,48 @@ it runs, but after that it's ok.  When this documention says
 <p>instead.
 </p>
 <p>
-Note: Only about Ubuntu I know for certain that it's <code>rhino</code> package includes
+The package name on Ubuntu is <b>rhino</b>.
+</p>
+<p>
+Note: Only about Ubuntu I know for certain that its <i>rhino</i> package includes
 the <code>/usr/bin/rhino</code> shell script.  On Archlinux you'd have to do
 </p><pre class="example">
 % java -jar /usr/share/java/js.jar foobar.js
 </pre>
 
+<p>But why bother?  Just use js.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-3" class="outline-4">
+<h4 id="sec-2-1-3"><span class="section-number-4">2.1.3</span> Google v8</h4>
+<div class="outline-text-4" id="text-2-1-3">
+
+<p>The <i>v8</i> package contains the <code>d8</code> JavaScript interpreter.  If you have it
+installed and want to use it stead of js, then type
+</p><pre class="example">
+% d8 foobar.js
+</pre>
+
+<p>instead of
+</p><pre class="example">
+% js foobar.js
+</pre>
+
+
 
 </div>
 </div>
 
 </div>
 
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Hello World</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Hello World</h3>
+<div class="outline-text-3" id="text-2-2">
 
-<p>Open your favorite editor and create the file <code>foobar.js</code> with the content
+<p>Open your favorite editor, create the file <code>foobar.js</code> with the content
 </p>
 
 
@@ -234,22 +279,23 @@ and run it in a shell
 Hello World!
 </pre>
 
-
+<p>Yay!
+</p>
 </div>
 </div>
 
 </div>
 
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> Hello Plasma</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Hello Plasma</h2>
+<div class="outline-text-2" id="text-3">
 
 
 </div>
 
-<div id="outline-container-2-1" class="outline-3">
-<h3 id="sec-2-1"><span class="section-number-3">2.1</span> And there was metadata</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> And there was metadata</h3>
+<div class="outline-text-3" id="text-3-1">
 
 <p>We aim to have plasma run our little world script.
 </p>
@@ -260,12 +306,12 @@ Hello World!
 
 <p>
 For this we have to create a plasma package.  A package consists of its
-content, our Javascript file, and meta data that describes this content and its
+content, our JavaScript file, and meta data that describes this content and its
 role.  The file tree of the simplest possible package looks like this
 </p><pre class="example">
 hello_world
 ├── contents
-│   └── main.js
+│   └── main.js
 └── metadata.desktop
 </pre>
 
@@ -303,9 +349,9 @@ hello world
 
 </div>
 
-<div id="outline-container-2-2" class="outline-3">
-<h3 id="sec-2-2"><span class="section-number-3">2.2</span> plasmapkg and life ain't easy</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> plasmapkg and life ain't easy</h3>
+<div class="outline-text-3" id="text-3-2">
 
 <p>To make our applet be usable for plasma we have to install it.  We'll install
 it into our user directory
@@ -466,13 +512,17 @@ time is that to upgrading an existing package
 
 <p>do the very same things.
 </p>
+<p>
+This was a rough start, wasn't it?  But fear not, besides some flaws like these
+it actually works quite well.
+</p>
 </div>
 
 </div>
 
-<div id="outline-container-2-3" class="outline-3">
-<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Give yourself a treat: Good error messages</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Give yourself a treat: Good error messages</h3>
+<div class="outline-text-3" id="text-3-3">
 
 <p>Consider this code
 </p>
@@ -535,7 +585,7 @@ js: ...............^
 A missing comma, brace and bracet is an frequent coding error.  QtScript will
 give you the line number, that's it.  If you have no idea what the heck its
 problem is, do yourself a favor by pasting the code in question into a file and
-have one of the above Javascript interpreters a run at it.  They of cause won't
+have one of the above JavaScript interpreters a run at it.  They of cause won't
 be able to run it, but they'll find the syntax error with a <span style="text-decoration:underline;">sweet</span> error
 message.
 </p></div>
