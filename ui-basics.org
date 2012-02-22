@@ -190,13 +190,13 @@ for(var i = 0; i < 4; i++) {
 }
 #+end_src
 builds this object graph
- :             P
- :             |
- :             L
- :             |
- :      o----o-----o---o
- :      |    |     |   |
- :     l0   l1    l2  l3
+ :            P
+ :            |
+ :            L
+ :            |
+ :      o---o---o---o
+ :      |   |   |   |
+ :     l0  l1  l2  l3
 The resulting applet is
 #+caption: More labels
 [[file:images/more_labels.png]]
