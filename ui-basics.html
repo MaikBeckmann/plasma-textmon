@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="Plasma user interface basics"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-19 14:43:42 CET"/>
+<meta name="generated" content="2012-02-22 22:21:34 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -284,7 +284,7 @@ The result
 <p>Hello label</p>
 </div>
 <p>
-This looks broken, doesn't it?  A label on it's own doesn't what to do with
+This looks broken, doesn't it?  A label on its own doesn't know what to do with
 itself.
 </p>
 </div>
@@ -295,7 +295,7 @@ itself.
 <h2 id="sec-4"><span class="section-number-2">4</span> Hello layout</h2>
 <div class="outline-text-2" id="text-4">
 
-<p>The label needs some guidance, which will be delivered by an layout <code>L</code>
+<p>The label needs some guidance, which will be delivered by a layout <code>L</code>
 </p><pre class="example">
             P
             |
@@ -313,7 +313,7 @@ itself.
 
 l = <span class="org-keyword">new</span> <span class="org-type">Label</span>()
 l.text = <span class="org-string">"Hello World"</span>;
-layout.addItem(l); <span class="org-comment-delimiter">// </span><span class="org-comment">inserts it as cild of layout</span>
+layout.addItem(l); <span class="org-comment-delimiter">// </span><span class="org-comment">inserts it as child of layout</span>
 </pre>
 
 <p>
@@ -379,13 +379,13 @@ labels = [];
 <p>
 builds this object graph
 </p><pre class="example">
-            P
-            |
-            L
-            |
-     o----o-----o---o
-     |    |     |   |
-    l0   l1    l2  l3
+           P
+           |
+           L
+           |
+     o---o---o---o
+     |   |   |   |
+    l0  l1  l2  l3
 </pre>
 
 <p>The resulting applet is
