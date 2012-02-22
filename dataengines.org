@@ -241,9 +241,9 @@ time zone has an offset of
 If you compare this data with what is shown in \ref{fig:plasmaengineexplorer},
 then you'll notice it being exactly the same, except for the actual point in
 time.  The /Type/ entry for each source in the image is the names of a Qt C++
-data type.  Some of them have an equivalent in Javascript, like
+data type.  Some of them have an equivalent in JavaScript, like
  - =QString= <--> =string= .
-For Qt data types that don't have an builtin equivalent in Javascript we get an
+For Qt data types that don't have an builtin equivalent in JavaScript we get an
 object
  - [[http://doc.qt.nokia.com/4.7-snapshot/scripting.html#conversion-between-qtscript-and-c-types][Conversion between QtScript and C++ types]] .
 Lets have a peek into what one of these converted Qt types has to offer
@@ -265,7 +265,7 @@ Lets have a peek into what one of these converted Qt types has to offer
  : ==== data =====
  : <properties of data["DateTime"]
  : </properties of data["DateTime"]
-Nothing?  That is correct.  These Javascript shells around a C++ object only
+Nothing?  That is correct.  These JavaScript shells around a C++ object only
 hand out a string representation of their value.
 
 Though they are not showing up with the code above, these objects have the
