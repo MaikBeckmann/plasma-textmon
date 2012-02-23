@@ -110,7 +110,8 @@ appears in the shell where we started plasmoidviewer
 ##+attr_html: width="150"
 [[file:images/empty_default_applet.png]]
 
-** plasmapkg and life ain't easy
+** plasmapkg
+*** A rough start
 To make our applet be usable for plasma we have to install it.  We'll install
 it into our user directory
  : % echo $(kde4-config --localprefix)
@@ -151,9 +152,10 @@ But
 results in
  : Plugin HelloFoobar is not installed.
 WAT?  That is clearly not correct.  It is a bug in plasmapkg that I'll report
-ASAP, I promise.  I the mean time do this
+ASAP, I promise.  In the mean time do this
  : % rm $(kde4-config --localprefix)/share/kde4/services/plasma-applet-HelloFoobar.desktop
  : % rm $(kde4-config --localprefix)/share/apps/plasma/plasmoids/HelloFoobar/ -r
+instead.
 
 What we have to add is the role this /Service/ named /HelloFoobar/ plays.  It's
 a plasma applet:
@@ -178,6 +180,10 @@ as well as
  : Successfully removed HelloFoobar
 Yay :D
 
+This was a rough start, wasn't it?  But fear not, besides some flaws like these
+it actually works quite well.
+
+*** Three command switches you'll want to know
 Since we have a package that plasmapkg can chew on without choking I suggest
 you play a bit with the options it provides.  We already saw how to install
  : % plasmapkg -i /path/to/package/dir/
@@ -190,7 +196,7 @@ We also, though unsuccessfully, used the command line to remove a package
 The second one reads the name of the package to remove from the
 =metadata.desktop= file in the directory it was given the path to.  That's why
  : % plasmapkg -r .
-just reverts the things done by =plasmapkg -i=.  Well, once the bug mentioned
+just reverts the things done by =plasmapkg -i .=.  Well, once the bug mentioned
 above is fixed :P.  Finally the plasmapkg command you'll be using most of the
 time is that to upgrading an existing package
  : % plasmapkg -u /path/to/package/dir/
@@ -201,9 +207,6 @@ and
  : % plasmapkg -r .
  : % plasmapkg -i .
 do the very same things.
-
-This was a rough start, wasn't it?  But fear not, besides some flaws like these
-it actually works quite well.
 
 ** Give yourself a treat: Good error messages
 Consider this code
