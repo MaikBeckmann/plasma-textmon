@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Prelude"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-02-22 20:55:31 CET"/>
+<meta name="generated" content="2012-02-23 20:29:45 CET"/>
 <meta name="author" content="Maik Beckmann &amp;lt;beckmann.maik@googlemail.com&amp;gt;"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -117,7 +117,12 @@
 <li><a href="#sec-3">3 Hello Plasma</a>
 <ul>
 <li><a href="#sec-3-1">3.1 And there was metadata</a></li>
-<li><a href="#sec-3-2">3.2 plasmapkg and life ain't easy</a></li>
+<li><a href="#sec-3-2">3.2 plasmapkg</a>
+<ul>
+<li><a href="#sec-3-2-1">3.2.1 A rough start</a></li>
+<li><a href="#sec-3-2-2">3.2.2 Three command switches you'll want to know</a></li>
+</ul>
+</li>
 <li><a href="#sec-3-3">3.3 Give yourself a treat: Good error messages</a></li>
 </ul>
 </li>
@@ -350,8 +355,15 @@ hello world
 </div>
 
 <div id="outline-container-3-2" class="outline-3">
-<h3 id="sec-3-2"><span class="section-number-3">3.2</span> plasmapkg and life ain't easy</h3>
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> plasmapkg</h3>
 <div class="outline-text-3" id="text-3-2">
+
+
+</div>
+
+<div id="outline-container-3-2-1" class="outline-4">
+<h4 id="sec-3-2-1"><span class="section-number-4">3.2.1</span> A rough start</h4>
+<div class="outline-text-4" id="text-3-2-1">
 
 <p>To make our applet be usable for plasma we have to install it.  We'll install
 it into our user directory
@@ -422,13 +434,14 @@ Plugin HelloFoobar is not installed.
 </pre>
 
 <p>WAT?  That is clearly not correct.  It is a bug in plasmapkg that I'll report
-ASAP, I promise.  I the mean time do this
+ASAP, I promise.  In the mean time do this
 </p><pre class="example">
 % rm $(kde4-config --localprefix)/share/kde4/services/plasma-applet-HelloFoobar.desktop
 % rm $(kde4-config --localprefix)/share/apps/plasma/plasmoids/HelloFoobar/ -r
 </pre>
 
-
+<p>instead.
+</p>
 <p>
 What we have to add is the role this <i>Service</i> named <i>HelloFoobar</i> plays.  It's
 a plasma applet:
@@ -467,7 +480,18 @@ Successfully removed HelloFoobar
 <p>Yay :D
 </p>
 <p>
-Since we have a package that plasmapkg can chew on without choking I suggest
+This was a rough start, wasn't it?  But fear not, besides some flaws like these
+it actually works quite well.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2-2" class="outline-4">
+<h4 id="sec-3-2-2"><span class="section-number-4">3.2.2</span> Three command switches you'll want to know</h4>
+<div class="outline-text-4" id="text-3-2-2">
+
+<p>Since we have a package that plasmapkg can chew on without choking I suggest
 you play a bit with the options it provides.  We already saw how to install
 </p><pre class="example">
 % plasmapkg -i /path/to/package/dir/
@@ -491,7 +515,7 @@ you play a bit with the options it provides.  We already saw how to install
 % plasmapkg -r .
 </pre>
 
-<p>just reverts the things done by <code>plasmapkg -i</code>.  Well, once the bug mentioned
+<p>just reverts the things done by <code>plasmapkg -i .</code>.  Well, once the bug mentioned
 above is fixed :P.  Finally the plasmapkg command you'll be using most of the
 time is that to upgrading an existing package
 </p><pre class="example">
@@ -512,10 +536,7 @@ time is that to upgrading an existing package
 
 <p>do the very same things.
 </p>
-<p>
-This was a rough start, wasn't it?  But fear not, besides some flaws like these
-it actually works quite well.
-</p>
+</div>
 </div>
 
 </div>
